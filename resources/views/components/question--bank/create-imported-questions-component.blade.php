@@ -47,7 +47,7 @@
                     <td>Program</td>
                     <td>Context</td>
                     <td>Private</td>
-                    <td>Published</td>
+                    <td><span class="badge bg-success">published</span></td>
                     <td>
                         <div class="dropdown">
                             <input class=" dropdown-toggle action-toggle" value="Actions" readonly
@@ -68,7 +68,7 @@
                     <td>Program</td>
                     <td>Context</td>
                     <td>Private</td>
-                    <td>Published</td>
+                    <td><span class="badge bg-success">published</span></td>
                     <td>
                         <div class="dropdown">
                             <input class=" dropdown-toggle action-toggle" value="Actions" readonly
@@ -90,7 +90,7 @@
                     <td>Program</td>
                     <td>Context</td>
                     <td>Private</td>
-                    <td>Published</td>
+                    <td><span class="badge bg-success">published</span></td>
                     <td>
                         <div class="dropdown">
                             <input class=" dropdown-toggle action-toggle" value="Actions" readonly
@@ -112,7 +112,7 @@
                     <td>Program</td>
                     <td>Context</td>
                     <td>public</td>
-                    <td>unpublished</td>
+                    <td><span class="badge bg-success">published</span></td>
                     <td>
                         <div class="dropdown">
                             <input class=" dropdown-toggle action-toggle" value="Actions" readonly
@@ -136,7 +136,7 @@
                     <td>Event</td>
                     <td>Context</td>
                     <td>Private</td>
-                    <td>Published</td>
+                    <td><span class="badge bg-success">published</span></td>
                     <td>
                         <div class="dropdown">
                             <input class=" dropdown-toggle action-toggle" value="Actions" readonly
