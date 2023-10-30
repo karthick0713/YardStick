@@ -1,0 +1,59 @@
+{
+  "menu": [
+    {
+      "url": "/admin/dashboard",
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "admin-dashboard"
+    },
+    {
+      "url": "/admin/manage-test",
+      "name": "Manage Tests",
+      "icon": "menu-icon tf-icons bx bx-building",
+      "slug": "manage-tests"
+    },
+    {
+      "url": "/admin/manage-learning",
+      "name": "Manage Learning",
+      "icon": "menu-icon tf-icons bx bx-news",
+      "slug": "manage-learning"
+    },
+    {
+      "url": "/admin/question-bank",
+      "name": "Question Bank",
+      "icon": "menu-icon tf-icons bx bx-question-mark",
+      "slug": "question-bank"
+    },
+     {
+      "url": "/admin/lession-bank",
+      "name": "Lession Bank",
+      "icon": "menu-icon tf-icons bx bx-file",
+      "slug": "lession-bank"
+    },
+    {
+      "url": "/admin/video-bank",
+      "name": "Video Bank",
+      "icon": "menu-icon tf-icons bx bxs-videos",
+      "slug": "video-bank"
+    },
+    {
+      "url": "/admin/manage-users",
+      "name": "Manage Users",
+      "icon": "menu-icon tf-icons bx bxs-user ",
+      "slug": "manage-users"
+    },
+    {
+      "url": "/",
+      "name": "Certificate Generation",
+      "icon": "menu-icon tf-icons bx bx-certification",
+      "slug": "dashboard-analytics"
+    },
+    {
+      "url": "/",
+      "name": "Support",
+      "icon": "menu-icon tf-icons bx bx-support",
+      "slug": "dashboard-analytics"
+    }
+
+  ]
+}
