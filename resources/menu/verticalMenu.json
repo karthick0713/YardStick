@@ -7,53 +7,117 @@
       "slug": "admin-dashboard"
     },
     {
-      "url": "/admin/manage-test",
       "name": "Manage Tests",
       "icon": "menu-icon tf-icons bx bx-building",
-      "slug": "manage-tests"
+      "slug": " manage-tests",
+      "submenu": [
+        {
+          "url": "/admin/manage-test/test",
+          "name": "Create Contest",
+          "slug": "create-test"
+        },
+        {
+          "url": "/admin/manage-test/quiz",
+          "name": "Create Quiz",
+          "slug": "create-quiz"
+        }
+      ]
     },
     {
-      "url": "/admin/manage-learning",
-      "name": "Manage Learning",
-      "icon": "menu-icon tf-icons bx bx-news",
-      "slug": "manage-learning"
-    },
-    {
-      "url": "/admin/question-bank",
-      "name": "Question Bank",
+      "name": "Question Banks",
       "icon": "menu-icon tf-icons bx bx-question-mark",
-      "slug": "question-bank"
-    },
-     {
-      "url": "/admin/lession-bank",
-      "name": "Lession Bank",
-      "icon": "menu-icon tf-icons bx bx-file",
-      "slug": "lession-bank"
-    },
-    {
-      "url": "/admin/video-bank",
-      "name": "Video Bank",
-      "icon": "menu-icon tf-icons bx bxs-videos",
-      "slug": "video-bank"
-    },
-    {
-      "url": "/admin/manage-users",
-      "name": "Manage Users",
-      "icon": "menu-icon tf-icons bx bxs-user ",
-      "slug": "manage-users"
+      "slug": " manage-questions",
+      "submenu": [
+        {
+          "url": "/admin/question-bank/manage-questions",
+          "name": "Manage Questions",
+          "slug": "manage-questions"
+        },
+        {
+          "url": "#",
+          "name": "Skills and Difficulties",
+          "slug": "filter-questions"
+        }
+      ]
     },
     {
-      "url": "/",
-      "name": "Certificate Generation",
-      "icon": "menu-icon tf-icons bx bx-certification",
-      "slug": "dashboard-analytics"
+      "name": "Manage Students",
+      "icon": "menu-icon tf-icons bx bx-user",
+      "slug": " manage-students",
+      "submenu": [
+        {
+          "url": "/admin/manage-students/students",
+          "name": "Students",
+          "slug": "manage-students-students"
+        },
+        {
+          "url": "/admin/manage-students/importstudents",
+          "name": "Import Students",
+          "slug": "managestudents-importstudents"
+        },
+        {
+          "url": "/admin/manage-students/students-group",
+          "name": "Students Group",
+          "slug": "managestudents-studentsgroup"
+        },
+        {
+          "url": "/admin/manage-students/import-students-group",
+          "name": "Import Students Group",
+          "slug": "manageUser-importgroup"
+        }
+      ]
     },
     {
-      "url": "/",
-      "name": "Support",
-      "icon": "menu-icon tf-icons bx bx-support",
-      "slug": "dashboard-analytics"
-    }
+      "name": "Manage College",
+      "icon": "menu-icon tf-icons bx bx-briefcase",
+      "slug": "manage-colleges",
+      "submenu": [
+        {
+          "url": "/admin/manage-colleges/colleges",
+          "name": "College",
+          "slug": "managecolleges-colleges"
+        },
+        {
+          "url": "/admin/manage-colleges/importcollege",
+          "name": "Import College",
+          "slug": "managecolleges-importcolleges"
+        }
+      ]
+    },
 
+    {
+      "name": "Masters",
+      "icon": "menu-icon tf-icons bx bxl-mastodon",
+      "slug": "masters",
+      "submenu": [
+        {
+          "url": "/admin/masters/difficulty",
+          "name": "Manage Difficulties",
+          "slug": "manage-difficulty"
+        },
+        {
+          "url": "/admin/masters/skills",
+          "name": "Manage Skills",
+          "slug": "manage-skills"
+        },
+        {
+          "url": "/admin/masters/topics",
+          "name": "Manage Topics",
+          "slug": "manage-topics"
+        },
+        {
+          "url": "/admin/masters/department",
+          "name": "Manage Departments",
+          "slug": "manage-department"
+        }
+      ]
+    },
+
+    {
+      "url": "/admin/profile",
+      "name": "Profile",
+      "icon": "menu-icon tf-icons bx bx-user-circle",
+      "slug": "admin-profile"
+    }
   ]
 }

@@ -123,30 +123,60 @@
     </div>
 @endif --}}
 {{-- </nav> --}}
-<header class="mt-3 p-3">
+
+<style>
+    .contents{
+        justify-content: space-evenly;
+    }
+</style>
+<header class=" p-3">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row">
+
+            <div class="d-flex contents">
+                @if (!isset($navbarHideToggle))
+                <div
+                class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0{{ isset($menuHorizontal) ? ' d-xl-none ' : '' }} {{ isset($contentNavbar) ? ' d-xl-none ' : '' }}">
+                <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                    <i class="bx bx-menu bx-sm"></i>
+                </a>
+                </div>
+            @endif
+
             <div class="col-md-6">
                 <span>
-                    <h4 class="navbar-title"><b>{{ $heading }}</b></h4>
+                    @php
+                        if ($sub_heading) {
+                            $values = ' | ' . $sub_heading;
+                        } else {
+                            $values = '';
+                        }
+                    @endphp
+                    <h4 class="navbar-title fw-bold">
+
+                        {{-- header title --}}
+                        
+                            @if($heading != "Dashboard")  
+                                <i class='bx bx-left-arrow-alt' onclick="back()"></i>
+                            @endif
+                            {{ $heading . $values }}
+                    </h4>
                 </span>
             </div>
-            <div style="display:flex; position: absolute; right:0; " class="col-md-5">
-                <div class="input-group">
-                    <input type="text" class="form-control search-field" placeholder="Search...">
-                    <button class="btn btn-secondary search-field" type="button">
-                        <i class="bx bx-search"></i>
-                    </button>
-                </div>
+           
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
                 <i class="bx-notifi-menu bx bx-bell me-2 mx-3"></i>
                 <div class="avatar avatar-online mx-3">
-                    <img height="35" weight="35" src="{{ asset('assets/img/avatars/1.png') }}" alt
-                        class="w-px-40 h-auto rounded-circle">
+                    <img height="35" width="35" src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
                 </div>
-                <i class="bx-notifi-menu bx bx-menu me-2 mx-3"></i>
+                
             </div>
         </div>
     </div>
 </header>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
 
 <!-- / Navbar -->

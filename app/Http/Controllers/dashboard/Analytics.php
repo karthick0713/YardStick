@@ -10,6 +10,7 @@ class Analytics extends Controller
   public function index()
   {
     $heading = 'Dashboard';
-    return view('content.dashboard.dashboards-analytics', compact('heading'));
+    $sub_heading = '';
+    return view('content.dashboard.dashboards-analytics', compact('heading', 'sub_heading'));
   }
 }

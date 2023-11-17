@@ -1,0 +1,118 @@
+{
+  "menu": [
+    {
+      "url": "/admin/dashboard",
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "admin-dashboard"
+    },
+    {
+      "name": "Manage Tests",
+      "icon": "menu-icon tf-icons bx bx-building",
+      "slug": "manage-tests",
+      "submenu": [
+        {
+          "url": "/admin/manage-test/create-test",
+          "name": "Create Test",
+          "slug": "create-test"
+        },
+        {
+          "url": "/admin/manage-test/create-quiz",
+          "name": "Create Quiz",
+          "slug": "create-quiz"
+        }
+      ]
+    },
+    {
+      "name": "Manage Learning",
+      "icon": "menu-icon tf-icons bx bx-news",
+      "slug": "manage-learning",
+      "submenu": [
+        {
+          "url": "/admin/manage-learning/practice-set",
+          "name": "Practice Sets",
+          "slug": "practice-set"
+        },
+        {
+          "url": "/admin/manage-learning/lessions",
+          "name": "Lessions",
+          "slug": "lessions"
+        },
+        {
+          "url": "/admin/manage-learning/videos",
+          "name": "Videos",
+          "slug": "videos"
+        }
+      ]
+    },
+    {
+      "url": "/admin/question-bank",
+      "name": "Question Bank",
+      "icon": "menu-icon tf-icons bx bx-question-mark",
+      "slug": "question-bank"
+    },
+    {
+      "url": "/admin/lession-bank",
+      "name": "Lession Bank",
+      "icon": "menu-icon tf-icons bx bx-file",
+      "slug": "lession-bank"
+    },
+    {
+      "url": "/admin/video-bank",
+      "name": "Video Bank",
+      "icon": "menu-icon tf-icons bx bxs-videos",
+      "slug": "video-bank"
+    },
+    {
+      "name": "Manage Users",
+      "icon": "menu-icon tf-icons bx bx-user",
+      "slug": "manage-users",
+      "submenu": [
+        {
+          "url": "/admin/manage-users/users",
+          "name": "Users",
+          "slug": "manageUser-users"
+        },
+        {
+          "url": "/admin/manage-users/usersGroup",
+          "name": "Users Group ",
+          "slug": "manageUser-usersgroup"
+        },
+        {
+          "url": "/admin/manage-users/importUsers",
+          "name": "Import Users",
+          "slug": "manageUser-importusers"
+        },
+        {
+          "url": "/admin/manage-users/importUsersGroup",
+          "name": "Import Users Group",
+          "slug": "manageUser-importusersgroup"
+        }
+      ]
+    },
+    {
+      "name": "Manage Clients",
+      "icon": "menu-icon tf-icons bx bx-briefcase",
+      "slug": "manage-users",
+      "submenu": [
+        {
+          "url": "/admin/manage-clients/clients",
+          "name": "Clients",
+          "slug": "layouts-without-menu"
+        },
+        {
+          "url": "/admin/manage-clients/importClients",
+          "name": "Import Clients",
+          "slug": "layouts-without-navbar"
+        }
+      ]
+    },
+
+    {
+      "url": "/admin/profile",
+      "name": "Profile",
+      "icon": "menu-icon tf-icons bx bx-user-circle",
+      "slug": "admin-profile"
+    }
+  ]
+}

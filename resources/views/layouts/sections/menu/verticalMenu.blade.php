@@ -2,15 +2,13 @@
 
     <!-- ! Hide app brand if navbar-full -->
     <div class="app-brand demo">
-        <a href="{{ url('/') }}" class="app-brand-link">
-            <span class="app-brand-logo demo">
+        <a href="{{ url('/admin/dashboard') }}" class="app-brand-link">
+            <img src="{{ asset('assets/img/logo/yardstick-logo2.png') }}" alt="">
+            {{-- <span class="app-brand-logo demo">
                 @include('_partials.macros', ['width' => 25, 'withbg' => '#696cff'])
-            </span>
-            <span class="app-brand-text demo menu-text fw-bold ms-2">
-                {{ config('variables.templateName') }}
-            </span>
-        </a>
+            </span> --}}
 
+        </a>
 
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-autod-block d-xl-none">
@@ -23,10 +21,10 @@
         <h5 class="admin-check">ADMINISTRATOR</h5>
     </div>
 
-    <div class="menu-inner-shadow"></div>
+    {{-- <div class="menu-inner-shadow"></div> --}}
 
     <ul class="menu-inner py-1">
-        @foreach ($menuData[0]->menu as $menu)
+        @foreach ($menuData->menu as $menu)
             {{-- adding active and open class if child is active --}}
 
             {{-- menu headers --}}
@@ -37,35 +35,40 @@
             @else
                 {{-- active menu method --}}
                 @php
-                    $activeClass = null;
+                   $activeClass = true;
                     $currentRouteName = Route::currentRouteName();
-
                     if ($currentRouteName === $menu->slug) {
-                        $activeClass = '';
-                    } elseif (isset($menu->submenu)) {
-                        if (gettype($menu->slug) === 'array') {
-                            foreach ($menu->slug as $slug) {
-                                if (str_contains($currentRouteName, $slug) and strpos($currentRouteName, $slug) === 0) {
-                                    $activeClass = 'active open';
-                                }
-                            }
-                        } else {
-                            if (str_contains($currentRouteName, $menu->slug) and strpos($currentRouteName, $menu->slug) === 0) {
-                                $activeClass = 'active open';
-                            }
-                        }
+                    $activeClass = 'active';
                     }
-                @endphp
+                    elseif (isset($menu->submenu)) {
+                    if (gettype($menu->slug) === 'array') {
+                    foreach($menu->slug as $slug){
+                    if (str_contains($currentRouteName,$slug) and strpos($currentRouteName,$slug) === 0) {
+                    $activeClass = 'open';
+                    }
+                    }
+                    }
+                    foreach ($menu->submenu as $submenu){
+                    if ($currentRouteName === $submenu->slug) {
+                        $activeClass = 'open';
+                        }}
+                    }
+                    @endphp
 
-                {{-- main menu --}}
+                {{-- main menu --}} 
                 <li class="menu-item {{ $activeClass }}">
+                    @php
+
+                    @endphp
+
                     <a href="{{ isset($menu->url) ? url($menu->url) : 'javascript:void(0);' }}"
                         class="{{ isset($menu->submenu) ? 'menu-link menu-toggle' : 'menu-link' }}"
                         @if (isset($menu->target) and !empty($menu->target)) target="_blank" @endif>
                         @isset($menu->icon)
+                        
                             <i class="{{ $menu->icon }}"></i>
                         @endisset
-                        <div>{{ isset($menu->name) ? __($menu->name) : '' }}</div>
+                        <div style="margin-top:7px; " >{{ isset($menu->name) ? __($menu->name) : '' }}</div>
                     </a>
 
                     {{-- submenu --}}

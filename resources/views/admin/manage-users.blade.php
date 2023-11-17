@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Manage Test ')
+@section('title', 'Manage Users')
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
@@ -12,26 +12,23 @@
 
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
+    <script src="{{ asset('assets/js/single-pagenation.js') }}"></script>
+    <script src="{{ asset('assets/js/single-table-search.js') }}"></script>
 @endsection
 @section('content')
     <div class="container">
         <div class="col-12 mt-3">
             <div class="button-container">
-                <button class="line-button active create-test">Create a Test</button>
-                <button class="line-button create-quiz">Create a Quiz</button>
+                <button class="line-button active ">Users</button>
+                <button class="line-button " id="">Users Group</button>
+                <button class="line-button " id="">Import Users</button>
+                <button class="line-button " id="">Import Users Groups</button>
             </div>
             <div class="line"></div>
 
-            <div class="manage-create-test-component">
-                @include('components.manage--test.create-test-component')
-            </div>
-
-            <div class="manage-create-quiz-component">
-                @include('components.manage--test.create-quiz-component')
-            </div>
-
-
         </div>
+
+    </div>
     </div>
 
 @endsection

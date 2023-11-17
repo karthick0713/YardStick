@@ -10,6 +10,7 @@ class VideoBankController extends Controller
     public function index()
     {
         $heading = "Video Bank";
-        return view('admin.video-bank', compact('heading'));
+        $sub_heading = "";
+        return view('admin.video-bank', compact('heading','sub_heading'));
     }
 }

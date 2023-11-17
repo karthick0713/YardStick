@@ -12,6 +12,8 @@
 
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
+    <script src="{{ asset('assets/js/single-pagenation.js') }}"></script>
+    <script src="{{ asset('assets/js/single-table-search.js') }}"></script>
 @endsection
 @section('content')
     <div class="container">

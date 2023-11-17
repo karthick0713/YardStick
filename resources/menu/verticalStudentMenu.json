@@ -1,0 +1,48 @@
+{
+  "menu": [
+    {
+      "url": "/student/dashboard",
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "student-dashboard"
+    },
+
+    {
+      "url": "/student/assesments",
+      "name": "Assessments",
+      "icon": "menu-icon tf-icons bx bxs-news",
+      "slug": "student-assesments"
+    },
+
+    {
+      "url": "/student/class-schedule",
+      "name": "Class Schedule",
+      "icon": "menu-icon tf-icons bx bxs-calendar",
+      "slug": "student-class"
+    },
+    {
+      "url": "/student/report",
+      "name": "Report",
+      "icon": "menu-icon tf-icons bx bx-rocket",
+      "slug": "student-report"
+    },
+    {
+      "url": "/student/certificate-generation",
+      "name": "Certificate Generation",
+      "icon": "menu-icon tf-icons bx bx-certification",
+      "slug": "student-certificate"
+    },
+    {
+      "url": "/student/support",
+      "name": "Support",
+      "icon": "menu-icon tf-icons bx bx-support",
+      "slug": "student-support"
+    },
+    {
+      "url": "/student/profile",
+      "name": "Profile",
+      "icon": "menu-icon tf-icons bx bxs-user",
+      "slug": "student-profile"
+    }
+  ]
+}

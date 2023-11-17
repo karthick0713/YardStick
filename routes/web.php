@@ -16,70 +16,75 @@ use Illuminate\Support\Facades\Route;
 $controller_path = 'App\Http\Controllers';
 
 // Main Page Route
+
+// login and register
+Route::get('login', function () {
+    return view('login-view');
+});
+
+Route::get('register', function () {
+    return view('register-view');
+});
+
+
+
+ //   Admin
+
+// admin dashboard 
 Route::get('/admin/dashboard', $controller_path . '\dashboard\Analytics@index')->name('admin-dashboard');
-Route::get('/admin/manage-test', $controller_path . '\Admin\ManageTestController@index')->name('manage-tests');
-Route::get('/admin/manage-learning', $controller_path . '\Admin\ManageLearningController@index')->name('manage-learning');
-Route::get('/admin/question-bank', $controller_path . '\Admin\QuestionBankController@index')->name('question-bank');
-Route::get('/admin/lession-bank', $controller_path . '\Admin\LessionBankController@index')->name('lession-bank');
-Route::get('/admin/video-bank', $controller_path . '\Admin\VideoBankController@index')->name('video-bank');
 
-// layout
-Route::get('/layouts/without-menu', $controller_path . '\layouts\WithoutMenu@index')->name('layouts-without-menu');
-Route::get('/layouts/without-navbar', $controller_path . '\layouts\WithoutNavbar@index')->name('layouts-without-navbar');
-Route::get('/layouts/fluid', $controller_path . '\layouts\Fluid@index')->name('layouts-fluid');
-Route::get('/layouts/container', $controller_path . '\layouts\Container@index')->name('layouts-container');
-Route::get('/layouts/blank', $controller_path . '\layouts\Blank@index')->name('layouts-blank');
+// Tests (Admin)
+Route::get('/admin/manage-test/test', $controller_path . '\Admin\ManageTestController@createTest')->name('create-test');
+Route::get('/admin/manage-test/quiz', $controller_path . '\Admin\ManageTestController@createTest')->name('create-quiz');
+Route::get('/admin/manage-test/add-test-common', $controller_path . '\Admin\ManageTestController@addTest')->name('create-test');
+Route::get('/admin/manage-test/add-test-individual', $controller_path . '\Admin\ManageTestController@create_new_test')->name('create-test');
+Route::get('/admin/manage-test/create-quiz', $controller_path . '\Admin\ManageTestController@createQuiz')->name('create-quiz');
 
-// pages
-Route::get('/pages/account-settings-account', $controller_path . '\pages\AccountSettingsAccount@index')->name('pages-account-settings-account');
-Route::get('/pages/account-settings-notifications', $controller_path . '\pages\AccountSettingsNotifications@index')->name('pages-account-settings-notifications');
-Route::get('/pages/account-settings-connections', $controller_path . '\pages\AccountSettingsConnections@index')->name('pages-account-settings-connections');
-Route::get('/pages/misc-error', $controller_path . '\pages\MiscError@index')->name('pages-misc-error');
-Route::get('/pages/misc-under-maintenance', $controller_path . '\pages\MiscUnderMaintenance@index')->name('pages-misc-under-maintenance');
+// Admin Profile
+Route::get('/admin/profile', $controller_path . '\Admin\ProfileController@index')->name('admin-profile');
+Route::get('/admin/profile/edit', $controller_path . '\Admin\ProfileController@editProfile')->name('admin-profile-edit');
 
-// authentication
-Route::get('/auth/login-basic', $controller_path . '\authentications\LoginBasic@index')->name('auth-login-basic');
-Route::get('/auth/register-basic', $controller_path . '\authentications\RegisterBasic@index')->name('auth-register-basic');
-Route::get('/auth/forgot-password-basic', $controller_path . '\authentications\ForgotPasswordBasic@index')->name('auth-reset-password-basic');
+// Manage students and students group (Admin)
+Route::get('/admin/manage-students/students', $controller_path . '\Admin\ManageStudentsController@students')->name('manage-students-students');
+Route::get('/admin/manage-students/students-group', $controller_path . '\Admin\ManageStudentsController@studentsGroup')->name('managestudents-studentsgroup');
+Route::get('/admin/manage-students/add-students-group', $controller_path . '\Admin\ManageStudentsController@addnew_group')->name('add-students-group');
+Route::get('/admin/manage-students/edit-students-group', $controller_path . '\Admin\ManageStudentsController@edit_students_group')->name('edit-students-group');
+Route::get('/admin/manage-students/importstudents', $controller_path . '\Admin\ManageStudentsController@importstudents')->name('managestudents-importstudents');
+Route::get('/admin/manage-students/import-students-group', $controller_path . '\Admin\ManageStudentsController@import_students_group')->name('manageUser-importgroup');
 
-// cards
-Route::get('/cards/basic', $controller_path . '\cards\CardBasic@index')->name('cards-basic');
+// Manage Colleges (Admin)
+Route::get('/admin/manage-colleges/colleges', $controller_path . '\Admin\ManageCollegeController@colleges')->name('managecolleges-colleges');
+Route::get('/admin/manage-colleges/importcollege', $controller_path . '\Admin\ManageCollegeController@importcolleges')->name('managecolleges-importcolleges');
 
-// User Interface
-Route::get('/ui/accordion', $controller_path . '\user_interface\Accordion@index')->name('ui-accordion');
-Route::get('/ui/alerts', $controller_path . '\user_interface\Alerts@index')->name('ui-alerts');
-Route::get('/ui/badges', $controller_path . '\user_interface\Badges@index')->name('ui-badges');
-Route::get('/ui/buttons', $controller_path . '\user_interface\Buttons@index')->name('ui-buttons');
-Route::get('/ui/carousel', $controller_path . '\user_interface\Carousel@index')->name('ui-carousel');
-Route::get('/ui/collapse', $controller_path . '\user_interface\Collapse@index')->name('ui-collapse');
-Route::get('/ui/dropdowns', $controller_path . '\user_interface\Dropdowns@index')->name('ui-dropdowns');
-Route::get('/ui/footer', $controller_path . '\user_interface\Footer@index')->name('ui-footer');
-Route::get('/ui/list-groups', $controller_path . '\user_interface\ListGroups@index')->name('ui-list-groups');
-Route::get('/ui/modals', $controller_path . '\user_interface\Modals@index')->name('ui-modals');
-Route::get('/ui/navbar', $controller_path . '\user_interface\Navbar@index')->name('ui-navbar');
-Route::get('/ui/offcanvas', $controller_path . '\user_interface\Offcanvas@index')->name('ui-offcanvas');
-Route::get('/ui/pagination-breadcrumbs', $controller_path . '\user_interface\PaginationBreadcrumbs@index')->name('ui-pagination-breadcrumbs');
-Route::get('/ui/progress', $controller_path . '\user_interface\Progress@index')->name('ui-progress');
-Route::get('/ui/spinners', $controller_path . '\user_interface\Spinners@index')->name('ui-spinners');
-Route::get('/ui/tabs-pills', $controller_path . '\user_interface\TabsPills@index')->name('ui-tabs-pills');
-Route::get('/ui/toasts', $controller_path . '\user_interface\Toasts@index')->name('ui-toasts');
-Route::get('/ui/tooltips-popovers', $controller_path . '\user_interface\TooltipsPopovers@index')->name('ui-tooltips-popovers');
-Route::get('/ui/typography', $controller_path . '\user_interface\Typography@index')->name('ui-typography');
+// Manage Questions (Admin)
+Route::get('admin/question-bank/manage-questions', $controller_path . '\Admin\QuestionBankController@manageQuestions')->name('manage-questions');
+Route::get('admin/question-bank/add-questions', $controller_path . '\Admin\QuestionBankController@addQuestions')->name('add-questions');
+Route::get('admin/question-bank/edit-questions', $controller_path . '\Admin\QuestionBankController@editQuestions')->name('edit-questions');
+Route::get('admin/question-bank/upload-questions', $controller_path . '\Admin\QuestionBankController@uploadQuestions')->name('upload-questions');
+// Route::get('admin/question-bank/filter-questions', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
+Route::get('admin/question-bank/view-questions', $controller_path . '\Admin\QuestionBankController@viewFilterQuestions')->name('view-filter-questions');
+Route::get('admin/skills/{skill}', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
 
-// extended ui
-Route::get('/extended/ui-perfect-scrollbar', $controller_path . '\extended_ui\PerfectScrollbar@index')->name('extended-ui-perfect-scrollbar');
-Route::get('/extended/ui-text-divider', $controller_path . '\extended_ui\TextDivider@index')->name('extended-ui-text-divider');
+// Masters (Admin)
+Route::get('admin/masters/difficulty', $controller_path . '\Admin\MastersController@difficulty')->name('manage-difficulty');
+Route::get('admin/masters/skills', $controller_path . '\Admin\MastersController@skills')->name('manage-skills');
+Route::get('admin/masters/topics', $controller_path . '\Admin\MastersController@topics')->name('manage-topics');
+Route::get('admin/masters/department', $controller_path . '\Admin\MastersController@department')->name('manage-department');
+Route::get('admin/masters/batch', $controller_path . '\Admin\MastersController@batch')->name('manage-batch');
+Route::get('admin/masters/semester', $controller_path . '\Admin\MastersController@semester')->name('manage-semester');
 
-// icons
-Route::get('/icons/boxicons', $controller_path . '\icons\Boxicons@index')->name('icons-boxicons');
 
-// form elements
-Route::get('/forms/basic-inputs', $controller_path . '\form_elements\BasicInput@index')->name('forms-basic-inputs');
-Route::get('/forms/input-groups', $controller_path . '\form_elements\InputGroups@index')->name('forms-input-groups');
 
-// form layouts
-Route::get('/form/layouts-vertical', $controller_path . '\form_layouts\VerticalForm@index')->name('form-layouts-vertical');
-Route::get('/form/layouts-horizontal', $controller_path . '\form_layouts\HorizontalForm@index')->name('form-layouts-horizontal');
+// Students
 
-// tables
-Route::get('/tables/basic', $controller_path . '\tables\Basic@index')->name('tables-basic');
+// Student dashboard
+Route::get('/student/dashboard', $controller_path . '\Students\StudentController@index')->name('student-dashboard');
+
+
+// Student Profile
+Route::get('/student/profile', $controller_path . '\Students\StudentProfileController@index')->name('student-profile');
+Route::get('/student/edit-profile', $controller_path . '\Students\StudentProfileController@editProfile')->name('student-profile');
+
+
+// Student Report
+Route::get('/student/report', $controller_path . '\Students\ReportController@index')->name('student-report');

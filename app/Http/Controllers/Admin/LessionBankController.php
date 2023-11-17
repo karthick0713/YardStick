@@ -10,6 +10,7 @@ class LessionBankController extends Controller
     public function index()
     {
         $heading = "Lession Bank";
-        return view('admin.lession-bank', compact('heading'));
+        $sub_heading = "";
+        return view('admin.lession-bank', compact('heading','sub_heading'));
     }
 }
