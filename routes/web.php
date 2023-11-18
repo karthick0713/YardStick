@@ -20,71 +20,84 @@ $controller_path = 'App\Http\Controllers';
 // login and register
 Route::get('login', function () {
     return view('login-view');
-});
+})->name('login');
+Route::post('/login-submit', $controller_path . '\Login_controller@login')->name('login-submit');
+Route::get('/logout', $controller_path . '\Login_controller@logout')->name('logout');
+
 
 Route::get('register', function () {
     return view('register-view');
 });
 
 
+Route::group(['middleware' => 'auth'], function () {
+    //   Admin
+    $controller_path = 'App\Http\Controllers';
+    // admin dashboard 
+    Route::get('/admin/dashboard', 'App\Http\Controllers\dashboard\Analytics@index')->name('admin-dashboard');
 
- //   Admin
+
+    // Tests (Admin)
+    Route::get('/admin/manage-test/test', $controller_path . '\Admin\ManageTestController@createTest')->name('create-test');
+    Route::get('/admin/manage-test/quiz', $controller_path . '\Admin\ManageTestController@createTest')->name('create-quiz');
+    Route::get('/admin/manage-test/add-test-common', $controller_path . '\Admin\ManageTestController@addTest')->name('create-test');
+    Route::get('/admin/manage-test/add-test-individual', $controller_path . '\Admin\ManageTestController@create_new_test')->name('create-test');
+    Route::get('/admin/manage-test/create-quiz', $controller_path . '\Admin\ManageTestController@createQuiz')->name('create-quiz');
+
+    // Admin Profile
+    Route::get('/admin/profile', $controller_path . '\Admin\ProfileController@index')->name('admin-profile');
+    Route::get('/admin/profile/edit', $controller_path . '\Admin\ProfileController@editProfile')->name('admin-profile-edit');
+
+    // Manage students and students group (Admin)
+    Route::get('/admin/manage-students/students', $controller_path . '\Admin\ManageStudentsController@students')->name('manage-students-students');
+    Route::get('/admin/manage-students/students-group', $controller_path . '\Admin\ManageStudentsController@studentsGroup')->name('managestudents-studentsgroup');
+    Route::get('/admin/manage-students/add-students-group', $controller_path . '\Admin\ManageStudentsController@addnew_group')->name('add-students-group');
+    Route::get('/admin/manage-students/edit-students-group', $controller_path . '\Admin\ManageStudentsController@edit_students_group')->name('edit-students-group');
+    Route::get('/admin/manage-students/importstudents', $controller_path . '\Admin\ManageStudentsController@importstudents')->name('managestudents-importstudents');
+    Route::get('/admin/manage-students/import-students-group', $controller_path . '\Admin\ManageStudentsController@import_students_group')->name('manageUser-importgroup');
+
+    // Manage Colleges (Admin)
+    Route::get('/admin/manage-colleges/colleges', $controller_path . '\Admin\ManageCollegeController@colleges')->name('managecolleges-colleges');
+    Route::get('/admin/manage-colleges/importcollege', $controller_path . '\Admin\ManageCollegeController@importcolleges')->name('managecolleges-importcolleges');
+
+    // Manage Questions (Admin)
+    Route::get('admin/question-bank/manage-questions', $controller_path . '\Admin\QuestionBankController@manageQuestions')->name('manage-questions');
+    Route::get('admin/question-bank/add-questions', $controller_path . '\Admin\QuestionBankController@addQuestions')->name('add-questions');
+    Route::get('admin/question-bank/edit-questions', $controller_path . '\Admin\QuestionBankController@editQuestions')->name('edit-questions');
+    Route::get('admin/question-bank/upload-questions', $controller_path . '\Admin\QuestionBankController@uploadQuestions')->name('upload-questions');
+    // Route::get('admin/question-bank/filter-questions', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
+    Route::get('admin/question-bank/view-questions', $controller_path . '\Admin\QuestionBankController@viewFilterQuestions')->name('view-filter-questions');
+    Route::get('admin/skills/{skill}', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
+
+    // Masters (Admin)
+    Route::get('admin/masters/difficulty', $controller_path . '\Admin\MastersController@difficulty')->name('manage-difficulty');
+    Route::post('admin/masters/difficulty-add', $controller_path . '\Admin\MastersController@difficulty_add')->name('difficulty-add');
+
+
+    Route::get('admin/masters/skills', $controller_path . '\Admin\MastersController@skills')->name('manage-skills');
+    Route::get('admin/masters/topics', $controller_path . '\Admin\MastersController@topics')->name('manage-topics');
+    Route::get('admin/masters/department', $controller_path . '\Admin\MastersController@department')->name('manage-department');
+    Route::get('admin/masters/batch', $controller_path . '\Admin\MastersController@batch')->name('manage-batch');
+    Route::get('admin/masters/semester', $controller_path . '\Admin\MastersController@semester')->name('manage-semester');
+
+
+    // Students
+
+    // Student dashboard
+    Route::get('/student/dashboard', $controller_path . '\Students\StudentController@index')->name('student-dashboard');
+
+
+    // Student Profile
+    Route::get('/student/profile', $controller_path . '\Students\StudentProfileController@index')->name('student-profile');
+    Route::get('/student/edit-profile', $controller_path . '\Students\StudentProfileController@editProfile')->name('student-profile');
+
+
+    // Student Report
+    Route::get('/student/report', $controller_path . '\Students\ReportController@index')->name('student-report');
+});
+
+
+//   Admin
 
 // admin dashboard 
-Route::get('/admin/dashboard', $controller_path . '\dashboard\Analytics@index')->name('admin-dashboard');
-
-// Tests (Admin)
-Route::get('/admin/manage-test/test', $controller_path . '\Admin\ManageTestController@createTest')->name('create-test');
-Route::get('/admin/manage-test/quiz', $controller_path . '\Admin\ManageTestController@createTest')->name('create-quiz');
-Route::get('/admin/manage-test/add-test-common', $controller_path . '\Admin\ManageTestController@addTest')->name('create-test');
-Route::get('/admin/manage-test/add-test-individual', $controller_path . '\Admin\ManageTestController@create_new_test')->name('create-test');
-Route::get('/admin/manage-test/create-quiz', $controller_path . '\Admin\ManageTestController@createQuiz')->name('create-quiz');
-
-// Admin Profile
-Route::get('/admin/profile', $controller_path . '\Admin\ProfileController@index')->name('admin-profile');
-Route::get('/admin/profile/edit', $controller_path . '\Admin\ProfileController@editProfile')->name('admin-profile-edit');
-
-// Manage students and students group (Admin)
-Route::get('/admin/manage-students/students', $controller_path . '\Admin\ManageStudentsController@students')->name('manage-students-students');
-Route::get('/admin/manage-students/students-group', $controller_path . '\Admin\ManageStudentsController@studentsGroup')->name('managestudents-studentsgroup');
-Route::get('/admin/manage-students/add-students-group', $controller_path . '\Admin\ManageStudentsController@addnew_group')->name('add-students-group');
-Route::get('/admin/manage-students/edit-students-group', $controller_path . '\Admin\ManageStudentsController@edit_students_group')->name('edit-students-group');
-Route::get('/admin/manage-students/importstudents', $controller_path . '\Admin\ManageStudentsController@importstudents')->name('managestudents-importstudents');
-Route::get('/admin/manage-students/import-students-group', $controller_path . '\Admin\ManageStudentsController@import_students_group')->name('manageUser-importgroup');
-
-// Manage Colleges (Admin)
-Route::get('/admin/manage-colleges/colleges', $controller_path . '\Admin\ManageCollegeController@colleges')->name('managecolleges-colleges');
-Route::get('/admin/manage-colleges/importcollege', $controller_path . '\Admin\ManageCollegeController@importcolleges')->name('managecolleges-importcolleges');
-
-// Manage Questions (Admin)
-Route::get('admin/question-bank/manage-questions', $controller_path . '\Admin\QuestionBankController@manageQuestions')->name('manage-questions');
-Route::get('admin/question-bank/add-questions', $controller_path . '\Admin\QuestionBankController@addQuestions')->name('add-questions');
-Route::get('admin/question-bank/edit-questions', $controller_path . '\Admin\QuestionBankController@editQuestions')->name('edit-questions');
-Route::get('admin/question-bank/upload-questions', $controller_path . '\Admin\QuestionBankController@uploadQuestions')->name('upload-questions');
-// Route::get('admin/question-bank/filter-questions', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
-Route::get('admin/question-bank/view-questions', $controller_path . '\Admin\QuestionBankController@viewFilterQuestions')->name('view-filter-questions');
-Route::get('admin/skills/{skill}', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
-
-// Masters (Admin)
-Route::get('admin/masters/difficulty', $controller_path . '\Admin\MastersController@difficulty')->name('manage-difficulty');
-Route::get('admin/masters/skills', $controller_path . '\Admin\MastersController@skills')->name('manage-skills');
-Route::get('admin/masters/topics', $controller_path . '\Admin\MastersController@topics')->name('manage-topics');
-Route::get('admin/masters/department', $controller_path . '\Admin\MastersController@department')->name('manage-department');
-Route::get('admin/masters/batch', $controller_path . '\Admin\MastersController@batch')->name('manage-batch');
-Route::get('admin/masters/semester', $controller_path . '\Admin\MastersController@semester')->name('manage-semester');
-
-
-
-// Students
-
-// Student dashboard
-Route::get('/student/dashboard', $controller_path . '\Students\StudentController@index')->name('student-dashboard');
-
-
-// Student Profile
-Route::get('/student/profile', $controller_path . '\Students\StudentProfileController@index')->name('student-profile');
-Route::get('/student/edit-profile', $controller_path . '\Students\StudentProfileController@editProfile')->name('student-profile');
-
-
-// Student Report
-Route::get('/student/report', $controller_path . '\Students\ReportController@index')->name('student-report');
+// Route::get('/admin/dashboard', $controller_path . '\dashboard\Analytics@index')->name('admin-dashboard');

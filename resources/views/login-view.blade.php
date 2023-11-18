@@ -8,20 +8,19 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://www.markuptag.com/bootstrap/5/css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" />
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
-    body {
-    background-image: url('{{ asset('assets/img/logo/yardstick-logo3.png') }}');
-    background-size: 16%; /* You can change this value to your preferred size */
-    background-position: left bottom ;
-    background-repeat: no-repeat;
-  }
+        body {
+            background-image: url('{{ asset('assets/img/logo/yardstick-logo3.png') }}');
+            background-size: 16%;
+            /* You can change this value to your preferred size */
+            background-position: left bottom;
+            background-repeat: no-repeat;
+        }
 
-  button.active{
-    background-color: rgba(33, 93, 129, 1);
-  }
-
-
+        button.active {
+            background-color: rgba(33, 93, 129, 1);
+        }
     </style>
 </head>
 
@@ -35,9 +34,7 @@
 
             <div class="collapse navbar-collapse" id="mob-navbar">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold text-black" href="#">Login</a>
-                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link fw-bold text-black ms-4" href="#">Signup</a>
                     </li>
@@ -91,38 +88,59 @@
                 <div class="card">
                     <div class="card-body login-card-body">
                         <div class="login-body-title mt-3">Glad to see you!</div>
-                        <div class="row mt-5 col-12">
+                        <div class="invalid-message mt-5">
+                            <div id="invalidCredentialsAlert" class="alert alert-danger alert-dismissible"
+                                role="alert" style="display: none;">
+                                Invalid Credentials
+                            </div>
+
+                            <div id="select-alert" class="alert alert-danger alert-dismissible" role="alert"
+                                style="display: none;">
+                                Please Select Your Role !
+
+                            </div>
+
+                            <div id="validation-message" class="alert alert-danger alert-dismissible" role="alert"
+                                style="display: none;">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+
+                        </div>
+                        <div class="row  col-12">
                             <div class="col-md-4 text-center">
-                                <button class="btn btn-secondary radius my-2 btn-block"
-                                    onclick="setAction(this,'student/dashboard')">Student</button>
+                                <button class="btn btn-secondary radius my-2 btn-block" value="3"
+                                    onclick="setAction(this,this.value)">Student</button>
                             </div>
-                            <div class="col-md-4  text-center">
-                                <button class="btn btn-secondary radius my-2 btn-block"
-                                    onclick="setAction(this,'institute/dashboard')">Institution </button>
+
+                            <div class="col-md-4 text-center">
+                                <button class="btn btn-secondary radius my-2 btn-block" value="2"
+                                    onclick="setAction(this,this.value)">Institution </button>
                             </div>
-                            <div class="col-md-4  text-center">
-                                <button class="btn btn-secondary radius my-2 btn-block"
-                                    onclick="setAction(this,'admin/dashboard')">Admin</button>
+                            <div class="col-md-4 text-center">
+                                <button class="btn btn-secondary radius my-2 btn-block" value="1"
+                                    onclick="setAction(this,this.value)">Admin</button>
                             </div>
                         </div>
-                        <form id="myForm" action="" method="">
+                        <form id="loginForm">
                             <div class="mb-3 mt-4">
-                                <input type="text" class="form-control login-fields " id="username"
-                                    placeholder="User Name/Mobile Number">
+                                <input type="email" class="form-control login-fields " id="username" name="email"
+                                    placeholder="Email">
+                                <input type="hidden" name="_token" id="csrf-token" value="{{ csrf_token() }}" />
                             </div>
                             <div class="mb-3">
                                 <input type="password" class="form-control login-fields" id="password"
-                                    placeholder="Password">
+                                    name="password" placeholder="Password">
                             </div>
                             <div class="row mt-5">
-                                <div class="col d-flex align-items-center  justify-content-center">
-                                    <button
+                                <div class="col d-flex align-items-center justify-content-center">
+                                    <button type="submit"
                                         class="btn background-secondary text-white radius mx-3 w-25">Login</button>
                                 </div>
                             </div>
                             <div class="row mt-4">
                                 <div class="col d-flex justify-content-center">
-                                    <span>To create a new account <a href="{{ url('/register')}}"
+                                    <span>To create a new account <a href="{{ url('/register') }}"
                                             style="color:#c23b3b">Sign-Up</a></span>
                                 </div>
                             </div>
@@ -134,20 +152,11 @@
         </div>
     </div>
 
-
-<script>
-
-    function setAction(clickedButton, newAction) {
-    document.querySelectorAll('.btn').forEach(function(button) {
-      button.style.backgroundColor = '#788393'; 
-      button.style.color = 'white'; 
-    });
-    clickedButton.style.backgroundColor = '#215D81'; 
-    clickedButton.style.color = 'white'; 
-    document.getElementById('myForm').action = newAction;
-  }
-      
-</script>
 </body>
+
+<script src="{{ asset('assets/js/login.js') }}"></script>
+<script src="{{ asset('assets/js/bootstraps4.js') }}"></script>
+
+
 
 </html>

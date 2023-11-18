@@ -23,28 +23,28 @@
 
     <style>
         /* @media only screen and (max-width: 600px) {
-                        body {
-                            font-size: 14px;
-                        }
+                                        body {
+                                            font-size: 14px;
+                                        }
 
-                        .container {
-                            width: 100%;
-                        }
+                                        .container {
+                                            width: 100%;
+                                        }
 
-                    }
+                                    }
 
-                    .scrolling-container {
-                        overflow-x: auto;
-                    }
+                                    .scrolling-container {
+                                        overflow-x: auto;
+                                    }
 
-                    @media only screen and (max-width:450px) {
-                        .ms-2, .mx-3, .mt-1, .ms-3 {
-                            margin-left: 10px;
-                            margin-right: 10px;
-                            margin-top: 5px;
-                        }
+                                    @media only screen and (max-width:450px) {
+                                        .ms-2, .mx-3, .mt-1, .ms-3 {
+                                            margin-left: 10px;
+                                            margin-right: 10px;
+                                            margin-top: 5px;
+                                        }
 
-                    } */
+                                    } */
 
 
         table {

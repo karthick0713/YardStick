@@ -188,7 +188,8 @@
                             <div class="row">
                                 <div class=" mb-3">
                                     <label for="difficulty-name" class="col-form-label">Difficulty Name:</label>
-                                    <input type="text" class="form-control" id="difficulty-name" required>
+                                    <input type="text" class="form-control" name="difficulty" id="difficulty-add"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +213,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Edit Difficulty</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="input-form">
+                <form id="">
                     @csrf
                     <div class="modal-body">
 
@@ -257,4 +258,39 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(function() {
+            $('#input-form').submit(function(event) {
+                event.preventDefault();
+                var difficulty = $("#difficulty-add").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('difficulty-add') }}',
+                    data: {
+                        '_token': '{{ csrf_token() }}',
+                        'difficulty': difficulty,
+                    },
+                    success: function(response) {
+                        $('#message').html('<div class="alert alert-success">' + response
+                            .message + '</div>');
+                        console.log(response);
+                    },
+                    error: function(xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorMessage = '<div class="alert alert-danger">';
+                            $.each(errors, function(key, value) {
+                                errorMessage += '<p>' + value + '</p>';
+                            });
+                            errorMessage += '</div>';
+                            $('#message').html(errorMessage);
+                        } else {
+                            $('#message').html(
+                                '<div class="alert alert-danger">An error occurred.</div>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

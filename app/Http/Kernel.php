@@ -23,7 +23,7 @@ class Kernel extends HttpKernel
     \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
   ];
 
-  /**
+  /** 
    * The application's route middleware groups.
    *
    * @var array<string, array<int, class-string|string>>
@@ -55,7 +55,7 @@ class Kernel extends HttpKernel
    * @var array<string, class-string|string>
    */
   protected $routeMiddleware = [
-    'auth' => \App\Http\Middleware\Authenticate::class,
+    'auth' => \App\Http\Middleware\Auth::class,
     'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
     'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
     'can' => \Illuminate\Auth\Middleware\Authorize::class,
