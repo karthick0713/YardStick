@@ -18,7 +18,7 @@ class ManageStudentsController extends Controller
         $data = DB::table('master_students')
             ->leftJoin('master_colleges', 'master_students.college_id', '=', 'master_colleges.college_id')
             ->select('master_colleges.college_name', 'master_students.*')
-            ->where('master_students.is_active', 1)->where('master_students.trash_key', 1)->get();
+            ->where('master_students.trash_key', 1)->get();
         $heading = "Manage Students";
         $sub_heading = "Students";
         return view("admin.manage-students.students", compact("heading", "sub_heading", "skills", "departments", "colleges", "data"));

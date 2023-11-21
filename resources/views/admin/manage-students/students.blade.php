@@ -150,33 +150,32 @@
                     </thead>
                     <tbody>
                         @foreach ($data as $key => $value)
+                            <tr>
+                                <td>{{ $value->register_no }}
+                                </td>
+                                <td>{{ $value->student_name }}
+                                </td>
+                                <td>{{ $value->college_name }}
+                                </td>
+                                <td>{{ $value->mobile_no }}
+                                </td>
+                                <td>
+                                    <label class="switch">
+                                        <input type="checkbox" {{ $value->is_active == 1 ? 'checked' : '' }}
+                                            id="statusToggle">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
+                                            class="bx bx-show-alt"></i></a>
+                                    <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
+                                            class="bx bx-edit-alt"></i></a>
+                                    <a data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                        class="text-black icon-buttons"><i class="bx bxs-trash"></i></a>
+                                </td>
+                            </tr>
                         @endforeach
-                        <tr>
-                            <td>{{ $value->register_no }}
-                            </td>
-                            <td>{{ $value->student_name }}
-                            </td>
-                            <td>{{ $value->college_name }}
-                            </td>
-                            <td>{{ $value->mobile_no }}
-                            </td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-
-
                     </tbody>
                 </table>
             </div>
