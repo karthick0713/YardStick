@@ -65,18 +65,40 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('admin/question-bank/add-questions', $controller_path . '\Admin\QuestionBankController@addQuestions')->name('add-questions');
     Route::get('admin/question-bank/edit-questions', $controller_path . '\Admin\QuestionBankController@editQuestions')->name('edit-questions');
     Route::get('admin/question-bank/upload-questions', $controller_path . '\Admin\QuestionBankController@uploadQuestions')->name('upload-questions');
-    // Route::get('admin/question-bank/filter-questions', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
     Route::get('admin/question-bank/view-questions', $controller_path . '\Admin\QuestionBankController@viewFilterQuestions')->name('view-filter-questions');
     Route::get('admin/skills/{skill}', $controller_path . '\Admin\QuestionBankController@filterQuestions')->name('filter-questions');
 
     // Masters (Admin)
+
+    //difficulty (Admin)
     Route::get('admin/masters/difficulty', $controller_path . '\Admin\MastersController@difficulty')->name('manage-difficulty');
     Route::post('admin/masters/difficulty-add', $controller_path . '\Admin\MastersController@difficulty_add')->name('difficulty-add');
+    Route::post('admin/masters/difficulty-status', $controller_path . '\Admin\MastersController@difficulty_status')->name('difficulty-status');
+    Route::post('admin/masters/difficulty-update', $controller_path . '\Admin\MastersController@edit_difficulty')->name('difficulty-update');
+    Route::post('admin/masters/difficulty-delete', $controller_path . '\Admin\MastersController@delete_difficulty')->name('difficulty-delete');
 
-
+    // skills master
     Route::get('admin/masters/skills', $controller_path . '\Admin\MastersController@skills')->name('manage-skills');
+    Route::post('admin/masters/add-skills', $controller_path . '\Admin\MastersController@skills_add')->name('add-skill');
+    Route::post('admin/masters/update-skills', $controller_path . '\Admin\MastersController@edit_skills')->name('update-skill');
+    Route::post('admin/masters/skills-status', $controller_path . '\Admin\MastersController@skill_status')->name('skills-status');
+    Route::post('admin/masters/skill-delete', $controller_path . '\Admin\MastersController@delete_skill')->name('skill-delete');
+
+    // topics master
     Route::get('admin/masters/topics', $controller_path . '\Admin\MastersController@topics')->name('manage-topics');
+    Route::post('admin/masters/add-topic', $controller_path . '\Admin\MastersController@add_topic')->name('add-topic');
+    Route::post('admin/masters/edit-topic', $controller_path . '\Admin\MastersController@edit_topic')->name('edit-topic');
+    Route::post('admin/masters/topic-status', $controller_path . '\Admin\MastersController@topic_status')->name('topic-status');
+    Route::post('admin/masters/delete-topic', $controller_path . '\Admin\MastersController@delete_topic')->name('delete-topic');
+
+    // department master
     Route::get('admin/masters/department', $controller_path . '\Admin\MastersController@department')->name('manage-department');
+    Route::post('admin/masters/department_add', $controller_path . '\Admin\MastersController@add_department')->name('add-department');
+    Route::post('admin/masters/department-status', $controller_path . '\Admin\MastersController@department_status')->name('department-status');
+    Route::post('admin/masters/department-update', $controller_path . '\Admin\MastersController@edit_department')->name('department-update');
+    Route::post('admin/masters/department-delete', $controller_path . '\Admin\MastersController@delete_department')->name('department-delete');
+
+
     Route::get('admin/masters/batch', $controller_path . '\Admin\MastersController@batch')->name('manage-batch');
     Route::get('admin/masters/semester', $controller_path . '\Admin\MastersController@semester')->name('manage-semester');
 

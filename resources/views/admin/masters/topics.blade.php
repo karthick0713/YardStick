@@ -23,6 +23,21 @@
 
     <div class="container mt-4">
 
+        @if (session('success'))
+            <div class="success-message col-md-5">
+                <div class="alert bg-success text-white fw-bold">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="error-message col-md-5">
+                <div class="alert bg-danger text-white fw-bold">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
 
         <div class="mb-2">
             <a data-bs-toggle="modal" data-bs-target="#addtopics" class="button-plus-icon"><i
@@ -51,74 +66,49 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="">ARRAYS</td>
-                            <td class="">PHP , JAVA</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
+                        @foreach ($data as $key => $value)
+                            <tr>
+                                <td class="">{{ $value->topic_name }}</td>
+                                <td class="">
+                                    @php
+                                        $skills = explode(',', $value->skills_id);
+                                        $selectedSkillIds = json_encode($skills);
+                                        $totalSkills = count($skills);
+                                    @endphp
 
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editTopics"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="">STATEMENTS</td>
-                            <td class="">PHP , PYTHON</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
+                                    @foreach ($skills as $index => $skillId)
+                                        @php
+                                            $val = DB::table('master_skills')
+                                                ->where('skill_id', $skillId)
+                                                ->first();
+                                        @endphp
+                                        @if ($val)
+                                            {{ strtoupper($val->skill_name) }}
+                                            @if ($index < $totalSkills - 1)
+                                                ,
+                                            @endif
+                                        @endif
+                                    @endforeach
 
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editTopics"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="">LOOPS</td>
-                            <td class="">PYTHON , C</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
+                                </td>
+                                <td class="text-center">
+                                    <label class="switch">
+                                        <input type="checkbox" {{ $value->is_active == 1 ? 'checked' : '' }}
+                                            onclick="statusChange({{ $value->topic_id }},{{ $value->is_active }})"
+                                            id="statusToggle">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
 
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editTopics"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="">OPERATORS</td>
-                            <td class="">C , C++</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
+                                <td class="text-center">
+                                    <a class="icon-buttons" onclick="editModal({{ $value->topic_id }})"><i
+                                            class="bx bx-edit-alt"></i></a>
+                                    <a class="text-black icon-buttons" onclick="deleteModal({{ $value->topic_id }})"><i
+                                            class="bx bxs-trash"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
 
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editTopics"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -136,7 +126,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Add New Topics</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="input-form">
+                <form id="input-form" onsubmit="return submitForm()">
                     @csrf
                     <div class="modal-body">
                         <div class="row col-12">
@@ -146,17 +136,18 @@
                                     <input type="text" class="form-control" id="topic-name" required>
                                 </div>
                             </div>
+                            @php
+
+                            @endphp
                             {{-- select multiple skills --}}
                             <div class=" mb-3">
                                 <label for="topic-name" class="col-form-label"><b>Select Skill:</b></label>
                                 <div class="mt-1 select2-dark">
                                     <select id="select2Dark" class="select2 form-select" multiple>
-                                        <option value="1">PHP</option>
-                                        <option value="2">PYTHON</option>
-                                        <option value="2">C</option>
-                                        <option value="2">C++</option>
-                                        <option value="3">JAVA</option>
-                                        <option value="4">ANGULAR</option>
+                                        @foreach ($fetch_skills as $key => $skill)
+                                            <option value="{{ $skill->skill_id }}">{{ strtoupper($skill->skill_name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -165,7 +156,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn text-white background-secondary">Submit</button>
+                        <button type="button" onclick="submitForm()"
+                            class="btn text-white background-secondary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -182,7 +174,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Edit Topics</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="input-form">
+                <form id="input-form" onsubmit="return editTopics()">
                     @csrf
                     <div class="modal-body">
 
@@ -190,20 +182,17 @@
 
                             <div class=" mb-3">
                                 <label for="Topics" class="col-form-label"><b>Topic:</b></label>
-                                <input type="text" class="form-control" id="Topics" value="Arrays" required>
+                                <input type="text" class="form-control" id="topic_name" required>
+                                <input type="hidden" class="form-control" id="topic_id">
                             </div>
 
                             {{-- select multiple skills --}}
                             <div class=" mb-3">
                                 <label for="topic-name" class="col-form-label"><b>edit Skill:</b></label>
                                 <div class="mt-1 select2-dark">
-                                    <select id="select2Darks" class="select2 form-select" multiple>
-                                        <option value="1" selected>PHP</option>
-                                        <option value="2">PYTHON</option>
-                                        <option value="2" selected>C</option>
-                                        <option value="2">C++</option>
-                                        <option value="3">JAVA</option>
-                                        <option value="4" selected>ANGULAR</option>
+                                    <select id="select2Darks" name="skills[]" class="select2 form-select"
+                                        multiple="multiple">
+
                                     </select>
                                 </div>
                             </div>
@@ -213,12 +202,14 @@
                     </div>
                     <div class="modal-footer">
                         {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
-                        <button type="submit" class="btn text-white background-secondary">Submit</button>
+                        <button type="button" onclick="editTopics()"
+                            class="btn text-white background-secondary">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
 
     {{-- delete Modal --}}
 
@@ -231,19 +222,167 @@
                     <h4 class="modal-title">Are you sure?</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                 </div>
-                <form action="" method="">
+                <form onsubmit="return deleteTopics()">
                     <div class="modal-body">
                         <p>Do You Want to Delete this Record ?</p>
+                        <input type="hidden" name="" id="topic_delete_id">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn background-info text-white" data-bs-dismiss="modal"
                             aria-label="Close">Cancel</button>
-                        <button type="submit" class="btn background-secondary text-white">Delete</button>
+                        <button type="button" onclick="deleteTopics()"
+                            class="btn background-secondary text-white">Delete</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <script>
+        $(document).ready(function() {
+
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+
+        });
+
+        let data1 = [];
+
+        @foreach ($fetch_skills as $key => $skill)
+
+            data1.push({
+                id: "{{ $skill->skill_id }}",
+                name: "{{ strtoupper($skill->skill_name) }}",
+            });
+        @endforeach
+
+
+
+        function submitForm() {
+            var topicName = $('#topic-name').val();
+            var selectedSkills = $('#select2Dark').val();
+            $.ajax({
+                url: '{{ route('add-topic') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    topic_name: topicName,
+                    skills: selectedSkills
+                },
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(xhr) {
+                    location.reload();
+                }
+            });
+        }
+
+
+
+        function editModal(id) {
+
+            var datas = @json($data);
+            console.log(datas);
+            $.each(datas, function(key, value) {
+                if (value.topic_id == id) {
+                    $("#topic_name").val(value.topic_name);
+                    $("#topic_id").val(value.topic_id);
+                    @php 
+                    if(isset($selectedSkillIds)){
+                    @endphp
+                    
+                    var selectedSkillIds = <?= $selectedSkillIds ?>;
+                    data1.map((item) => {
+                        item.selected = selectedSkillIds.includes(item.id) ? true : false;
+                        console.log(selectedSkillIds, item.id);
+                        return item;
+
+                    })
+                    data1.map((item) => {
+                        var newOption = new Option(item.name, item.id, true, item.selected);
+                        $('#select2Darks').append(newOption).trigger('change');
+                    })
+
+                    @php
+                    }
+                    @endphp
+
+                }
+            });
+            $('#editTopics').modal('show');
+        }
+
+
+
+        function editTopics() {
+            var topicId = $("#topic_id").val();
+            var topicName = $('#topic_name').val();
+            var selectedSkills = $('#select2Darks').val();
+            $.ajax({
+                url: '{{ route('edit-topic') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    topic_name: topicName,
+                    topic_id: topicId,
+                    skills: selectedSkills
+                },
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(xhr) {
+                    location.reload();
+                }
+            });
+        }
+
+        function statusChange(value, status) {
+            if (status == 1) {
+                is_active = 2;
+            } else {
+                is_active = 1;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('topic-status') }}',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'value': value,
+                    'is_active': is_active,
+                },
+            });
+
+        }
+
+        function deleteModal(id) {
+            var datas = @json($data);
+            $.each(datas, function(key, value) {
+                console.log(key, value);
+                if (value.topic_id == id) {
+                    $("#topic_delete_id").val(value.topic_id);
+                }
+            });
+            $('#deleteModal').modal('show');
+        }
+
+        function deleteTopics() {
+            var topicId = $("#topic_delete_id").val();
+            $.ajax({
+                url: '{{ route('delete-topic') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    topic_id: topicId,
+                },
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(xhr) {
+                    location.reload();
+                }
+            });
+        }
+    </script>
 
 @endsection

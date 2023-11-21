@@ -19,6 +19,23 @@
 
 
     <div class="container mt-4">
+
+        @if (session('success'))
+            <div class="success-message col-md-5">
+                <div class="alert bg-success text-white fw-bold">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="error-message col-md-5">
+                <div class="alert bg-danger text-white fw-bold">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
+
         <div class="mb-2">
             <a data-bs-toggle="modal" data-bs-target="#addDepartment" class="button-plus-icon"><i
                     class='plus-icon bx bxs-plus-circle'></i></a>
@@ -42,70 +59,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="">ECE</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
 
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editDepartment"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="">CSE</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
+                        @foreach ($data as $key => $value)
+                            <tr>
+                                <td class="">{{ $value->department_name }}</td>
+                                <td class="text-center">
+                                    <label class="switch">
+                                        <input type="checkbox" {{ $value->is_active == 1 ? 'checked' : '' }}
+                                            onclick="statusChange({{ $value->department_id }},{{ $value->is_active }})"
+                                            id="statusToggle">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
 
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editDepartment"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="">CIVIL</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
+                                <td class="text-center">
+                                    <a class="icon-buttons" onclick="editModal({{ $value->department_id }})"><i
+                                            class="bx bx-edit-alt"></i></a>
+                                    <a class="text-black icon-buttons"
+                                        onclick="deleteModal({{ $value->department_id }})"><i class="bx bxs-trash"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
 
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editDepartment"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="">MECHANICAL</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editDepartment"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -130,7 +105,7 @@
                             <div class="row">
                                 <div class=" mb-3">
                                     <label for="Department-name" class="col-form-label"><b>Department Name:</b></label>
-                                    <input type="text" class="form-control" id="Department-name" required>
+                                    <input type="text" class="form-control" id="department-name" required>
                                 </div>
                             </div>
                         </div>
@@ -154,22 +129,23 @@
                     <h5 class="modal-title" id="exampleModalLabel">Edit Department</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="input-form">
+                <form id="" onsubmit="return updateDepartment()">
                     @csrf
                     <div class="modal-body">
 
                         <div class="row">
                             <div class=" mb-3">
                                 <label for="department" class="col-form-label"><b>Department Name:</b></label>
-                                <input type="text" class="form-control" id="department" value="B.SC COMPUTER SCIENCE"
-                                    required>
+                                <input type="text" class="form-control" id="department-edit" required>
+                                <input type="hidden" class="form-control" id="department_id">
                             </div>
 
                         </div>
                     </div>
                     <div class="modal-footer">
                         {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
-                        <button type="submit" class="btn text-white background-secondary">Submit</button>
+                        <button type="button" onclick="updateDepartment()"
+                            class="btn text-white background-secondary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -189,16 +165,134 @@
                 <form action="" method="">
                     <div class="modal-body">
                         <p>Do You Want to Delete this Record ?</p>
+                        <input type="hidden" name="" id="department_id">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn background-info text-white" data-bs-dismiss="modal"
                             aria-label="Close">Cancel</button>
-                        <button type="submit" class="btn background-secondary text-white">Delete</button>
+                        <button type="button" onclick="deleteDepartment()"
+                            class="btn background-secondary text-white">Delete</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <script>
+        $(document).ready(function() {
+            $('#input-form').submit(function(event) {
+                event.preventDefault();
+                var department = $("#department-name").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('add-department') }}',
+                    data: {
+                        '_token': '{{ csrf_token() }}',
+                        'department': department,
+                    },
+                    success: function(response) {
+                        localStorage.setItem('response', response.message);
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            location.reload();
+                        } else {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+        });
+
+        function statusChange(value, status) {
+            if (status == 1) {
+                is_active = 2;
+            } else {
+                is_active = 1;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('department-status') }}',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'value': value,
+                    'is_active': is_active,
+                },
+            });
+        }
+
+        function editModal(id) {
+            var datas = @json($data);
+            $.each(datas, function(key, value) {
+                if (value.department_id == id) {
+                    $("#department-edit").val(value.department_name);
+                    $("#department_id").val(value.department_id);
+                }
+            });
+            $('#editDepartment').modal('show');
+        }
+
+        function updateDepartment() {
+            var department = $("#department-edit").val();
+            var id = $("#department_id").val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('department-update') }}',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'department': department,
+                    'id': id,
+                },
+                success: function(response) {
+                    localStorage.setItem('response', response.message);
+                    location.reload();
+                },
+                error: function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        location.reload();
+                    } else {
+                        location.reload();
+                    }
+                }
+            });
+        }
+
+        function deleteModal(id) {
+            var datas = @json($data);
+            $.each(datas, function(key, value) {
+                if (value.department_id == id) {
+                    $("#department_id").val(value.department_id);
+                }
+            });
+            $('#deleteModal').modal('show');
+        }
+
+        function deleteDepartment() {
+            var id = $("#department_id").val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('department-delete') }}',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'id': id,
+                },
+                success: function(response) {
+                    localStorage.setItem('response', response.message);
+                    location.reload();
+                },
+                error: function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        location.reload();
+                    } else {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    </script>
 
 @endsection
