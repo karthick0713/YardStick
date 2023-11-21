@@ -36,15 +36,10 @@
                 </a>
 
                 @php
-                    $values = ['APTITUDE', 'PHP', 'PYTHON', 'JAVA', 'ANGULAR']; // change the skills dynamically from the table.
-
-                    $skillImages = [
-                        'APTITUDE' => 'aptitude.jpg',
-                        'PHP' => 'php.png',
-                        'PYTHON' => 'python.png',
-                        'JAVA' => 'java.png',
-                        'ANGULAR' => 'angular.png',
-                    ];
+                    $values = DB::table('master_skills')
+                        ->where('is_active', 1)
+                        ->where('trash_key', 1)
+                        ->get(); // change the skills dynamically from the table.
                 @endphp
 
                 {{-- jquery for this was writtened in footer --}}
@@ -53,10 +48,10 @@
                         <ul style="list-style-type: none;">
                             @foreach ($values as $value)
                                 <li>
-                                    <img src="{{ asset('assets/img/lang-icons/' . $skillImages[$value]) }}" height="22"
-                                        width="22" class="mx-1" alt="">
+                                    <img src="{{ asset($value->logo) }}" height="22" width="22" class="mx-1"
+                                        alt="">
                                     <a class="text-white "
-                                        href="{{ url('admin/skills/' . strtolower($value)) }}">{{ strtoupper($value) }}</a>
+                                        href="{{ url('admin/skills/' . strtolower($value->skill_name)) }}">{{ strtoupper($value->skill_name) }}</a>
                                 </li>
                             @endforeach
                         </ul>

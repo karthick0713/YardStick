@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Admin Profile
     Route::get('/admin/profile', $controller_path . '\Admin\ProfileController@index')->name('admin-profile');
     Route::get('/admin/profile/edit', $controller_path . '\Admin\ProfileController@editProfile')->name('admin-profile-edit');
+    Route::post('/admin/profile/update', $controller_path . '\Admin\ProfileController@admin_profile_edit')->name('admin-edit-profile');
 
     // Manage students and students group (Admin)
     Route::get('/admin/manage-students/students', $controller_path . '\Admin\ManageStudentsController@students')->name('manage-students-students');
@@ -58,6 +59,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Manage Colleges (Admin)
     Route::get('/admin/manage-colleges/colleges', $controller_path . '\Admin\ManageCollegeController@colleges')->name('managecolleges-colleges');
+    Route::post('/admin/manage-colleges/add-college', $controller_path . '\Admin\ManageCollegeController@add_college')->name('add-college');
+    Route::post('/admin/manage-colleges/edit-college', $controller_path . '\Admin\ManageCollegeController@edit_college')->name('edit-college');
+    Route::post('/admin/manage-colleges/college-status', $controller_path . '\Admin\ManageCollegeController@college_status')->name('college-status');
+    Route::post('/admin/manage-colleges/delete-college', $controller_path . '\Admin\ManageCollegeController@delete_college')->name('delete-college');
+
     Route::get('/admin/manage-colleges/importcollege', $controller_path . '\Admin\ManageCollegeController@importcolleges')->name('managecolleges-importcolleges');
 
     // Manage Questions (Admin)

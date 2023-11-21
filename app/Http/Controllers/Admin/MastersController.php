@@ -6,10 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
-use PDO;
 
 class MastersController extends Controller
 {
@@ -113,7 +110,7 @@ class MastersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Session::flash('error', validator()->errors());
+            Session::flash('error', $validator->errors());
         }
 
         $imagePath = $request->file('skill_logo')->storeAs('assets/img/lang-icons', uniqid('', true) . '.' . $request->file('skill_logo')->getClientOriginalExtension(), 'public');
@@ -142,7 +139,7 @@ class MastersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Session::flash('error', validator()->errors());
+            Session::flash('error', $validator->errors());
         }
 
         if ($request->input('skill_logo') != "") {
@@ -195,6 +192,7 @@ class MastersController extends Controller
     {
         $fetch_skills = DB::table('master_skills')
             ->where('trash_key', 1)
+            ->where('is_active', 1)
             ->get();
 
         $data = DB::table('master_topics')
@@ -248,7 +246,7 @@ class MastersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Session::flash('error', validator()->errors());
+            Session::flash('error', $validator->errors());
         }
 
         $skills = implode(',', $request->input('skills'));

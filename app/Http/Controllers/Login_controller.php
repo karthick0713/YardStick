@@ -28,6 +28,7 @@ class Login_controller extends Controller
 
         if ($user && $credentials['password'] == $user->password && $user->role == $credentials['role']) {
             Session::put('userToken', $user->remember_token);
+            Session::put('userId', $user->id);
             return response()->json(['success' => true, 'message' => Session::get('userToken')]);
         }
 

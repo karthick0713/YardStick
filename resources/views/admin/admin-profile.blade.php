@@ -65,6 +65,11 @@
             box-shadow: none !important;
         }
 
+
+        .height {
+            line-height: 0.7 !important;
+        }
+
         tr {
             line-height: 1.5cm;
         }
@@ -79,8 +84,8 @@
                 <div class="col-12 col-md-6 mb-3">
                     <div class="d-flex flex-row align-items-center ms-3 ms-md-5 mb-3 text-center">
                         <div class="image-background" style="background-color: #f0f0f0; padding: 10px; border-radius: 50%;">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin"
-                                class="rounded-circle" width="200">
+                            <img src="{{ asset($data->profile_image) }}" alt="Admin" class="rounded-circle"
+                                width="200">
                         </div>
                         <div class="mt-3">
                             <div class="ms-3 ms-md-4 text-md-right">
@@ -95,27 +100,45 @@
                         <table class="table">
                             <tr>
                                 <td>Email</td>
-                                <td><b>admin@gmail.com</b></td>
+                                <td class="fw-bold">{{ $data->email_id }}</td>
                             </tr>
                             <tr>
                                 <td>Contact No.</td>
-                                <td><b>9638552741</b></td>
+                                <td class="fw-bold">{{ $data->contact_no }}</td>
                             </tr>
                             <tr>
                                 <td>Address</td>
-                                <td><b>Salem</b></td>
+                                <td class="fw-bold">{{ $data->address }}</td>
                             </tr>
-                            <tr>
+                            <tr class="height">
                                 <td>Skills</td>
-                                <td><b>xxxxxx</b></td>
+                                <td class="fw-bold">
+                                    @php
+                                        $skills = explode(',', $data->skills_id);
+                                        $totalSkills = count($skills);
+                                    @endphp
+                                    @foreach ($skills as $index => $skillId)
+                                        @php
+                                            $val = DB::table('master_skills')
+                                                ->where('skill_id', $skillId)
+                                                ->first();
+                                        @endphp
+                                        @if ($val)
+                                            {{ strtoupper($val->skill_name) }}
+                                            @if ($index < $totalSkills - 1)
+                                                ,
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
                             </tr>
                             <tr>
                                 <td>Certifications</td>
-                                <td><b>xxxxxx</b></td>
+                                <td class="fw-bold">{{ $data->certifications }}</td>
                             </tr>
                             <tr>
                                 <td>Projects Done</td>
-                                <td><b>xxxxxx</b></td>
+                                <td class="fw-bold">{{ $data->projects_done }}</td>
                             </tr>
                         </table>
                     </div>
@@ -140,19 +163,19 @@
                                     <tr>
                                         <td>Password</td>
                                         <td>
-                                            <div class="m-0 p-0">
-                                                <b>**********</b>
+                                            <div class="fw-bold m-0 p-0">
+                                                **********
                                             </div>
                                             <div class="m-0 p-0"></div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Security Questions</td>
-                                        <td><b>xxxxxxxx</b></td>
+                                        <td class="fw-bold">{{ $data->security_questions }}</td>
                                     </tr>
                                     <tr>
                                         <td>Primary Mobile No.</td>
-                                        <td><b>9874563210</b></td>
+                                        <td class="fw-bold">{{ $data->primary_mobile_no }}</td>
                                     </tr>
                                 </table>
                             </div>
