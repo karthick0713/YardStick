@@ -89,6 +89,23 @@
     </style>
 
     <div class="container mt-4">
+
+        @if (session('error'))
+            <div class="error-message col-md-5">
+                <div class="alert bg-danger text-white fw-bold">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="success-message col-md-5">
+                <div class="alert bg-success text-white fw-bold">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
         <div class="mb-2">
             <a data-bs-toggle="modal" data-bs-target="#addUser"><i class='plus-icon bx bxs-plus-circle'></i></a>
             <button class="button-plus-icon"></button>
@@ -132,14 +149,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($data as $key => $value)
+                        @endforeach
                         <tr>
-                            <td>721120104001
+                            <td>{{ $value->register_no }}
                             </td>
-                            <td>ADIPI MANOJ KUMAR
+                            <td>{{ $value->student_name }}
                             </td>
-                            <td>STUDY WORLD OF ENGINEERING
+                            <td>{{ $value->college_name }}
                             </td>
-                            <td>8852698520
+                            <td>{{ $value->mobile_no }}
                             </td>
                             <td>
                                 <label class="switch">
@@ -157,150 +176,7 @@
                             </td>
                         </tr>
 
-                        <tr>
-                            <td>721120104002
-                            </td>
-                            <td>ALAGU MANIKANDAN
-                            </td>
-                            <td>STUDY WORLD OF ENGINEERING
-                            </td>
-                            <td>9658741230
-                            </td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>721120104002
-                            </td>
-                            <td>ALAGU MANIKANDAN
-                            </td>
-                            <td>STUDY WORLD OF ENGINEERING
-                            </td>
-                            <td>8562321479
-                            </td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>721120104002
-                            </td>
-                            <td>ALAGU MANIKANDAN
-                            </td>
-                            <td>STUDY WORLD OF ENGINEERING
-                            </td>
-                            <td>8854712369
-                            </td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                    class="text-black icon-buttons"><i class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>721120104002
-                            </td>
-                            <td>ALAGU MANIKANDAN
-                            </td>
-                            <td>STUDY WORLD OF ENGINEERING
-                            </td>
-                            <td>8745215820
-                            </td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                    class="text-black icon-buttons"><i class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>721120104002
-                            </td>
-                            <td> KARTHICK RAJA
-                            </td>
-                            <td>STUDY WORLD OF ENGINEERING
-                            </td>
-                            <td>7845123698
-                            </td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                    class="text-black icon-buttons"><i class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>721120104002
-                            </td>
-                            <td>ALAGU MANIKANDAN
-                            </td>
-                            <td>STUDY WORLD OF ENGINEERING
-                            </td>
-                            <td>9632587410
-                            </td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                    class="text-black icon-buttons"><i class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -335,86 +211,88 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="College" class="col-form-label">College:</label>
-                                        <select name="" class="form-control" required id="">
+                                        <select name="college" class="form-control" required id="select-college">
                                             <option value="" selected disabled>SELECT</option>
-                                            <option value="">STUDY WORLD COLLEGE OF ENGINEERING</option>
                                         </select>
                                     </div>
 
                                     <div class="mt-1 col-md-6 mb-3">
                                         <label for="select2Dark" class="form-label">Skills:</label>
                                         <div class="mt-1 select2-dark">
-                                            <select id="select2Dark" class="select2 form-select" multiple>
-                                                <option value="1">PHP</option>
-                                                <option value="2">PYTHON</option>
-                                                <option value="2">C</option>
-                                                <option value="2">C++</option>
-                                                <option value="3">JAVA</option>
-                                                <option value="4">ANGULAR</option>
+                                            <select id="select2Dark" name="skills[]" class="select2 form-select"
+                                                multiple>
+                                                @foreach ($skills as $skill)
+                                                    <option value="{{ $skill->skill_id }}">{{ $skill->skill_name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
 
 
-
                                     <div class="col-md-6 mb-3">
                                         <label for="department" class="col-form-label">Department:</label>
-                                        <select name="" class="form-control" id="">
+                                        <select name="department" class="form-control" id="select-department">
                                             <option value="" selected disabled>SELECT</option>
-                                            <option value="">Computer Science and Technology</option>
                                         </select>
                                     </div>
-
-                                    {{-- <div class="col-md-6 mb-3">
-                                        <label for="batch" class="col-form-label">Batch:</label>
-                                        <select name="" class="form-control" id="">
-                                            <option value="" selected disabled>SELECT</option>
-                                            <option value="">2022-2023</option>
-                                        </select>
-                                    </div> --}}
 
                                     <div class="col-md-6 mb-3">
                                         <label for="year" class="col-form-label">Year:</label>
-                                        <select name="" class="form-control" id="">
+                                        <select name="year" class="form-control" id="">
                                             <option value="" selected disabled>SELECT</option>
-                                            <option value="">1st Year</option>
+                                            <option value="1">1st Year</option>
+                                            <option value="2">2nd Year</option>
+                                            <option value="3">3rd Year</option>
+                                            <option value="4">4th Year</option>
                                         </select>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="semester" class="col-form-label">Semester:</label>
-                                        <select name="" class="form-control" id="">
+                                        <label for="" class="col-form-label">Semester:</label>
+                                        <select name="semester" class="form-control" id="">
                                             <option value="" selected disabled>SELECT</option>
-                                            <option value="">First Semester</option>
+                                            <option value="1">First Semester</option>
+                                            <option value="2">Second Semester</option>
+                                            <option value="3">Third Semester</option>
+                                            <option value="4">Fourth Semester</option>
+                                            <option value="5">Fifth Semester</option>
+                                            <option value="6">Sixth Semester</option>
+                                            <option value="7">Seventh Semester</option>
+                                            <option value="8">Eighth Semester</option>
                                         </select>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="student-name" class="col-form-label">Student Name:</label>
-                                        <input type="text" class="form-control" id="student-name" required>
+                                        <input type="text" name="student_name" class="form-control" id="student-name"
+                                            required>
                                     </div>
 
 
                                     <div class="col-md-6 mb-3">
                                         <label for="register-no" class="col-form-label">Register No:</label>
-                                        <input type="text" class="form-control" id="register-no" required>
+                                        <input type="text" name="register_no" class="form-control" id="register-no"
+                                            required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="email-id" class="col-form-label">Email Id:</label>
-                                        <input type="email" class="form-control" id="email-id" required>
+                                        <input type="email" name="email_id" class="form-control" id="email-id"
+                                            required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="mobile-no" class="col-form-label">Mobile No:</label>
-                                        <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                            maxlength="10" class="form-control" id="mobile-no" required>
+                                        <input type="text" name="mobile_no"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10"
+                                            class="form-control" id="mobile-no" required>
                                     </div>
                                 </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
+                        {{-- <button type="bu tton" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
                         <button type="submit" class="btn text-white background-secondary">Submit</button>
                     </div>
                     </form>
@@ -503,9 +381,8 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="client" class="col-form-label">College:</label>
-                                        <select name="" class="form-control" required id="">
+                                        <select name="" class="form-control" required id="edit-college">
                                             <option value="" disabled>SELECT</option>
-                                            <option value="" selected>STUDY WORLD COLLEGE OF ENGINEERING</option>
                                         </select>
                                     </div>
 
@@ -525,26 +402,21 @@
 
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="edit-department" class="col-form-label">Department:</label>
-                                        <select name="" class="form-control" id="">
+                                        <label for="" class="col-form-label">Department:</label>
+                                        <select name="" class="form-control" id="edit-department">
                                             <option value="" disabled>SELECT</option>
-                                            <option value="" selected>Computer Science and Technology</option>
+
                                         </select>
                                     </div>
-
-                                    {{-- <div class="col-md-6 mb-3">
-                                        <label for="edit-batch" class="col-form-label">Batch:</label>
-                                        <select name="" class="form-control" id="">
-                                            <option value="" disabled>SELECT</option>
-                                            <option value="" selected>2022-2023</option>
-                                        </select>
-                                    </div> --}}
 
                                     <div class="col-md-6 mb-3">
                                         <label for="edit-year" class="col-form-label">Year:</label>
                                         <select name="" class="form-control" id="">
                                             <option value="" disabled>SELECT</option>
-                                            <option value="" selected>1st Year</option>
+                                            <option value="">1st Year</option>
+                                            <option value="">2nd Year</option>
+                                            <option value="">3rd Year</option>
+                                            <option value="">4th Year</option>
                                         </select>
                                     </div>
 
@@ -552,7 +424,14 @@
                                         <label for="edit-semester" class="col-form-label">Semester:</label>
                                         <select name="" class="form-control" id="">
                                             <option value="" disabled>SELECT</option>
-                                            <option value="" selected>First Semester</option>
+                                            <option value="">First Semester</option>
+                                            <option value="">Second Semester</option>
+                                            <option value="">Third Semester</option>
+                                            <option value="">Fourth Semester</option>
+                                            <option value="">Fifth Semester</option>
+                                            <option value="">Sixth Semester</option>
+                                            <option value="">Seventh Semester</option>
+                                            <option value="">Eighth Semester</option>
                                         </select>
                                     </div>
 
@@ -617,5 +496,57 @@
                 </div>
             </div>
         </div>
+
+
+        <script>
+            $(document).ready(() => {
+                var college = @json($colleges);
+                college.map((col) => {
+                    $("#select-college").append('<option value="' + col.college_id + '">' + col.college_name +
+                        '</option>');
+                    $("#edit-college").append('<option value="' + col.college_id + '">' + col.college_name +
+                        '</option>');
+                })
+
+                var department = @json($departments);
+                department.map((dept) => {
+                    $("#select-department").append('<option value="' + dept.department_id + '">' + dept
+                        .department_name +
+                        '</option>');
+                    $("#edit-department").append('<option value="' + dept.department_id + '">' + dept
+                        .department_name +
+                        '</option>');
+                })
+
+                $(".success-message").fadeIn().delay(3000).fadeOut();
+                $(".error-message").fadeIn().delay(3000).fadeOut();
+
+
+                $('#input-form').submit(function(event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    $.ajax({
+                        url: '{{ route('add-students') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            console.error(xhr.responseText);
+                            location.reload();
+                        }
+                    });
+                });
+
+
+            })
+        </script>
 
     @endsection

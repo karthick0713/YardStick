@@ -354,26 +354,30 @@
 
     <script>
         function addCollege() {
+            event.preventDefault();
             var formData = new FormData($('#add-form')[0]);
-            console.log(formData);
-            $.ajax({
-                url: '{{ route('add-college') }}',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    console.log(response);
-                    location.reload();
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText);
-                    location.reload();
-                }
-            });
+            if (form.checkValidity()) {
+                $.ajax({
+                    url: '{{ route('add-college') }}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                        location.reload();
+                    }
+                });
+            } else {
+                console.log(form);
+            }
         }
 
         $(document).ready(() => {

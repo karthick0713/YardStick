@@ -51,6 +51,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Manage students and students group (Admin)
     Route::get('/admin/manage-students/students', $controller_path . '\Admin\ManageStudentsController@students')->name('manage-students-students');
+    Route::post('/admin/manage-students/add-students', $controller_path . '\Admin\ManageStudentsController@add_students')->name('add-students');
+
+
+
     Route::get('/admin/manage-students/students-group', $controller_path . '\Admin\ManageStudentsController@studentsGroup')->name('managestudents-studentsgroup');
     Route::get('/admin/manage-students/add-students-group', $controller_path . '\Admin\ManageStudentsController@addnew_group')->name('add-students-group');
     Route::get('/admin/manage-students/edit-students-group', $controller_path . '\Admin\ManageStudentsController@edit_students_group')->name('edit-students-group');
