@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2023 at 02:09 PM
+-- Generation Time: Nov 23, 2023 at 09:59 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -47,26 +47,20 @@ CREATE TABLE `master_colleges` (
   `college_id` bigint(20) NOT NULL,
   `college_name` varchar(150) NOT NULL,
   `email_id` varchar(50) NOT NULL,
-  `primary_mobile_no` bigint(12) NOT NULL,
-  `alternate_mobile_no` bigint(12) NOT NULL,
+  `primary_mobile_no` varchar(20) NOT NULL,
+  `alternate_mobile_no` varchar(20) NOT NULL,
   `address_1` varchar(255) NOT NULL,
   `address_2` varchar(255) NOT NULL,
   `city` varchar(100) NOT NULL,
   `state_id` int(11) NOT NULL,
   `country` varchar(50) NOT NULL,
-  `pincode` int(11) NOT NULL,
+  `pincode` varchar(11) NOT NULL,
   `is_active` enum('1','2') NOT NULL,
   `trash_key` enum('1','2') NOT NULL,
+  `error_key` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `master_colleges`
---
-
-INSERT INTO `master_colleges` (`college_id`, `college_name`, `email_id`, `primary_mobile_no`, `alternate_mobile_no`, `address_1`, `address_2`, `city`, `state_id`, `country`, `pincode`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
-(1, 'STUDY WORLD COLLEGE OF ENGINEERING', 'studyworld@gmail.com', 9874563214, 9156324780, 'Gandhipuram', 'Cbe', 'Coimbatore', 31, 'India', 636141, '1', '1', '2023-11-21 09:38:08', '2023-11-21 12:59:13');
 
 -- --------------------------------------------------------
 
@@ -150,7 +144,7 @@ CREATE TABLE `master_profile` (
 --
 
 INSERT INTO `master_profile` (`profile_id`, `user_id`, `user_role`, `name`, `profile_image`, `email_id`, `contact_no`, `address`, `skills_id`, `certifications`, `projects_done`, `password`, `security_questions`, `primary_mobile_no`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Karthick', 'assets/img/profile/655c5921da3e78.63948643.jpg', 'admin@gmail.com', 9874563210, 'Mullaivadi, Attur, Salem.', '3,4', 'PHP Certificate', 'Test project', '1234', 'test question', 9361872238, '1', '1', '2023-11-21 05:48:16', '2023-11-21 05:48:16');
+(1, 1, 1, 'Karthick', 'assets/img/profile/655c5921da3e78.63948643.jpg', 'admin@gmail.com', 9361872238, 'Mullaivadi, Attur, Salem.', '1,3,4', 'PHP Certificate', 'Test project', '1234', 'test question', 9361872238, '1', '1', '2023-11-21 05:48:16', '2023-11-21 05:48:16');
 
 -- --------------------------------------------------------
 
@@ -496,7 +490,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `master_colleges`
 --
 ALTER TABLE `master_colleges`
-  MODIFY `college_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `college_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `master_departments`
