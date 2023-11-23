@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/manage-students/students', $controller_path . '\Admin\ManageStudentsController@students')->name('manage-students-students');
     Route::get('/admin/manage-students/fetch-students', $controller_path . '\Admin\ManageStudentsController@fetchData')->name('fetch-students');
     Route::post('/admin/manage-students/add-students', $controller_path . '\Admin\ManageStudentsController@add_students')->name('add-students');
+    Route::post('/admin/manage-students/student-status', $controller_path . '\Admin\ManageStudentsController@student_status')->name('student-status');
 
 
 

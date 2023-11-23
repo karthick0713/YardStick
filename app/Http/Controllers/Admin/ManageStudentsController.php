@@ -79,6 +79,19 @@ class ManageStudentsController extends Controller
         }
     }
 
+    public function student_status(Request $request){
+        $value = DB::table('master_students')->where('student_id', $request->input('student_id'))->update([
+            'is_active' => $request->input('is_active'),
+            'updated_at' => now(),
+        ]);
+
+        if ($value) {
+            return response()->json(['message' => 'Status Changed successfully!']);
+        } else {
+            return response()->json(['message' => 'Something Went Wrong!']);
+        }
+    }
+
     public function studentsGroup()
     {
         $heading = "Manage Students";

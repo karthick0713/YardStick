@@ -582,9 +582,24 @@
                         }
                     });
                 });
-
-
             })
+
+            function statusChange(student_id, data) {
+                if (data == 1) {
+                    is_active = 2;
+                } else {
+                    is_active = 1;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('student-status') }}',
+                    data: {
+                        '_token': '{{ csrf_token() }}',
+                        'student_id': student_id,
+                        'is_active': is_active,
+                    },
+                });
+            }
         </script>
 
     @endsection
