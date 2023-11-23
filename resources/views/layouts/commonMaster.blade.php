@@ -2,7 +2,7 @@
 
 <html class="light-style layout-menu-fixed" data-theme="theme-default" data-base-url="{{ url('/') }}"
     data-framework="laravel" data-template="vertical-menu-laravel-template-free">
-    
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport"

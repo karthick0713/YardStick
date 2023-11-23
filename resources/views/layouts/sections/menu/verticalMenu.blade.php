@@ -35,27 +35,27 @@
             @else
                 {{-- active menu method --}}
                 @php
-                   $activeClass = true;
+                    $activeClass = true;
                     $currentRouteName = Route::currentRouteName();
                     if ($currentRouteName === $menu->slug) {
-                    $activeClass = 'active';
+                        $activeClass = 'active';
+                    } elseif (isset($menu->submenu)) {
+                        if (gettype($menu->slug) === 'array') {
+                            foreach ($menu->slug as $slug) {
+                                if (str_contains($currentRouteName, $slug) and strpos($currentRouteName, $slug) === 0) {
+                                    $activeClass = 'open';
+                                }
+                            }
+                        }
+                        foreach ($menu->submenu as $submenu) {
+                            if ($currentRouteName === $submenu->slug) {
+                                $activeClass = 'open';
+                            }
+                        }
                     }
-                    elseif (isset($menu->submenu)) {
-                    if (gettype($menu->slug) === 'array') {
-                    foreach($menu->slug as $slug){
-                    if (str_contains($currentRouteName,$slug) and strpos($currentRouteName,$slug) === 0) {
-                    $activeClass = 'open';
-                    }
-                    }
-                    }
-                    foreach ($menu->submenu as $submenu){
-                    if ($currentRouteName === $submenu->slug) {
-                        $activeClass = 'open';
-                        }}
-                    }
-                    @endphp
+                @endphp
 
-                {{-- main menu --}} 
+                {{-- main menu --}}
                 <li class="menu-item {{ $activeClass }}">
                     @php
 
@@ -65,10 +65,9 @@
                         class="{{ isset($menu->submenu) ? 'menu-link menu-toggle' : 'menu-link' }}"
                         @if (isset($menu->target) and !empty($menu->target)) target="_blank" @endif>
                         @isset($menu->icon)
-                        
                             <i class="{{ $menu->icon }}"></i>
                         @endisset
-                        <div style="margin-top:7px; " >{{ isset($menu->name) ? __($menu->name) : '' }}</div>
+                        <div style="margin-top:7px; ">{{ isset($menu->name) ? __($menu->name) : '' }}</div>
                     </a>
 
                     {{-- submenu --}}

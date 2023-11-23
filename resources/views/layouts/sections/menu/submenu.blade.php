@@ -48,9 +48,9 @@
                         <ul style="list-style-type: none;">
                             @foreach ($values as $value)
                                 <li>
-                                    <img src="{{ asset($value->logo) }}" height="22" width="22" class="mx-1"
+                                    <img src="{{ asset($value->logo) }}" height="22" width="22" class="mx-1 mb-2"
                                         alt="">
-                                    <a class="text-white "
+                                    <a class="text-white mb-2 "
                                         href="{{ url('admin/skills/' . strtolower($value->skill_name)) }}">{{ strtoupper($value->skill_name) }}</a>
                                 </li>
                             @endforeach

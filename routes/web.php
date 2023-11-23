@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Manage students and students group (Admin)
     Route::get('/admin/manage-students/students', $controller_path . '\Admin\ManageStudentsController@students')->name('manage-students-students');
+    Route::get('/admin/manage-students/fetch-students', $controller_path . '\Admin\ManageStudentsController@fetchData')->name('fetch-students');
     Route::post('/admin/manage-students/add-students', $controller_path . '\Admin\ManageStudentsController@add_students')->name('add-students');
 
 
@@ -69,6 +70,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/admin/manage-colleges/delete-college', $controller_path . '\Admin\ManageCollegeController@delete_college')->name('delete-college');
 
     Route::get('/admin/manage-colleges/importcollege', $controller_path . '\Admin\ManageCollegeController@importcolleges')->name('managecolleges-importcolleges');
+    Route::post('/admin/manage-colleges/import-college', $controller_path . '\Admin\ManageCollegeController@import_college_data')->name('import-college');
+    Route::get('/admin/manage-colleges/show_error_data/{error}',  $controller_path . '\Admin\ManageCollegeController@show_error_data')->name('show_error_data');
+    Route::get('/admin/manage-colleges/edit-import-data',  $controller_path . '\Admin\ManageCollegeController@edit_import_data')->name('edit-import-data');
+    Route::post('/admin/manage-colleges/edit-college-data',  $controller_path . '\Admin\ManageCollegeController@edit_data')->name('edit-college-data');
+
 
     // Manage Questions (Admin)
     Route::get('admin/question-bank/manage-questions', $controller_path . '\Admin\QuestionBankController@manageQuestions')->name('manage-questions');

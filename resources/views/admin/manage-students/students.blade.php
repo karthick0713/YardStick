@@ -5,6 +5,7 @@
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/select2.css') }}">
+
 @endsection
 
 @section('vendor-script')
@@ -22,7 +23,7 @@
 @endsection
 
 @section('content')
-
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     <style>
         .dropdown {
             position: relative;
@@ -86,6 +87,12 @@
         select.open {
             background-image: url('{{ asset('assets/img/icons/up-arrow.png') }}');
         }
+
+        .dataTables_empty {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
     </style>
 
     <div class="container mt-4">
@@ -113,7 +120,7 @@
         <div class="card ">
             {{-- list of students table --}}
             <div class="table-responsive  text-nowrap">
-                <table id="example" class="table table-striped">
+                <table id="example" class="table table-striped display">
                     <thead class="background-secondary">
                         <tr class="text-white">
                             <th scope="col" class="text-white">REGISTER NO</th>
@@ -149,33 +156,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $key => $value)
-                            <tr>
-                                <td>{{ $value->register_no }}
-                                </td>
-                                <td>{{ $value->student_name }}
-                                </td>
-                                <td>{{ $value->college_name }}
-                                </td>
-                                <td>{{ $value->mobile_no }}
-                                </td>
-                                <td>
-                                    <label class="switch">
-                                        <input type="checkbox" {{ $value->is_active == 1 ? 'checked' : '' }}
-                                            id="statusToggle">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </td>
-                                <td>
-                                    <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser"><i
-                                            class="bx bx-show-alt"></i></a>
-                                    <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                            class="bx bx-edit-alt"></i></a>
-                                    <a data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                        class="text-black icon-buttons"><i class="bx bxs-trash"></i></a>
-                                </td>
-                            </tr>
-                        @endforeach
+
                     </tbody>
                 </table>
             </div>
@@ -218,8 +199,7 @@
                                     <div class="mt-1 col-md-6 mb-3">
                                         <label for="select2Dark" class="form-label">Skills:</label>
                                         <div class="mt-1 select2-dark">
-                                            <select id="select2Dark" name="skills[]" class="select2 form-select"
-                                                multiple>
+                                            <select id="select2Dark" name="skills[]" class="select2 form-select" multiple>
                                                 @foreach ($skills as $skill)
                                                     <option value="{{ $skill->skill_id }}">{{ $skill->skill_name }}
                                                     </option>
@@ -498,7 +478,66 @@
 
 
         <script>
+            $('#example').DataTable({
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('fetch-students') }}',
+                    type: 'GET',
+                },
+                columns: [{
+                        data: 'register_no',
+                        name: 'register_no'
+                    },
+                    {
+                        data: 'student_name',
+                        name: 'student_name'
+                    },
+                    {
+                        data: 'college_name',
+                        name: 'college_id'
+                    },
+                    {
+                        data: 'mobile_no',
+                        name: 'mobile_no'
+                    },
+                    {
+                        data: 'is_active',
+                        name: 'is_active',
+                        render: function(data, type, row) {
+                            return `
+                                <label class="switch">
+                                    <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange(${row.student_id},${data})" id="statusToggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            `;
+                        },
+                    },
+                    {
+                        data: 'other_mobile',
+                        name: 'other_mobile',
+                        render: function(data, type, row) {
+                            return `
+                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser" onclick="openViewUserModal(${row.student_id})">
+                                    <i class="bx bx-show-alt"></i>
+                                </a>
+                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser" onclick="openEditUserModal(${row.student_id})">
+                                    <i class="bx bx-edit-alt"></i>
+                                </a>
+                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="openDeleteModal(${row.student_id})" class="text-black icon-buttons">
+                                    <i class="bx bxs-trash"></i>
+                                </a>
+                            `;
+                        },
+                    },
+                ],
+                searching: false,
+                paging: false,
+                info: false
+            });
+
+
             $(document).ready(() => {
+
                 var college = @json($colleges);
                 college.map((col) => {
                     $("#select-college").append('<option value="' + col.college_id + '">' + col.college_name +
@@ -549,3 +588,49 @@
         </script>
 
     @endsection
+
+    {{-- <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Include DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('fetch-students') }}',
+                    type: 'GET',
+                },
+                columns: [{
+                        data: 'register_no',
+                        name: 'register_no'
+                    },
+                    {
+                        data: 'student_name',
+                        name: 'student_name'
+                    },
+                    {
+                        data: 'college',
+                        name: 'college_id'
+                    },
+                    {
+                        data: 'mobile',
+                        name: 'mobile_no'
+                    },
+                    {
+                        data: 'is_active',
+                        name: 'is_active'
+                    },
+                    {
+                        data: 'other_mobile',
+                        name: 'other_mobile',
+                        render: function(data, type, row) {
+                            return '<button class="btn btn-sm btn-info" onclick="viewDetails(' + row
+                                .other_mobile + ')">View</button>';
+                        },
+                    },
+                ],
+            });
+        });
+    </script> --}}

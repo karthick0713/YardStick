@@ -4,6 +4,8 @@
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
+
+
 @endsection
 
 @section('vendor-script')
@@ -13,13 +15,12 @@
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
     <script src="{{ asset('assets/js/pagenation.js') }}"></script>
+
     <script src="{{ asset('assets/js/jquery-repeater.js') }}"></script>
     <script src="{{ asset('assets/js/forms-extras.js') }}"></script>
 @endsection
 
 @section('content')
-
-
 
     <style>
         select {
@@ -32,6 +33,12 @@
 
         select.open {
             background-image: url('{{ asset('assets/img/icons/up-arrow.png') }}');
+        }
+
+        tfoot input {
+            width: 100%;
+            padding: 3px;
+            box-sizing: border-box;
         }
     </style>
 
@@ -61,7 +68,7 @@
 
             {{-- list of colleges table --}}
             <div class="table-responsive  text-nowrap">
-                <table id="example" class="table table-striped">
+                <table id="dtExample" class=" display table table-striped">
                     <thead class="background-secondary">
                         <tr class="text-white">
                             <th scope="col" class="text-white text-center">NAME</th>
@@ -73,20 +80,19 @@
                         </tr>
 
                         <tr class="background-grey">
-                            <td class="text-center"><input type="search" name=""
-                                    class="form-control table-search-bar" placeholder="Search Name" id=""></td>
-                            <td class="text-center"><input type="search" name=""
-                                    class="form-control table-search-bar" placeholder="Search Email" id=""></td>
-                            <td class="text-center"><input type="search" name=""
-                                    class="form-control table-search-bar" placeholder="Search Users" id=""></td>
-                            <td class="text-center"><input type="search" name=""
-                                    class="form-control table-search-bar" placeholder="Search Mobile" id=""></td>
-                            <td class="text-center">
-
-                            </td>
-                            <td class="text-center"></td>
+                            <th scope="col"><input type="search" name="" class="form-control"
+                                    placeholder="Search college" id=""></th>
+                            <th scope="col"><input type="search" name="" class="form-control"
+                                    placeholder="Search email" id=""></th>
+                            <th scope="col"><input type="search" name="" class="form-control"
+                                    placeholder="Search users" id=""> </th>
+                            <th scope="col"><input type="search" name="" class="form-control"
+                                    placeholder="Search mobile" id=""></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @foreach ($data as $key => $value)
                             <tr>
@@ -113,6 +119,10 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+
+
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -137,7 +147,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row col-12">
-                        <form id="add-form" onsubmit="addCollege()">
+                        <form id="add-form">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -205,8 +215,7 @@
                 </div>
                 <div class="modal-footer">
                     {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
-                    <button type="button" onclick="addCollege()"
-                        class="btn text-white background-secondary">Submit</button>
+                    <button type="submit" class="btn text-white background-secondary">Submit</button>
                 </div>
                 </form>
             </div>
@@ -353,10 +362,14 @@
     </div>
 
     <script>
-        function addCollege() {
-            event.preventDefault();
-            var formData = new FormData($('#add-form')[0]);
-            if (form.checkValidity()) {
+        $(document).ready(() => {
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+            fetch_state();
+
+            $('#add-form').submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
                 $.ajax({
                     url: '{{ route('add-college') }}',
                     type: 'POST',
@@ -375,15 +388,8 @@
                         location.reload();
                     }
                 });
-            } else {
-                console.log(form);
-            }
-        }
+            });
 
-        $(document).ready(() => {
-            $(".success-message").fadeIn().delay(3000).fadeOut();
-            $(".error-message").fadeIn().delay(3000).fadeOut();
-            fetch_state();
         })
 
         function fetch_state() {
@@ -397,11 +403,21 @@
         }
 
         function viewCollege(id) {
+            var country;
             var colleges = @json($data);
+            console.log(colleges);
+            $("#tbody").empty();
             colleges.map((col) => {
                 if (col.college_id == id) {
+                    switch (col.country) {
+                        case '1':
+                            country = "India";
+                            break;
+                        default:
+                            country = "";
+                    }
                     var tbody =
-                        `<tr><td>College Name:</td><td class="fw-bold">${col.college_name}</td></tr><tr><td>Email:</td><td class="fw-bold">${col.email_id}</td></tr><tr><td>Mobile No:</td><td class="fw-bold">${col.primary_mobile_no}</td></tr><tr><td>Alternate Mobile No:</td><td class="fw-bold">${col.alternate_mobile_no}</td></tr><tr><td>Address_1:</td><td class="fw-bold">${col.address_1}</td></tr><tr><td>Address_2:</td><td class="fw-bold">${col.address_2}</td></tr><tr><td>City:</td><td class="fw-bold">${col.city}</td></tr><tr><td>State:</td><td class="fw-bold">${col.state_name}</td></tr><tr><td>Country:</td><td class="fw-bold">${col.country}</td></tr><tr><td>Pincode:</td><td class="fw-bold">${col.pincode}</td></tr>`;
+                        `<tr><td>College Name:</td><td class="fw-bold">${col.college_name}</td></tr><tr><td>Email:</td><td class="fw-bold">${col.email_id}</td></tr><tr><td>Mobile No:</td><td class="fw-bold">${col.primary_mobile_no}</td></tr><tr><td>Alternate Mobile No:</td><td class="fw-bold">${col.alternate_mobile_no}</td></tr><tr><td>Address_1:</td><td class="fw-bold">${col.address_1}</td></tr><tr><td>Address_2:</td><td class="fw-bold">${col.address_2}</td></tr><tr><td>City:</td><td class="fw-bold">${col.city}</td></tr><tr><td>State:</td><td class="fw-bold">${col.state}</td></tr><tr><td>Country:</td><td class="fw-bold">${country}</td></tr><tr><td>Pincode:</td><td class="fw-bold">${col.pincode}</td></tr>`;
                     $("#tbody").append(tbody);
                     $("#viewCollege").modal('show');
                 }

@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class ManageStudentsController extends Controller
 {
     public function students()
     {
+
         $skills = DB::table('master_skills')->where('trash_key', 1)->where('is_active', 1)->get();
-        $colleges = DB::table('master_colleges')->where('trash_key', 1)->where('is_active', 1)->get();
+        $colleges = DB::table('master_colleges')->where('trash_key', 1)->where('error_key', 0)->where('is_active', 1)->get();
         $departments = DB::table('master_departments')->where('trash_key', 1)->where('is_active', 1)->get();
         $data = DB::table('master_students')
             ->leftJoin('master_colleges', 'master_students.college_id', '=', 'master_colleges.college_id')
@@ -23,6 +25,18 @@ class ManageStudentsController extends Controller
         $sub_heading = "Students";
         return view("admin.manage-students.students", compact("heading", "sub_heading", "skills", "departments", "colleges", "data"));
     }
+
+    public function fetchData()
+    {
+        $query = DB::table('master_students')
+            ->leftJoin('master_colleges', 'master_students.college_id', '=', 'master_colleges.college_id')
+            ->select('master_colleges.college_name', 'master_students.*')
+            ->where('master_students.trash_key', 1)
+            ->orderBy('master_students.created_at', 'desc')->get();
+
+        return DataTables::of($query)->toJson();
+    }
+
 
     public function add_students(Request $request)
     {
