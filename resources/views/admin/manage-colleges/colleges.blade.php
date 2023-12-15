@@ -73,7 +73,7 @@
                         <tr class="text-white">
                             <th scope="col" class="text-white text-center">NAME</th>
                             <th scope="col" class="text-white text-center">EMAIL</th>
-                            <th scope="col" class="text-white text-center">TOTAL USERS</th>
+                            <th scope="col" class="text-white text-center">TOTAL STUDENTS</th>
                             <th scope="col" class="text-white text-center">MOBILE</th>
                             <th scope="col" class="text-white text-center">ACTIVE</th>
                             <th scope="col" class="text-white text-center">ACTIONS</th>
@@ -85,7 +85,7 @@
                             <th scope="col"><input type="search" name="" class="form-control"
                                     placeholder="Search email" id=""></th>
                             <th scope="col"><input type="search" name="" class="form-control"
-                                    placeholder="Search users" id=""> </th>
+                                    placeholder="Search students" id=""> </th>
                             <th scope="col"><input type="search" name="" class="form-control"
                                     placeholder="Search mobile" id=""></th>
                             <th scope="col"></th>
@@ -98,7 +98,18 @@
                             <tr>
                                 <td>{{ $value->college_name }}</td>
                                 <td>{{ $value->email_id }}</td>
-                                <td>{{ '53 users' }}</td>
+
+                                <td>
+                                    @php
+                                        $total_students = DB::table('master_students')
+                                            ->where('college_id', $value->college_id)
+                                            ->where('error_key', 0)
+                                            ->where('trash_key', 1)
+                                            ->get();
+                                        echo count($total_students) . ' students';
+
+                                    @endphp
+                                </td>
                                 <td>{{ $value->primary_mobile_no }}</td>
                                 <td>
                                     <label class="switch">
@@ -201,7 +212,7 @@
                                     <label for="country" class="col-form-label">Country:</label>
                                     <select name="country" class="form-control" id="country" required>
                                         <option value="" selected disabled>SELECT</option>
-                                        <option value="India">India</option>
+                                        <option value="1">India</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -315,7 +326,7 @@
                                     <label for="country" class="col-form-label">Country:</label>
                                     <select name="edit_country" class="form-control" id="edit_country" required>
                                         <option value="" disabled>SELECT</option>
-                                        <option value="India">India</option>
+                                        <option value="1">India</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -343,7 +354,7 @@
                     <div class="icon-box">
                     </div>
                     <h4 class="modal-title">Are you sure?</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form onsubmit="return deleteCollege()">
                     <div class="modal-body">

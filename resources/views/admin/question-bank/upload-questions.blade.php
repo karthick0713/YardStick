@@ -12,14 +12,26 @@
 
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
-    <script src="{{ asset('assets/js/single-pagenation.js') }}"></script>
-    <script src="{{ asset('assets/js/single-table-search.js') }}"></script>
 @endsection
 
 @section('content')
     <div class="container mt-4">
         <div class="container">
+            @if (session('error'))
+                <div class="error-message col-md-5">
+                    <div class="alert bg-danger text-white fw-bold">
+                        {{ session('error') }}
+                    </div>
+                </div>
+            @endif
 
+            @if (session('success'))
+                <div class="success-message col-md-5">
+                    <div class="alert bg-success text-white fw-bold">
+                        {{ session('success') }}
+                    </div>
+                </div>
+            @endif
             <div class="row col-12">
                 <div class="col-5"></div>
                 {{-- template download for import bulk questions --}}
@@ -37,11 +49,14 @@
                         <div class="card-body background-light">
                             <div class="text-center fw-bold text-sec-color mt-3">Choose a File</div>
 
-                            <form action="" method="">
+                            <form action="{{ route('import-excel-programming-questions') }}" method="post"
+                                enctype="multipart/form-data">
+                                @csrf
                                 <div class="mb-3 mt-4">
                                     <label class="ms-4" for="">Select Only a CSV, XLSX, or XLS file:</label>
-                                    <input type="file" class="form-control login-fields" id="username"
-                                        accept=".xlsx, .xls, .csv" placeholder="Select a CSV, XLSX, or XLS file">
+                                    <input type="file" class="form-control login-fields" id="uploaded_file"
+                                        name="uploaded_file" accept=".xlsx, .xls, .csv" required
+                                        placeholder="Select a CSV, XLSX, or XLS file">
                                 </div>
 
                                 <div class="row mt-5">
@@ -56,4 +71,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(() => {
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+        });
+    </script>
 @endsection

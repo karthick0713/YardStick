@@ -4,6 +4,7 @@
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/datatable-bootstrap5.css') }}">
 @endsection
 
 @section('vendor-script')
@@ -12,8 +13,7 @@
 
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
-    <script src="{{ asset('assets/js/pagenation.js') }}"></script>
-    <script src="{{ asset('assets/js/table-search.js') }}"></script>
+    <script src="{{ asset('assets/js/datatable-bootstrap5.js') }}"></script>
 @endsection
 
 @section('content')
@@ -25,102 +25,37 @@
             padding: 8px;
             text-align: left;
         }
+
+        table {
+            /* white-space: initial !important; */
+        }
     </style>
 
     <div class="container mt-4">
 
         <div class="card ">
-            {{-- view filtered questions fields --}}
-            {{--  --}}
-            <h5 class="card-header text-sec-color"><b>PYTHON - EASY</b></h5> {{-- skills and difficulty --}}
-            <div class="table-responsive  text-nowrap">
-                {{-- list of filtered questions table --}}
-                <table id="example" class="table table-striped">
-                    <thead class="background-secondary">
-                        <tr class="text-white">
-                            <th scope="col" class="text-white text-center">QUESTIONS</th>
-                            <th scope="col" class="text-white text-center">STATUS</th>
-                            <th scope="col" class="text-white text-center">ACTIONS</th>
-                        </tr>
-                        <tr class="background-grey">
-                            <td class="text-center"><input type="search" name=""
-                                    class="form-control table-search-bar" placeholder="Search Questions" id="">
-                            </td>
-
-                            <td class="text-center">
-                            </td>
-                            <td class=""></td>
+            <div class="card-datatable text-nowrap">
+                <table class="dt-column-search table table-striped display">
+                    <thead class="background-secondary ">
+                        <tr>
+                            <th class="text-white">Question Code</th>
+                            <th class="text-white">Questions</th>
+                            <th class="text-white">Status</th>
+                            <th class="text-white">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class=" truncate-text">
-                                Write a program which can compute the factorial of a given numbers.
-                                The results should be printed in a comma-separated sequence on a single line.
-                                Suppose the following input is supplied to the program:
-                                8
-                            </td>
-
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewQuestion"><i
-                                        class="bx bx-show-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class=" truncate-text">
-
-                                Write a program which accepts a sequence of words separated by whitespace as input to print
-                                the words composed of digits only.
-
-                                Example:
-                                If the following words is given as input to the program:
-
-                                2 cats and 3 dogs.
-
-                                Then, the output of the program should be:
-
-                                ['2', '3']
-
-                                In case of input data being supplied to the question, it should be assumed to be a console
-                                input.
-
-
-                            </td>
-
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewQuestion"><i
-                                        class="bx bx-show-alt"></i></a>
-                            </td>
-                        </tr>
 
                     </tbody>
                 </table>
             </div>
         </div>
 
-        {{-- pagenations --}}
-        <div class="pagination-flex-container justify-content-end mt-5" id="pagination">
-            <button class="page-link btn-sm" id="previous" disabled>Previous</button>
-            <div id="page-numbers" class="pagination-flex-container"></div>
-            <button class="page-link btn-sm" id="next">Next</button>
-        </div>
     </div>
 
     {{-- view questions modal --}}
+
+
     <div class="modal fade" id="viewQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-contents">
@@ -130,46 +65,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="question-details">
-
-
-                        <div class="question-statement border-bottom border-3">
-                            <h5>Question</h5>
-                            <p>
-                                Write a program which accepts a sequence of words separated by whitespace as input to print
-                                the words composed of digits only.
-                            </p>
-                            <p class="example">Example:</p>
-                            <p>
-                                If the following words are given as input to the program:
-                            </p>
-                            <p class="code">2 cats and 3 dogs.</p>
-                            <p>
-                                Then, the output of the program should be:
-                            </p>
-                            <pre class="code">['2', '3']</pre>
-                            <p>
-                                In case of input data being supplied to the question, it should be assumed to be a console
-                                input.
-                            </p>
-                        </div>
-
-                        <div class="question-solution mt-5 border-bottom border-3">
-                            <h5>Solution</h5>
-                            <pre>
-                    n = int(raw_input())
-                    d = dict()
-                    for i in range(1, n + 1):
-                        d[i] = i * i
-                  </pre>
-                        </div>
-
-                        <div class="question-hints mt-5">
-                            <h5>Hints</h5>
-                            <ul>
-                                <li>If the output received is in decimal form, round it to the nearest value.</li>
-                                <li>Assume input data is from the console.</li>
-                            </ul>
-                        </div>
+                        {{--  --}}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -179,45 +75,152 @@
         </div>
     </div>
 
-    <style>
-        .modal-contents {
-            padding: 20px;
-        }
-
-        .question-details {
-            padding: 20px;
-            border: 1px solid #ccc;
-        }
-
-        h5 {
-            margin-bottom: 10px;
-        }
-
-        .code {
-            font-family: monospace;
-            background-color: #eee;
-            padding: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .example {
-            font-weight: bold;
-        }
-    </style>
-
     <script>
-        function truncateTextInTable(maxWords) {
-            var truncateElements = document.querySelectorAll('.truncate-text');
+        $(document).ready(() => {
 
-            truncateElements.forEach(function(element) {
-                var words = element.textContent.trim().split(' ');
+            function truncateText(text, maxWords) {
+                var words = text.split(' ');
                 if (words.length > maxWords) {
-                    var truncatedText = words.slice(0, maxWords).join(' ') + '...';
-                    element.textContent = truncatedText;
+                    return words.slice(0, maxWords).join(' ') + '...';
+                }
+                return text;
+            }
+
+            t = $(".dt-column-search");
+
+            if (t.length) {
+                $(".dt-column-search thead tr")
+                    .clone(!0)
+                    .appendTo(".dt-column-search thead"),
+                    $(".dt-column-search thead tr:eq(1) th").each(function(a) {
+                        var t = $(this).text();
+                        $(this).html(
+                                '<input type="text" class="form-control" placeholder="Search ' +
+                                t +
+                                '" />'
+                            ),
+                            $("input", this).on("keyup change", function() {
+                                c.column(a).search() !== this.value &&
+                                    c.column(a).search(this.value).draw();
+                            });
+                    });
+
+
+                var difficulties = "{{ $data['difficulties'] }}";
+                var categories = "{{ $data['categories'] }}";
+                var topics = "{{ $data['topics'] }}";
+                var skills = "{{ $data['skills'] }}";
+
+                var c = t.DataTable({
+                    ajax: {
+                        url: "{{ route('get-filtered-questions') }}",
+                        type: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: function(d) {
+                            d.difficulties = difficulties;
+                            d.categories = categories;
+                            d.topics = topics;
+                            d.skills = skills;
+                        }
+                    },
+                    columns: [{
+                            data: "question_code",
+                            orderable: false
+                        },
+
+                        {
+                            data: "questions",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                var val = truncateText(data, 20);
+                                var html = $("<html>").append(val);
+                                return html.text();
+                            }
+                        },
+
+                        {
+                            data: "is_active",
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                return `
+                                        <label class="switch">
+                                            <input type="checkbox" ${data == 1 ? 'checked' : ''} disabled id="statusToggle">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    `;
+                            },
+                        },
+                        {
+                            data: "question_code",
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                var d = row.question_code;
+                                return `
+                                            <a class="icon-buttons text-center"  onclick="viewQuestion('${row.question_code}')">
+                                                <i class="bx bx-show-alt"></i>
+                                            </a>
+                                            
+                                        `;
+                            },
+                        },
+                    ],
+
+                    orderCellsTop: !0,
+                    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                });
+
+                $(".dt-column-search tbody").on({
+                    mouseenter: function() {
+                        $(this).data("originalContent", $(this).text());
+                        var orig = $(this).text($(this).text() + "📋");
+                        $(this).css("cursor", "pointer");
+                    },
+                    mouseleave: function() {
+                        $(this).text($(this).data("originalContent"));
+                        $(this).css("cursor", "pointer");
+                    },
+                    click: function() {
+                        var contentToCopy = $(this).data("originalContent");
+                        var tempInput = $("<input>");
+                        $("body").append(tempInput);
+                        tempInput.val(contentToCopy).select();
+                        document.execCommand("copy");
+                        tempInput.remove();
+                        $(this).text(contentToCopy + "✅");
+                        setTimeout(function() {
+                            $(this).text(contentToCopy);
+                        }.bind(this), 2000);
+                    },
+                }, "td:first-child");
+            }
+
+
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+        });
+
+        function viewQuestion(value) {
+            $(".question-details").empty();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('view-detailed-questions') }}",
+                data: {
+                    value: value
+                },
+                success: (data) => {
+                    $(".question-details").append(data);
+                    $("#viewQuestion").modal('show');
+                },
+                error: (xhr) => {
+                    console.log(xhr);
                 }
             });
+
         }
-        truncateTextInTable(70);
     </script>
 
 @endsection

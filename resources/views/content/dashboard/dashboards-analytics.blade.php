@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="ms-3" style="padding-top: 10px">
                                     <label class="fw-bold" for="">Total Tests</label><br>
-                                    <span class="text-sec-color fw-bold">152 mins
+                                    <span class="text-sec-color fw-bold">{{ $data['total_duration'] }} hrs
                                     </span>
                                 </div>
                             </div>
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="ms-3" style="padding-top: 10px">
                                     <label class="fw-bold" for="">Total Questions</label><br>
-                                    <span class="text-sec-color fw-bold">458</span>
+                                    <span class="text-sec-color fw-bold">{{ $data['total_questions'] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="ms-3" style="padding-top: 10px">
                                     <label class="fw-bold" for="">Total Users</label><br>
-                                    <span class="text-sec-color fw-bold">300</span>
+                                    <span class="text-sec-color fw-bold">{{ $data['total_students'] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="ms-3" style="padding-top: 10px">
                                     <label class="fw-bold" for="">Total Colleges</label><br>
-                                    <span class="text-sec-color fw-bold">3</span>
+                                    <span class="text-sec-color fw-bold">{{ $data['total_colleges'] }}</span>
                                 </div>
                             </div>
                         </div>

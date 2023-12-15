@@ -160,7 +160,7 @@
                     <div class="icon-box">
                     </div>
                     <h4 class="modal-title">Are you sure?</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form action="" method="">
                     <div class="modal-body">

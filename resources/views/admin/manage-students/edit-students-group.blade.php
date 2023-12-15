@@ -47,128 +47,151 @@
             bottom: 8px;
         }
     </style>
+    <div style="color:#9b9b9b;" class="">
+        Note: You can only change the group of name and students.
+    </div>
     <div class="card">
         <div class="container ">
+
             <div class="card-body">
                 {{-- edit students groups fields --}}
-                <form action="" method="post">
+                <form id="myForm">
                     <div class="row col-12">
                         <div class="col-md-6 mb-3">
                             <label for="select-college">GROUP NAME:</label>
-                            <input type="text" name="" placeholder="Group Name" value="PSG-ECE-1-2nd"
-                                class="form-control" id="">
+                            <input type="text" name="edit_group_name" placeholder="Group Name" id="group-name"
+                                onkeyup="nameCheck(this.value)" value="{{ $group_data->group_name }}" class="form-control"
+                                id="">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="select-college">SELECT COLLEGE:</label>
-                            <select name="" class="form-control" id="select-college">
+                            <select name="" class="form-control" id="select-college" disabled>
                                 <option value="">SELECT</option>
-                                <option value="">STUDY WORLD COLLEGE OF ENGINEERING</option>
-                                <option value="" selected>PSG COLLEGE OF INSTITUTIONS</option>
+                                @foreach ($colleges as $col)
+                                    <option value="{{ $col->college_id }}"
+                                        {{ $col->college_id == $group_data->college_id ? 'selected' : '' }}>
+                                        {{ $col->college_name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="select-deparment">SELECT DEPARTMENT:</label>
-                            <select name="" class="form-control" id="select-deparment">
+                            <select name="" class="form-control" id="select-deparment" disabled>
                                 <option value="">SELECT</option>
-                                <option value="">CSE</option>
-                                <option value="" selected>ECE</option>
+                                @foreach ($departments as $dept)
+                                    <option value="{{ $dept->department_id }}"
+                                        {{ $dept->department_id == $group_data->department_id ? 'selected' : '' }}>
+                                        {{ $dept->department_name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="select-year">SELECT YEAR:</label>
-                            <select name="" class="form-control" id="select-year">
+                            <select name="" class="form-control" id="select-year" disabled>
                                 <option value="">SELECT</option>
-                                <option value="" selected>1st Year</option>
-                                <option value="">2nd Year</option>
-                                <option value="">3rd Year</option>
-                                <option value="">4th Year</option>
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="select-semester">SELECT SEMESTER:</label>
-                            <select name="" class="form-control" id="select-semester">
+                            <select name="" class="form-control" id="select-semester" disabled>
                                 <option value="">SELECT</option>
-                                <option value="">1st Semester</option>
-                                <option value="" selected>2nd Semester</option>
-                                <option value="">3rd Semester</option>
-                                <option value="">4th Semester</option>
-                                <option value="">5th Semester</option>
-                                <option value="">6th Semester</option>
-                                <option value="">7th Semester</option>
-                                <option value="">8th Semester</option>
+                                <option value="1">1st Semester</option>
+                                <option value="2">2nd Semester</option>
+                                <option value="3">3rd Semester</option>
+                                <option value="4">4th Semester</option>
+                                <option value="5">5th Semester</option>
+                                <option value="6">6th Semester</option>
+                                <option value="7">7th Semester</option>
+                                <option value="8">8th Semester</option>
                             </select>
                         </div>
                     </div>
                     {{-- list of students in above selected fields --}}
                     <label class="mt-5"><b>EDIT STUDENTS:</b></label>
-                    <div class="row col-12 mt-4">
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">ADIPI MANOJ KUMAR</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" name="" class="" id="">
-                            <span class="checkbox-span">ALAGU MANIKANDAN</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">ANU PRIYA E.P </span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" name="" class="" id="">
-                            <span class="checkbox-span">ANUSH KRISHNAN </span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">ATHUL S JOTHI</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" name="" class="" id="">
-                            <span class="checkbox-span">BOOMIGA</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">EKAMBARAM BHANU PRAKASH</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">HARI PRASATH C</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" name="" class="" id="">
-                            <span class="checkbox-span">KAAVYAA S</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" name="" class="" id="">
-                            <span class="checkbox-span">KABILAN T</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">KONDAPANENI BHARGAV</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">KONDAREDDY NIKHILESHWAR REDDY</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" name="" class="" id="">
-                            <span class="checkbox-span">KOTHA CHETAN KUMAR</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" checked name="" class="" id="">
-                            <span class="checkbox-span">MADINENI MADHVILATHA</span>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="checkbox" name="" class="" id="">
-                            <span class="checkbox-span">MALAVIKA R</span>
-                        </div>
+                    <div class="row col-12 mt-4 edit-students">
+
                     </div>
                     <div class="mt-4 d-flex justify-content-end">
-                        <button type="submit" class="btn background-secondary text-white">Update</button>
+                        <button type="submit" id="submitBtn" class="btn background-secondary text-white">Update</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
+
+    <script>
+        var group_data = @json($group_data);
+        $(document).ready(() => {
+
+            var currentPath = window.location.pathname;
+            var pathArray = currentPath.split('/');
+            var finalIndex = pathArray[pathArray.length - 1];
+
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('get-data-for-edit') }}',
+                data: {
+                    id: group_data.group_id,
+                },
+                success: function(response) {
+                    $(".edit-students").append(response);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+
+            $('#select-year').find('option[value="' + group_data.year + '"]').prop('selected', true);
+            $('#select-semester').find('option[value="' + group_data.semester + '"]').prop('selected', true);
+
+            $('#myForm').on('submit', function() {
+                event.preventDefault();
+                var formData = new FormData($('#myForm')[0]);
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+                formData.append('group_id', finalIndex);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('update-students-group') }}',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.status == '200') {
+                            window.location.href =
+                                "{{ route('managestudents-studentsgroup') }}";
+                        }
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+        });
+
+        function nameCheck(value) {
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('ajax-student-group-detail') }}',
+                success: (response) => {
+                    response.map((e) => {
+                        if (e.group_name == value && group_data.group_name != value) {
+                            alert("This Group Name is already in use !");
+                            $("#group-name").val("");
+                        }
+                    });
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            });
+        }
+    </script>
 
 @endsection

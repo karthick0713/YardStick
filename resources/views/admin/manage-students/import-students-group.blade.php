@@ -19,12 +19,27 @@
 @section('content')
     <div class="container mt-4">
         <div class="container">
+            @if (session('success'))
+                <div class="success-message col-md-5">
+                    <div class="alert bg-success text-white fw-bold">
+                        {{ session('success') }}
+                    </div>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="error-message col-md-5">
+                    <div class="alert bg-danger text-white fw-bold">
+                        {{ session('error') }}
+                    </div>
+                </div>
+            @endif
 
             <div class="row col-12">
                 <div class="col-5"></div>
                 {{-- template download for entry the student groups data --}}
                 <div class="col-6 justify-content-center d-flex">
-                    <a download="" href="{{ asset('import-templates/users-import-template.xlsx') }}"><button
+                    <a download="" href="{{ asset('import-templates/students-group-template.xlsx') }}"><button
                             class="background-info btn text-white">Download Template</button></a>
                 </div>
 
@@ -37,11 +52,13 @@
                         <div class="card-body background-light">
                             <div class="text-center fw-bold text-sec-color mt-3">Choose a File</div>
 
-                            <form action="" method="">
+                            <form action="{{ route('import-student-group-excel') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
                                 <div class="mb-3 mt-4">
                                     <label class="ms-4" for="">Select Only a CSV, XLSX, or XLS file:</label>
-                                    <input type="file" class="form-control login-fields" id="username"
-                                        accept=".xlsx, .xls, .csv" placeholder="">
+                                    <input type="file" class="form-control login-fields" id="username" required
+                                        name="uploaded_file" accept=".xlsx, .xls, .csv" placeholder="">
                                 </div>
 
                                 <div class="row mt-5">
@@ -56,4 +73,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(() => {
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+        })
+    </script>
 @endsection

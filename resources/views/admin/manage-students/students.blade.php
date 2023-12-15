@@ -5,6 +5,8 @@
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/select2.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/datatable-bootstrap5.css') }}">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css"> --}}
 
 @endsection
 
@@ -15,15 +17,15 @@
 @section('page-script')
 
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
-    <script src="{{ asset('assets/js/pagenation.js') }}"></script>
     <script src="{{ asset('assets/js/jquery-repeater.js') }}"></script>
     <script src="{{ asset('assets/js/forms-extras.js') }}"></script>
     <script src="{{ asset('assets/js/form-select.js') }}"></script>
     <script src="{{ asset('assets/js/select2.js') }}"></script>
+
+    <script src="{{ asset('assets/js/datatable-bootstrap5.js') }}"></script>
 @endsection
 
 @section('content')
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     <style>
         .dropdown {
             position: relative;
@@ -94,6 +96,7 @@
             margin-bottom: 10px;
         }
     </style>
+    <script src=" https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
     <div class="container mt-4">
 
@@ -118,15 +121,15 @@
             <button class="button-plus-icon"></button>
         </div>
         <div class="card ">
-            {{-- list of students table --}}
-            <div class="table-responsive  text-nowrap">
+
+            {{-- <div class="table-responsive  text-nowrap">
                 <table id="example" class="table table-striped display">
                     <thead class="background-secondary">
                         <tr class="text-white">
                             <th scope="col" class="text-white">REGISTER NO</th>
                             <th scope="col" class="text-white">STUDENT NAME</th>
                             <th scope="col" class="text-white">COLLEGE</th>
-                            {{-- <th scope="col" class="text-white">SEMESTER</th> --}}
+                          
                             <th scope="col" class="text-white">MOBILE</th>
                             <th scope="col" class="text-white">STATUS</th>
                             <th scope="col" class="text-white">ACTIONS</th>
@@ -141,18 +144,33 @@
                             <th><input type="search" name="" class="form-control table-search-bar"
                                     placeholder="Search College" id="college" onkeyup="searchTable('college', 0)"></th>
 
-                            {{-- <th><input type="search" name="" class="form-control table-search-bar"
-                        placeholder="Search Semester" id="semester" onkeyup="searchTable('semester', 0)"></th> --}}
                             <th>
                                 <input type="search" name="" class="form-control table-search-bar"
                                     placeholder="Search Mobile" id="mobile-no" onkeyup="searchTable('mobile-no', 0)">
                             </th>
                             <th>
-                                {{-- <input type="search" name="" class="form-control table-search-bar"
-                            placeholder="Search Email" id="email-id" onkeyup="searchTable('email-id', 0)"> --}}
+
                             </th>
 
                             <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div> --}}
+
+            <div class="card-datatable text-nowrap">
+                <table class="dt-column-search table table-striped display">
+                    <thead class="background-secondary ">
+                        <tr>
+                            <th class="text-white">Register No</th>
+                            <th class="text-white">Student Name</th>
+                            <th class="text-white">College</th>
+                            <th class="text-white">Mobile</th>
+                            <th class="text-white">Status</th>
+                            <th class="text-white">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -163,12 +181,12 @@
 
 
         </div>
-
+        {{-- 
         <div class="pagination-flex-container justify-content-end  mt-5" id="pagination">
             <button class="page-link btn-sm" id="previous" disabled>Previous</button>
             <div id="page-numbers" class="pagination-flex-container"></div>
             <button class="page-link btn-sm" id="next">Next</button>
-        </div>
+        </div> --}}
 
 
         {{-- Add users Model --}}
@@ -271,7 +289,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{-- <button type="bu tton" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
                         <button type="submit" class="btn text-white background-secondary">Submit</button>
                     </div>
                     </form>
@@ -293,42 +310,9 @@
                     <div class="modal-body">
                         <div>
                             <table id="" class="table table-responsive">
-                                <tr>
-                                    <td>COLLEGE:</td>
-                                    <td><b>Study World College of Engineering</b></td>
-                                </tr>
-                                <tr>
-                                    <td>STUDENT NAME:</td>
-                                    <td><b>ADIPI MANOJ KUMAR</b></td>
-                                </tr>
-                                <tr>
-                                    <td>REGISTER NO:</td>
-                                    <td><b>721120104001</b></td>
-                                </tr>
-                                <tr>
-                                    <td>DEPARTMENT:</td>
-                                    <td><b>CSE</b></td>
-                                </tr>
-                                <tr>
-                                    <td>BATCH:</td>
-                                    <td><b>2022-2024</b></td>
-                                </tr>
-                                <tr>
-                                    <td>YEAR:</td>
-                                    <td><b>3rd Year</b></td>
-                                </tr>
-                                <tr>
-                                    <td>SEMESTER:</td>
-                                    <td><b>6th sem</b></td>
-                                </tr>
-                                <tr>
-                                    <td>EMAIL ID:</td>
-                                    <td><b>adipimanojkumar@gmail.com</b></td>
-                                </tr>
-                                <tr>
-                                    <td>MOBILE NO:</td>
-                                    <td><b>8688219585</b></td>
-                                </tr>
+                                <tbody class="user_body">
+
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -339,9 +323,6 @@
             </div>
         </div>
 
-
-
-
         {{-- edit Modal --}}
 
         <div class="modal fade" id="editUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -349,102 +330,19 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="clearForm()"
-                            aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row col-12">
-                            <form id="input-form">
-
+                    <form id="edit-form">
+                        <div class="modal-body">
+                            <div class="row col-12">
                                 @csrf
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="client" class="col-form-label">College:</label>
-                                        <select name="" class="form-control" required id="edit-college">
-                                            <option value="" disabled>SELECT</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mt-1 col-md-6 mb-3">
-                                        <label for="select2Dark" class="form-label">Skills:</label>
-                                        <div class="mt-1 select2-dark">
-                                            <select id="select2Darks" class="select2 form-select" multiple>
-                                                <option value="1" selected>PHP</option>
-                                                <option value="2" selected>PYTHON</option>
-                                                <option value="2">C</option>
-                                                <option value="2">C++</option>
-                                                <option value="3">JAVA</option>
-                                                <option value="4" selected>ANGULAR</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="" class="col-form-label">Department:</label>
-                                        <select name="" class="form-control" id="edit-department">
-                                            <option value="" disabled>SELECT</option>
-
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="edit-year" class="col-form-label">Year:</label>
-                                        <select name="" class="form-control" id="">
-                                            <option value="" disabled>SELECT</option>
-                                            <option value="">1st Year</option>
-                                            <option value="">2nd Year</option>
-                                            <option value="">3rd Year</option>
-                                            <option value="">4th Year</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="edit-semester" class="col-form-label">Semester:</label>
-                                        <select name="" class="form-control" id="">
-                                            <option value="" disabled>SELECT</option>
-                                            <option value="">First Semester</option>
-                                            <option value="">Second Semester</option>
-                                            <option value="">Third Semester</option>
-                                            <option value="">Fourth Semester</option>
-                                            <option value="">Fifth Semester</option>
-                                            <option value="">Sixth Semester</option>
-                                            <option value="">Seventh Semester</option>
-                                            <option value="">Eighth Semester</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="edit-student-name" class="col-form-label">Student Name:</label>
-                                        <input type="text" class="form-control" value="ADIPI MANOJ KUMAR"
-                                            id="edit-student-name" required>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="edit-register-no" class="col-form-label">Register No:</label>
-                                        <input type="text" class="form-control" value="721120104001"
-                                            id="edit-register-no" required>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="edit-email-id" class="col-form-label">Email Id:</label>
-                                        <input type="email" class="form-control" value="adipimanojkumar@gmail.com"
-                                            id="edit-email-id" required>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="edit-mobile-no" class="col-form-label">Mobile No:</label>
-                                        <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                            maxlength="10" value="8688219585" class="form-control" id="edit-mobile-no"
-                                            required>
-                                    </div>
+                                <div class="row edit_user_body">
                                 </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
-                        <button type="submit" class="btn text-white background-secondary">Submit</button>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn text-white background-secondary">Submit</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -459,17 +357,18 @@
                         <div class="icon-box">
                         </div>
                         <h4 class="modal-title">Are you sure?</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close">&times;</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                     </div>
                     <form action="" method="">
                         <div class="modal-body">
                             <p>Do You Want to Delete this Record ?</p>
+                            <input type="hidden" name="" id="student-delete-id">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn background-info text-white" data-bs-dismiss="modal"
                                 aria-label="Close">Cancel</button>
-                            <button type="submit" class="btn background-secondary text-white">Delete</button>
+                            <button type="button" onclick="deleteStudent()"
+                                class="btn background-secondary text-white">Delete</button>
                         </div>
                     </form>
                 </div>
@@ -478,69 +377,112 @@
 
 
         <script>
-            $('#example').DataTable({
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('fetch-students') }}',
-                    type: 'GET',
-                },
-                columns: [{
-                        data: 'register_no',
-                        name: 'register_no'
-                    },
-                    {
-                        data: 'student_name',
-                        name: 'student_name'
-                    },
-                    {
-                        data: 'college_name',
-                        name: 'college_id'
-                    },
-                    {
-                        data: 'mobile_no',
-                        name: 'mobile_no'
-                    },
-                    {
-                        data: 'is_active',
-                        name: 'is_active',
-                        render: function(data, type, row) {
-                            return `
-                                <label class="switch">
-                                    <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange(${row.student_id},${data})" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            `;
-                        },
-                    },
-                    {
-                        data: 'other_mobile',
-                        name: 'other_mobile',
-                        render: function(data, type, row) {
-                            return `
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewUser" onclick="openViewUserModal(${row.student_id})">
-                                    <i class="bx bx-show-alt"></i>
-                                </a>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#editUser" onclick="openEditUserModal(${row.student_id})">
-                                    <i class="bx bx-edit-alt"></i>
-                                </a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="openDeleteModal(${row.student_id})" class="text-black icon-buttons">
-                                    <i class="bx bxs-trash"></i>
-                                </a>
-                            `;
-                        },
-                    },
-                ],
-                searching: false,
-                paging: false,
-                info: false
+            $(document).ready(() => {
+                setTimeout(() => {
+                    $("input[type='search']").addClass("form-control");
+                    var targetElement = $('select[name="DataTables_Table_0_length"]');
+                    targetElement.addClass('form-control');
+                }, 5);
             });
 
+            t = $(".dt-column-search");
+
+            if (t.length) {
+                $(".dt-column-search thead tr")
+                    .clone(!0)
+                    .appendTo(".dt-column-search thead"),
+                    $(".dt-column-search thead tr:eq(1) th").each(function(a) {
+                        var t = $(this).text();
+                        $(this).html(
+                                '<input type="text" class="form-control" placeholder="Search ' +
+                                t +
+                                '" />'
+                            ),
+                            $("input", this).on("keyup change", function() {
+                                c.column(a).search() !== this.value &&
+                                    c.column(a).search(this.value).draw();
+                            });
+                    });
+                var c = t.DataTable({
+                    ajax: "{{ route('fetch-students') }}",
+                    columns: [{
+                            data: "register_no",
+                            orderable: false
+                        },
+                        {
+                            data: "student_name",
+                            orderable: false
+                        },
+                        {
+                            data: "college_name",
+                            orderable: false
+                        },
+                        {
+                            data: "mobile_no",
+                            orderable: false
+                        },
+                        {
+                            data: "is_active",
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                return `
+                        <label class="switch">
+                            <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange(${row.student_id},${data})" id="statusToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    `;
+                            },
+                        },
+                        {
+                            data: "student_id",
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                return `
+                        <a class="icon-buttons"  onclick="openViewUserModal(${row.student_id})">
+                            <i class="bx bx-show-alt"></i>
+                        </a>
+                        <a class="icon-buttons" onclick="openEditUserModal(${row.student_id})">
+                            <i class="bx bx-edit-alt"></i>
+                        </a>
+                        <a onclick="openDeleteModal(${row.student_id})" class="text-black icon-buttons">
+                            <i class="bx bxs-trash"></i>
+                        </a>
+                    `;
+                            },
+                        },
+                    ],
+                    orderCellsTop: !0,
+                    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                });
+            }
+
+
+
+            function openViewUserModal(id) {
+                $(".user_body").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('fetch-student-details') }}',
+                    data: {
+                        'student_id': id
+                    },
+                    success: function(response) {
+                        $(".user_body").append(response);
+                        $("#viewUser").modal('show');
+                    }
+
+                });
+
+            }
 
             $(document).ready(() => {
 
                 var college = @json($colleges);
                 college.map((col) => {
-                    $("#select-college").append('<option value="' + col.college_id + '">' + col.college_name +
+                    $("#select-college").append('<option value="' + col.college_id + '">' + col
+                        .college_name +
                         '</option>');
                     $("#edit-college").append('<option value="' + col.college_id + '">' + col.college_name +
                         '</option>');
@@ -582,6 +524,29 @@
                         }
                     });
                 });
+
+                $('#edit-form').submit(function(event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    $.ajax({
+                        url: '{{ route('edit-students') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            console.error(xhr.responseText);
+                            location.reload();
+                        }
+                    });
+                });
             })
 
             function statusChange(student_id, data) {
@@ -600,52 +565,44 @@
                     },
                 });
             }
+
+            function openEditUserModal(id) {
+                $(".edit_user_body").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('get-edit-details') }}',
+                    data: {
+                        'student_id': id
+                    },
+                    success: function(response) {
+                        $(".edit_user_body").append(response);
+                        $("#editUser").modal('show');
+                    }
+                });
+            }
+
+            function openDeleteModal(id) {
+                $("#student-delete-id").val(id);
+                $('#deleteModal').modal('show');
+            }
+
+            function deleteStudent() {
+                var studentId = $("#student-delete-id").val();
+                $.ajax({
+                    url: '{{ route('delete-student') }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        'student_id': studentId,
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        location.reload();
+                    }
+                });
+            }
         </script>
 
     @endsection
-
-    {{-- <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <!-- Include DataTables -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('fetch-students') }}',
-                    type: 'GET',
-                },
-                columns: [{
-                        data: 'register_no',
-                        name: 'register_no'
-                    },
-                    {
-                        data: 'student_name',
-                        name: 'student_name'
-                    },
-                    {
-                        data: 'college',
-                        name: 'college_id'
-                    },
-                    {
-                        data: 'mobile',
-                        name: 'mobile_no'
-                    },
-                    {
-                        data: 'is_active',
-                        name: 'is_active'
-                    },
-                    {
-                        data: 'other_mobile',
-                        name: 'other_mobile',
-                        render: function(data, type, row) {
-                            return '<button class="btn btn-sm btn-info" onclick="viewDetails(' + row
-                                .other_mobile + ')">View</button>';
-                        },
-                    },
-                ],
-            });
-        });
-    </script> --}}

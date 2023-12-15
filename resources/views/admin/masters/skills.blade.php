@@ -64,7 +64,7 @@
 
                         @foreach ($data as $key => $value)
                             <tr>
-                                <td class=""><img src="{{ url($value->logo) }}" height="50" width="50"
+                                <td class=""><img src="{{ asset($value->logo) }}" height="50" width="50"
                                         alt=""></td>
                                 <td class="">{{ strtoupper($value->skill_name) }}</td>
                                 <td class="text-center">
@@ -178,7 +178,7 @@
                     <div class="icon-box">
                     </div>
                     <h4 class="modal-title">Are you sure?</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form onsubmit="return deleteSkill()">
                     <div class="modal-body">

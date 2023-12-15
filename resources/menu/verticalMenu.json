@@ -7,19 +7,21 @@
       "slug": "admin-dashboard"
     },
     {
+      "url": "/admin/courses",
+      "name": "Courses",
+      "icon": "menu-icon tf-icons bx bx-book",
+      "slug": "admin-courses"
+    },
+
+    {
       "name": "Manage Tests",
       "icon": "menu-icon tf-icons bx bx-building",
       "slug": " manage-tests",
       "submenu": [
         {
-          "url": "/admin/manage-test/test",
-          "name": "Create Contest",
-          "slug": "create-test"
-        },
-        {
-          "url": "/admin/manage-test/quiz",
-          "name": "Create Quiz",
-          "slug": "create-quiz"
+          "url": "/admin/manage-test/manage-test",
+          "name": "Manage Test",
+          "slug": "manage-test"
         }
       ]
     },
@@ -94,6 +96,11 @@
           "url": "/admin/masters/difficulty",
           "name": "Manage Difficulties",
           "slug": "manage-difficulty"
+        },
+        {
+          "url": "/admin/masters/categories",
+          "name": "Manage Categories",
+          "slug": "manage-categories"
         },
         {
           "url": "/admin/masters/skills",

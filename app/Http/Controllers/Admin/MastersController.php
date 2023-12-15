@@ -55,11 +55,18 @@ class MastersController extends Controller
     //edit difficulty status
     public function difficulty_status(Request $request)
     {
+        $val =  DB::table('master_difficulties')->where('difficulty_id', $request->input('value'))->first();
 
-        DB::table('master_difficulties')->where('difficulty_id', $request->input('value'))->update([
-            'is_active' => $request->input('is_active'),
-            'updated_at' => now(),
-        ]);
+        if ($val->is_active == 1) {
+            $data['is_active'] = 2;
+            $data['updated_at'] = now();
+        } else {
+            $data['is_active'] = 1;
+            $data['updated_at'] = now();
+        }
+
+        DB::table('master_difficulties')->where('difficulty_id', $request->input('value'))->update($data);
+
         return response()->json(['message' => ' Updated successfully!']);
     }
 
@@ -134,6 +141,7 @@ class MastersController extends Controller
 
     public function edit_skills(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'skill_name' => 'required|string|max:100',
         ]);
@@ -142,9 +150,8 @@ class MastersController extends Controller
             Session::flash('error', $validator->errors());
         }
 
-        if ($request->input('skill_logo') != "") {
+        if ($request->hasFile('skill_logo') && $request->file('skill_logo')->isValid()) {
             $imagePath = $request->file('skill_logo')->storeAs('assets/img/lang-icons', uniqid('', true) . '.' . $request->file('skill_logo')->getClientOriginalExtension(), 'public');
-
             $value = DB::table('master_skills')->where('skill_id', $request->input('skill_id'))->update([
                 'logo' => $imagePath,
                 'skill_name' => $request->input('skill_name'),
@@ -168,10 +175,17 @@ class MastersController extends Controller
     public function skill_status(Request $request)
     {
 
-        DB::table('master_skills')->where('skill_id', $request->input('value'))->update([
-            'is_active' => $request->input('is_active'),
-            'updated_at' => now(),
-        ]);
+        $val =  DB::table('master_skills')->where('skill_id', $request->input('value'))->first();
+
+        if ($val->is_active == 1) {
+            $data['is_active'] = 2;
+            $data['updated_at'] = now();
+        } else {
+            $data['is_active'] = 1;
+            $data['updated_at'] = now();
+        }
+
+        DB::table('master_skills')->where('skill_id', $request->input('value'))->update($data);
         return response()->json(['message' => $request->input('value')]);
     }
 
@@ -269,10 +283,19 @@ class MastersController extends Controller
     // change topic status
     public function topic_status(Request $request)
     {
-        DB::table('master_topics')->where('topic_id', $request->input('value'))->update([
-            'is_active' => $request->input('is_active'),
-            'updated_at' => now(),
-        ]);
+
+        $val =  DB::table('master_topics')->where('topic_id', $request->input('value'))->first();
+
+        if ($val->is_active == 1) {
+            $data['is_active'] = 2;
+            $data['updated_at'] = now();
+        } else {
+            $data['is_active'] = 1;
+            $data['updated_at'] = now();
+        }
+
+        DB::table('master_topics')->where('topic_id', $request->input('value'))->update($data);
+
         return response()->json(['message' => $request->input('value')]);
     }
 
@@ -332,10 +355,18 @@ class MastersController extends Controller
     public function department_status(Request $request)
     {
 
-        DB::table('master_departments')->where('department_id', $request->input('value'))->update([
-            'is_active' => $request->input('is_active'),
-            'updated_at' => now(),
-        ]);
+        $val =  DB::table('master_departments')->where('department_id', $request->input('value'))->first();
+
+        if ($val->is_active == 1) {
+            $data['is_active'] = 2;
+            $data['updated_at'] = now();
+        } else {
+            $data['is_active'] = 1;
+            $data['updated_at'] = now();
+        }
+
+        DB::table('master_departments')->where('department_id', $request->input('value'))->update($data);
+
         return response()->json(['message' => $request->input('value')]);
     }
 
@@ -377,17 +408,84 @@ class MastersController extends Controller
         }
     }
 
-    public function batch()
+    // manage categories
+
+    public function categories(Request $request)
     {
         $heading = "Masters";
-        $sub_heading = "Manage Batch";
-        return view('admin.masters.batch', compact('heading', 'sub_heading'));
+        $sub_heading = "Categories";
+        $data = DB::table('master_categories')->where('trash_key', 1)->get();
+        return view('admin.masters.categories', compact('heading', 'sub_heading', 'data'));
     }
 
-    public function semester()
+
+    public function category_add(Request $request)
     {
-        $heading = "Masters";
-        $sub_heading = "Manage Semester";
-        return view('admin.masters.semester', compact('heading', 'sub_heading'));
+
+        $validator = Validator::make($request->all(), [
+            'category' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errorMessages = $validator->errors()->all();
+            Session::flash('error', $errorMessages);
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $data = [
+            'category_name' => $request->input('category'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+        if (DB::table('master_categories')->insert($data)) {
+            Session::flash('success', 'Added successfully!');
+            return response()->json(['message' => 'Inserted successfully!']);
+        } else {
+            Session::flash('error', 'Something went wrong!');
+            return response()->json(['message' => 'Something went wrong!']);
+        }
+    }
+
+    //edit category status
+    public function category_status(Request $request)
+    {
+
+        $val =  DB::table('master_categories')->where('category_id', $request->input('value'))->first();
+
+        if ($val->is_active == 1) {
+            $data['is_active'] = 2;
+            $data['updated_at'] = now();
+        } else {
+            $data['is_active'] = 1;
+            $data['updated_at'] = now();
+        }
+
+        DB::table('master_categories')->where('category_id', $request->input('value'))->update($data);
+
+        return response()->json(['message' => ' Updated successfully!']);
+    }
+
+    //edit category
+    public function edit_category(Request $request)
+    {
+
+        $value = DB::table('master_categories')->where('category_id', $request->input('id'))->update([
+            'category_name' => $request->input('category'),
+            'updated_at' => now(),
+        ]);
+        if ($value) {
+            Session::flash('success', 'Updated successfully!');
+        } else {
+            Session::flash('error', 'Something went wrong!');
+        }
+    }
+
+    // delete category
+    public function delete_category(Request $request)
+    {
+        $value = DB::table('master_categories')->where('category_id', $request->input('id'))->update(['trash_key' => 2]); // change the trash key to 2.
+        if ($value) {
+            Session::flash('success', 'Deleted successfully!');
+        } else {
+            Session::flash('error', 'Something went wrong!');
+        }
     }
 }

@@ -86,7 +86,8 @@
         <div class="">
             <div class="container mt-5">
                 {{-- select fields to filter questions --}}
-                <form action="{{ route('view-filter-questions') }}" method="">
+                <form action="{{ route('set-filter-session') }}" method="POST">
+                    @csrf
                     <div class="row col-12">
                         <div class=" col-md-4 mb-4">
                             <div class="card custom-card">
@@ -98,11 +99,24 @@
                                     <div class="mx-auto mb-4">
                                         <span class=""><b>DIFFICULTY </b></span>
                                     </div>
-                                    <div class="d-flex justify-content-between">
-                                        <button type="button" class="btn btn-outline-primary mx-1">Easy-75</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Medium-70</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Hard-55</button>
+                                    <div class=" button-container">
+
+                                        @foreach ($difficulty as $diff)
+                                            @php
+                                                $val = DB::table('question_banks')
+                                                    ->where('difficulties_id', $diff->difficulty_id)
+                                                    ->where('skills_id', $skills->skill_id)
+                                                    ->where('trash_key', 1)
+                                                    ->where('is_active', 1)
+                                                    ->get();
+                                            @endphp
+                                            <button type="button" value="{{ $diff->difficulty_id }}"
+                                                class="btn btn-outline-primary difficulty_button mx-1">{{ $diff->difficulty_name }}-{{ count($val) }}</button>
+                                        @endforeach
                                     </div>
+                                    <input type="hidden" name="difficulties" id="difficulties">
+                                    <input type="hidden" name="skills" id="skills" value="{{ $skills->skill_id }}">
+
                                 </div>
                             </div>
                         </div>
@@ -119,8 +133,11 @@
                                     </div>
 
                                     <div class="button-container">
-                                        <button type="button" class="btn btn-outline-primary mx-1">Programming</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">MCQ</button>
+                                        <input type="hidden" name="categories" id="categories">
+                                        @foreach ($category as $cat)
+                                            <button type="button" value="{{ $cat->category_id }}"
+                                                class="btn btn-outline-primary mx-1 category_button">{{ $cat->category_name }}</button>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -136,13 +153,11 @@
                                         <span class=""><b>TOPICS</b></span>
                                     </div>
                                     <div class="button-container">
-                                        <button type="button" class="btn btn-outline-primary mx-1">Arrays</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Operators</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Statements</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Variables</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Datatypes</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Keywords</button>
-                                        <button type="button" class="btn btn-outline-primary mx-1">Threads</button>
+                                        <input type="hidden" name="topics" id="topics">
+                                        @foreach ($topics as $top)
+                                            <button type="button" value="{{ $top->topic_id }}"
+                                                class="btn btn-outline-primary mx-1 topic_button">{{ $top->topic_name }}</button>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -179,7 +194,49 @@
                         selectedValues.push(button.dataset.value);
                     }
 
-                    console.log('Selected values:', selectedValues);
+                });
+            });
+
+
+            $(document).ready(function() {
+                var categoryArray = [];
+                var difficultyArray = [];
+                var topicArray = [];
+
+                $(".category_button").on("click", function() {
+                    var valueToAdd = $(this).val();
+                    var index = categoryArray.indexOf(valueToAdd);
+                    if (index === -1) {
+                        categoryArray.push(valueToAdd);
+                        $("#categories").val(categoryArray);
+                    } else {
+                        categoryArray.splice(index, 1);
+                        $("#categories").val(categoryArray);
+                    }
+                });
+
+                $(".difficulty_button").on("click", function() {
+                    var valueToAdd = $(this).val();
+                    var index = difficultyArray.indexOf(valueToAdd);
+                    if (index === -1) {
+                        difficultyArray.push(valueToAdd);
+                        $("#difficulties").val(difficultyArray);
+                    } else {
+                        difficultyArray.splice(index, 1);
+                        $("#difficulties").val(difficultyArray);
+                    }
+                });
+
+                $(".topic_button").on("click", function() {
+                    var valueToAdd = $(this).val();
+                    var index = topicArray.indexOf(valueToAdd);
+                    if (index === -1) {
+                        topicArray.push(valueToAdd);
+                        $("#topics").val(topicArray);
+                    } else {
+                        topicArray.splice(index, 1);
+                        $("#topics").val(topicArray);
+                    }
                 });
             });
         </script>

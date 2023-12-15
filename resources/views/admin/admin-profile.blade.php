@@ -110,7 +110,7 @@
                                 <td>Address</td>
                                 <td class="fw-bold">{{ $data->address }}</td>
                             </tr>
-                            <tr class="height">
+                            <tr class="">
                                 <td>Skills</td>
                                 <td class="fw-bold">
                                     @php

@@ -164,7 +164,13 @@ class ManageCollegeController extends Controller
         if ($validator->fails()) {
             Session::flash('error', $validator->errors());
         }
+
         if ($request->hasFile('uploaded_file') && $request->file('uploaded_file')->isValid()) {
+
+            DB::table('master_colleges')
+                ->whereIn('error_key', [1, 2])
+                ->delete();
+
             $the_file = $request->file('uploaded_file');
             $spreadsheet = IOFactory::load($the_file->getRealPath());
             $sheet = $spreadsheet->getActiveSheet();
@@ -188,12 +194,11 @@ class ManageCollegeController extends Controller
                 ) {
                     foreach ($db_val as $val) {
                         if (
-                            $val->primary_mobile_no == $sheet->getCell('D' . $row)->getValue() &&
-                            $val->alternate_mobile_no == $sheet->getCell('E' . $row)->getValue() &&
+                            $val->primary_mobile_no == $sheet->getCell('D' . $row)->getValue() ||
+                            $val->alternate_mobile_no == $sheet->getCell('E' . $row)->getValue() ||
                             $val->email_id == $sheet->getCell('C' . $row)->getValue()
                         ) {
                             $error_key = 2;
-                            $error_key1 = 2;
                         }
                     }
 
@@ -214,6 +219,15 @@ class ManageCollegeController extends Controller
                     ];
                     $values[] = DB::table('master_colleges')->insertGetId($data);
                 } else {
+                    foreach ($db_val as $val) {
+                        if (
+                            $val->primary_mobile_no == $sheet->getCell('D' . $row)->getValue() ||
+                            $val->alternate_mobile_no == $sheet->getCell('E' . $row)->getValue() ||
+                            $val->email_id == $sheet->getCell('C' . $row)->getValue()
+                        ) {
+                            $error_key1 = 2;
+                        }
+                    }
                     $data = [
                         'college_name' => $sheet->getCell('B' . $row)->getValue(),
                         'email_id' => $sheet->getCell('C' . $row)->getValue(),
@@ -229,10 +243,14 @@ class ManageCollegeController extends Controller
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
+
+
                     $values2[] = DB::table('master_colleges')->insertGetId($data);
                 }
+
                 $startcount++;
             }
+
             if (count($values2) > 0) {
                 return redirect()->route('edit-import-data');
             } else {
@@ -253,7 +271,6 @@ class ManageCollegeController extends Controller
     public function edit_data(Request $request)
     {
 
-        dd($request->all());
         $validator = Validator::make($request->all(), [
             'college_name' => 'required',
             'email_id' => 'required',

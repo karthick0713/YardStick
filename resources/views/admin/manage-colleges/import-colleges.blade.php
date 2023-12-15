@@ -28,11 +28,7 @@
                                 ->where('error_key', 2)
                                 ->get();
                         @endphp
-                        {{-- @if ($dup_data != '')
-                            <a href="{{ route('edit-import-data') }}">
-                                <button class="background-info btn ms-4 text-white">Edit Incorrect Data</button>
-                            </a>
-                        @endif --}}
+
                     </div>
 
                 </div>
@@ -48,7 +44,7 @@
                                 @csrf
                                 <div class="mb-3 mt-4">
                                     <label class="ms-4" for="">Select Only a CSV, XLSX, or XLS file:</label>
-                                    <input type="file" class="form-control login-fields" id="username"
+                                    <input type="file" class="form-control login-fields" id=""
                                         name="uploaded_file" accept=".xlsx, .xls, .csv" required placeholder="">
                                 </div>
                                 <div class="row mt-5">
@@ -65,29 +61,5 @@
         </div>
     </div>
 
-    <script>
-        // $(document).ready(function() {
-        //     $('#import-form').submit(function(e) {
-        //         e.preventDefault();
-        //         var formData = new FormData(this);
-        //         $.ajax({
-        //             url: '{{ route('import-college') }}',
-        //             type: 'POST',
-        //             data: formData,
-        //             processData: false,
-        //             contentType: false,
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             },
-        //             success: function(response) {
-        //                 console.log(response);
-        //                 window.location.href = "{{ route('managecolleges-colleges') }}";
-        //             },
-        //             error: function(xhr) {
-        //                 console.error(xhr.responseText);
-        //             }
-        //         });
-        //     });
-        // });
-    </script>
+    <script></script>
 @endsection

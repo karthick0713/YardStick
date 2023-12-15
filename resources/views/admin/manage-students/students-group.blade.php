@@ -23,6 +23,21 @@
         }
     </style>
     <div class="container mt-4">
+        @if (session('error'))
+            <div class="error-message col-md-5">
+                <div class="alert bg-danger text-white fw-bold">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="success-message col-md-5">
+                <div class="alert bg-success text-white fw-bold">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
         <div class="mb-2">
             <a href="{{ route('add-students-group') }}"><button class="button-plus-icon"><i
                         class='plus-icon bx bxs-plus-circle'></i></button></a>
@@ -38,6 +53,7 @@
                             <th scope="col" class="text-white">COLLEGE</th>
                             <th scope="col" class="text-white">DEPARTMENT</th>
                             <th scope="col" class="text-white">YEAR</th>
+                            <th scope="col" class="text-white">SEMESTER</th>
                             <th scope="col" class="text-white">STATUS</th>
                             <th scope="col" class="text-white">ACTIONS</th>
                         </tr>
@@ -50,51 +66,82 @@
                                     placeholder="Search Department" id=""></td>
                             <td><input type="search" name="" class="form-control table-search-bar"
                                     placeholder="Search Year" id=""></td>
+                            <td><input type="search" name="" class="form-control table-search-bar"
+                                    placeholder="Search Semester" id=""></td>
                             <td></td>
                             <td></td>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>CSE-2nd-A</td>
-                            <td>STUDY WORLD COLLEGE OF ENGINEERING</td>
-                            <td>CSE</td>
-                            <td>2nd Year</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewGroup"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" href="{{ route('edit-students-group') }}"><i
-                                        class="text-black  bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>ECE-1st-B</td>
-                            <td>PSG COLLEGE OF INSTITUTIONS</td>
-                            <td>ECE</td>
-                            <td>1st Year</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewGroup"><i
-                                        class="bx bx-show-alt"></i></a>
-                                <a class="icon-buttons" href="{{ route('edit-students-group') }}"><i
-                                        class="text-black bx bx-edit-alt"></i></a>
-                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-black icon-buttons"><i
-                                        class="bx bxs-trash"></i></a>
-                            </td>
-                        </tr>
+                        @foreach ($student_group as $key => $value)
+                            @php
+                                switch ($value->year) {
+                                    case 1:
+                                        $year = '1st Year';
+                                        break;
+                                    case 2:
+                                        $year = '2nd Year';
+                                        break;
+                                    case 3:
+                                        $year = '3rd Year';
+                                        break;
+                                    case 4:
+                                        $year = '4th Year';
+                                        break;
+                                }
+
+                                switch ($value->semester) {
+                                    case 1:
+                                        $semester = '1st Semester';
+                                        break;
+                                    case 2:
+                                        $semester = '2nd Semester';
+                                        break;
+                                    case 3:
+                                        $semester = '3rd Semester';
+                                        break;
+                                    case 4:
+                                        $semester = '4th Semester';
+                                        break;
+                                    case 5:
+                                        $semester = '5th Semester';
+                                        break;
+                                    case 6:
+                                        $semester = '6th Semester';
+                                        break;
+                                    case 7:
+                                        $semester = '7th Semester';
+                                        break;
+                                    case 8:
+                                        $semester = '8th Semester';
+                                        break;
+                                }
+                            @endphp
+                            <tr>
+                                <td>{{ $value->group_name }}</td>
+                                <td>{{ $value->college_name }}</td>
+                                <td>{{ $value->department_name }}</td>
+                                <td>{{ $year }}</td>
+                                <td>{{ $semester }}</td>
+                                <td class="text-center">
+                                    <label class="switch">
+                                        <input type="checkbox" {{ $value->is_active == 1 ? 'checked' : '' }}
+                                            onclick="statusChange({{ $value->group_id }},{{ $value->is_active }})"
+                                            id="statusToggle">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <a class="icon-buttons" onclick="viewGroupStudents({{ $value->group_id }})"><i
+                                            class="bx bx-show-alt"></i></a>
+                                    <a class="icon-buttons"
+                                        href="{{ route('edit-students-group', ['id' => $value->group_id]) }}"><i
+                                            class="text-black bx bx-edit-alt"></i></a>
+                                    <a onclick="deleteModalOpen({{ $value->group_id }})" class="text-black icon-buttons"><i
+                                            class="bx bxs-trash"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -108,7 +155,7 @@
 
 
     <div class="modal fade" id="viewGroup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">View Students</h5>
@@ -117,56 +164,7 @@
                 <div class="modal-body">
                     <div>
                         <table id="" class="table table-responsive">
-                            <tr>
-                                <td>1.</td>
-                                <td>ADIPI MANOJ KUMAR</td>
-                            </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td>ALAGU MANIKANDAN</td>
-
-                            </tr>
-                            <tr>
-                                <td>3.</td>
-                                <td>KOTHA CHETAN KUMAR</td>
-
-                            </tr>
-                            <tr>
-                                <td>4.</td>
-                                <td>HARI PRASATH C</td>
-
-                            </tr>
-                            <tr>
-                                <td>5.</td>
-                                <td>ATHUL S JOTHI
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>6.</td>
-                                <td>BOOMIGA</td>
-
-                            </tr>
-                            <tr>
-                                <td>7.</td>
-                                <td>EKAMBARAM BHANU PRAKASH</td>
-
-                            </tr>
-                            <tr>
-                                <td>8.</td>
-                                <td>KONDAREDDY NIKHILESHWAR REDDY</td>
-
-                            </tr>
-                            <tr>
-                                <td>9.</td>
-                                <td>MADINENI MADHVILATHA</td>
-
-                            </tr>
-                            <tr>
-                                <td>10.</td>
-                                <td>MALAVIKA R</td>
-
-                            </tr>
+                            <tbody id="view-group-students"></tbody>
                         </table>
                     </div>
                 </div>
@@ -184,21 +182,88 @@
                     <div class="icon-box">
                     </div>
                     <h4 class="modal-title">Are you sure?</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="" method="">
                     <div class="modal-body">
+                        <input type="hidden" name="" id="group-delete-id">
                         <p>Do You Want to Delete this Record ?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn background-info text-white" data-bs-dismiss="modal"
                             aria-label="Close">Cancel</button>
-                        <button type="submit" class="btn background-secondary text-white">Delete</button>
+                        <button type="button" onclick="delete_group()"
+                            class="btn background-secondary text-white">Delete</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <script>
+        $(document).ready(() => {
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+        });
 
+        function viewGroupStudents(id) {
+            $('#view-group-students').empty();
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('view-group-students') }}",
+                data: {
+                    id: id,
+                },
+                success: function(data) {
+                    $('#view-group-students').append(data);
+                    $("#viewGroup").modal('show');
+
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function statusChange(group_id, data) {
+            if (data == 1) {
+                is_active = 2;
+            } else {
+                is_active = 1;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('group-status') }}',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'group_id': group_id,
+                    'is_active': is_active,
+                },
+            });
+        }
+
+        function deleteModalOpen(id) {
+            $("#group-delete-id").val(id);
+            $('#deleteModal').modal('show');
+        }
+
+        function delete_group() {
+            var group_id = $("#group-delete-id").val();
+            $.ajax({
+                url: '{{ route('delete-group') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    'group_id': group_id,
+                },
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    location.reload();
+                }
+            });
+        }
+    </script>
 @endsection

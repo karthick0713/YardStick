@@ -12,19 +12,23 @@
 
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
-    <script src="{{ asset('assets/js/single-pagenation.js') }}"></script>
-    <script src="{{ asset('assets/js/single-table-search.js') }}"></script>
 @endsection
 
 @section('content')
     <div class="container mt-4">
         <div class="container">
-
+            @if (session('error'))
+                <div class="error-message col-md-5">
+                    <div class="alert bg-danger text-white fw-bold">
+                        {{ session('error') }}
+                    </div>
+                </div>
+            @endif
             <div class="row col-12">
                 <div class="col-5"></div>
                 {{-- template download for entry the student data --}}
                 <div class="col-6 justify-content-center d-flex">
-                    <a download="" href="{{ asset('import-templates/users-import-template.xlsx') }}"><button
+                    <a download="" href="{{ asset('import-templates/students-import-template.xlsx') }}"><button
                             class="background-info btn text-white">Download Template</button></a>
                 </div>
 
@@ -37,23 +41,14 @@
                         <div class="card-body background-light">
                             <div class="text-center fw-bold text-sec-color mt-3">Choose a File</div>
 
-                            <form action="" method="">
+                            <form action="{{ route('student-excel-import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
                                 <div class="mb-3 mt-4">
                                     <label class="ms-4" for="">Select Only a CSV, XLSX, or XLS file:</label>
-                                    <input type="file" class="form-control login-fields" id="username"
-                                        accept=".xlsx, .xls, .csv" placeholder="">
+                                    <input type="file" class="form-control login-fields" id="uploaded_file"
+                                        name="uploaded_file" accept=".xlsx, .xls, .csv" placeholder="" required>
                                 </div>
-                                <!--<div class="mb-3">-->
-                                <!--    <label for="">Role </label>-->
-                                <!--    <select name="" class="form-control login-fields">-->
-                                <!--        <option value="" selected disabled>SELECT</option>-->
-                                <!--    </select>-->
-                                <!--</div>-->
-                                {{-- <div class="mt-5">Password must be 8 characters.</div>
-                                <div>Accepted values for Email Verified are:
-                                    <button class="btn btn-sm background-info text-sec-color fw-bold">Yes</button>
-                                    <button class="btn btn-sm background-info text-sec-color fw-bold">No</button>
-                                </div> --}}
+
                                 <div class="row mt-5">
                                     <div class="col d-flex align-items-center  justify-content-center">
                                         <button class="btn background-secondary text-white mx-3 w-25">Proceed</button>
@@ -66,4 +61,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(() => {
+
+            $(".success-message").fadeIn().delay(3000).fadeOut();
+            $(".error-message").fadeIn().delay(3000).fadeOut();
+
+            $('#uploaded_file').on('change', (e) => {
+                var fileName = e.target.files[0].name;
+                var ext = fileName.split('.').pop().toLowerCase();
+                if (jQuery.inArray(ext, ['csv', 'xlsx', 'xls']) == -1) {
+                    alert('Please select a valid file');
+                    $("#uploaded_file").val("");
+                }
+            })
+        })
+    </script>
 @endsection

@@ -220,7 +220,7 @@
                     <div class="icon-box">
                     </div>
                     <h4 class="modal-title">Are you sure?</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form onsubmit="return deleteTopics()">
                     <div class="modal-body">
@@ -270,10 +270,12 @@
                     skills: selectedSkills
                 },
                 success: function(response) {
-                    location.reload();
+                    console.log(response);
+                    // location.reload();
                 },
                 error: function(xhr) {
-                    location.reload();
+                    console.log(xhr);
+                    // location.reload();
                 }
             });
         }
@@ -281,7 +283,7 @@
 
 
         function editModal(id) {
-
+            $("#select2Darks").empty();
             var datas = @json($data);
             console.log(datas);
             $.each(datas, function(key, value) {
@@ -292,7 +294,7 @@
                     if(isset($selectedSkillIds)){
                     @endphp
                     
-                    var selectedSkillIds = <?= $selectedSkillIds ?>;
+                    var selectedSkillIds = value.skills_id.split(',');
                     data1.map((item) => {
                         item.selected = selectedSkillIds.includes(item.id) ? true : false;
                         console.log(selectedSkillIds, item.id);

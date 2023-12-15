@@ -4,6 +4,7 @@
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/datatable-bootstrap5.css') }}">
 @endsection
 
 @section('vendor-script')
@@ -12,97 +13,51 @@
 
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
-    <script src="{{ asset('assets/js/pagenation.js') }}"></script>
-    <script src="{{ asset('assets/js/table-search.js') }}"></script>
+    <script src="{{ asset('assets/js/datatable-bootstrap5.js') }}"></script>
 @endsection
 
 @section('content')
     <div class="container mt-4">
+        @if (session('error'))
+            <div class="error-message col-md-5">
+                <div class="alert bg-danger text-white fw-bold">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="success-message col-md-5">
+                <div class="alert bg-success text-white fw-bold">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
         <div class="mb-2">
             {{-- Add test buttons --}}
-            <a href="{{ url('admin/manage-test/add-test-common') }}"><button class=" btn background-info text-white">Add Test
-                    Common</button></a>
-            <a href="{{ url('admin/manage-test/add-test-individual') }}"><button class=" btn background-info text-white">Add
-                    Test Individual</button></a>
+            <a href="{{ route('create-new-test') }}"><button class=" btn background-info text-white">Create
+                    Test
+                </button></a>
+
         </div>
         <div class="card ">
 
             {{-- list of created tests --}}
             <div class="table-responsive  text-nowrap">
-                <table id="example" class="table table-striped">
-                    <thead class="">
+                <table id="example" class="table table-striped dt-column-search">
+                    <thead>
                         <tr class="background-secondary">
-                            <th scope="col" class="text-white text-center">TEST DATE</th>
-                            <th scope="col" class="text-white text-center">SKILLS</th>
-                            <th scope="col" colspan="3" class="text-white text-center">QUESTIONS</th>
-                            <th scope="col" class="text-white text-center">STATUS</th>
-                            <th scope="col" class="text-white text-center">ACTIONS</th>
-                        </tr>
-                        <tr class="background-grey">
-                            <th>
-                                <input type="search" name="search_date" class="form-control table-search-bar"
-                                    placeholder="Search Date" id="search_date" onkeyup="searchTable('search_date', 0)">
-                            </th>
-                            <th>
-                                <input type="search" name="search_skills" class="form-control table-search-bar"
-                                    placeholder="Search Skills" id="search_skills"
-                                    onkeyup="searchTable('search_skills', 5)">
-                            </th>
-                            <th>
-                                EASY
-                            </th>
-                            <th>
-                                MEDIUM
-                            </th>
-                            <th>
-                                HARD
-                            </th>
-
-                            <th>
-
-                            </th>
-                            <th></th>
+                            <th scope="col" class="text-white text-center">Test Code</th>
+                            <th scope="col" class="text-white text-center">Test Date</th>
+                            <th scope="col" class="text-white text-center">Test Title</th>
+                            <th scope="col" class="text-white text-center">Test Assigned To</th>
+                            <th scope="col" class="text-white text-center">Status</th>
+                            <th scope="col" class="text-white text-center">Actions</th>
                         </tr>
                     </thead>
+
                     <tbody>
-
-
-
-                        <tr>
-                            <td>08-November-2023</td>
-                            <td>PHP</td>
-                            <td>30</td>
-                            <td>40</td>
-                            <td>40</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td class="fs-big text-center">
-                                <a class="icon-buttons " data-bs-toggle="modal" data-bs-target="#viewModal"><i
-                                        style="font-size: 1.5rem;" class="bx bx-show-alt"></i></a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>07-December-2023</td>
-                            <td>PYTHON</td>
-                            <td>30</td>
-                            <td>40</td>
-                            <td>40</td>
-                            <td class="text-center">
-                                <label class="switch">
-                                    <input type="checkbox" checked id="statusToggle">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td class="text-center">
-                                <a class="icon-buttons" data-bs-toggle="modal" data-bs-target="#viewModal"><i
-                                        style="font-size: 1.5rem;" class="bx bx-show-alt"></i></a>
-                        </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -126,79 +81,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="">
-                        <div class="responsive">
-                            <div class="accordion" id="testDetailsAccordion">
-                                <div class="accordion-item active">
-                                    <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                            <b>More Details</b>
-                                        </button>
-                                    </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse show"
-                                        aria-labelledby="headingOne" data-bs-parent="#testDetailsAccordion">
-                                        <div class="accordion-body">
+                    <div class="test-modal">
 
-                                            <p class="mb-2">
-                                                TEST DATE: <span class="float-end"
-                                                    style="font-size: 16px;">08-November-2023</span>
-                                            </p>
-                                            <p class="mb-2">
-                                                SKILLS: <span class="float-end" style="font-size: 16px;">PYTHON</span>
-                                            </p>
-                                            <label class="mt-2" style="font-size: 16px; font-weight: 600;"
-                                                for="">QUESTIONS:</label>
-                                            <div class="d-flex mt-2 justify-content-between" style="font-size: 16px;">
-                                                <p class="mb-0">EASY:</p>
-                                                <p class="mb-0" style="font-weight: 600;"><span>30</span></p>
-                                            </div>
-                                            <div class="d-flex justify-content-between" style="font-size: 16px;">
-                                                <p class="mb-0">MEDIUM:</p>
-                                                <p class="mb-0" style="font-weight: 600;"><span>40</span></p>
-                                            </div>
-                                            <div class="d-flex justify-content-between" style="font-size: 16px;">
-                                                <p class="mb-0">HARD:</p>
-                                                <p class="mb-0" style="font-weight: 600;"><span>40</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 responsive">
-                            <table class="table table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>College Name</th>
-                                        <th>Department</th>
-                                        <th>Year</th>
-                                        <th>Semester</th>
-                                        <th>Batch</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><b>1</b></td>
-                                        <td><b>Study World</b></td>
-                                        <td><b>CSE</b></td>
-                                        <td><b>1st Year</b></td>
-                                        <td><b>1st Semester</b></td>
-                                        <td><b>2022-2026</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>2</b></td>
-                                        <td><b>PSG</b></td>
-                                        <td><b>ECE</b></td>
-                                        <td><b>2nd Year</b></td>
-                                        <td><b>2nd Semester</b></td>
-                                        <td><b>2023-2027</b></td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -206,5 +90,129 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            $(document).ready(() => {
+
+                t = $(".dt-column-search");
+
+                if (t.length) {
+                    $(".dt-column-search thead tr")
+                        .clone(!0)
+                        .appendTo(".dt-column-search thead"),
+                        $(".dt-column-search thead tr:eq(1) th").each(function(a) {
+                            var t = $(this).text();
+                            $(this).html(
+                                    '<input type="text" class="form-control" placeholder="Search ' +
+                                    t +
+                                    '" />'
+                                ),
+                                $("input", this).on("keyup change", function() {
+                                    c.column(a).search() !== this.value &&
+                                        c.column(a).search(this.value).draw();
+                                });
+                        });
+
+
+                    var c = t.DataTable({
+                        ajax: "{{ route('get-test-details') }}",
+                        columns: [{
+                                data: "test_code",
+                                orderable: false
+                            },
+                            {
+                                data: "start_date",
+                                orderable: false
+                            },
+                            {
+                                data: "title",
+                                orderable: false
+                            },
+                            {
+                                data: "test_assigned_to",
+                                orderable: false
+                            },
+                            {
+                                data: "is_active",
+                                orderable: false,
+                                searchable: false,
+                                render: function(data, type, row) {
+                                    return `
+                                        <label class="switch">
+                                            <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.test_code}',${data})" id="statusToggle">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    `;
+                                },
+                            },
+                            {
+                                data: "test_assigned_to",
+                                orderable: false,
+                                searchable: false,
+                                render: function(data, type, row) {
+                                    var d = row.question_code;
+                                    return `
+                                        <a class="icon-buttons"  onclick="openViewModal('${row.test_code}')">
+                                            <i class="bx bx-show-alt"></i>
+                                        </a>
+                                        
+                                    `;
+                                },
+                            },
+                        ],
+
+                        orderCellsTop: !0,
+                        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                    });
+
+                    $(".dt-column-search tbody").on({
+                        mouseenter: function() {
+                            $(this).data("originalContent", $(this).text());
+                            var orig = $(this).text($(this).text() + "📋");
+                            $(this).css("cursor", "pointer");
+                        },
+                        mouseleave: function() {
+                            $(this).text($(this).data("originalContent"));
+                            $(this).css("cursor", "pointer");
+                        },
+                        click: function() {
+                            var contentToCopy = $(this).data("originalContent");
+                            var tempInput = $("<input>");
+                            $("body").append(tempInput);
+                            tempInput.val(contentToCopy).select();
+                            document.execCommand("copy");
+                            tempInput.remove();
+                            $(this).text(contentToCopy + "✅");
+                            setTimeout(function() {
+                                $(this).text(contentToCopy);
+                            }.bind(this), 2000);
+                        },
+                    }, "td:first-child");
+                }
+
+
+                $(".success-message").fadeIn().delay(3000).fadeOut();
+                $(".error-message").fadeIn().delay(3000).fadeOut();
+            });
+
+
+            function openViewModal(test_code) {
+                $(".test-modal").empty();
+                $.ajax({
+                    url: "{{ route('get-detailed-question-view') }}",
+                    type: "GET",
+                    data: {
+                        test_code: test_code
+                    },
+                    success: (response) => {
+                        $(".test-modal").append(response);
+                        $("#viewModal").modal("show");
+                    },
+                    error: (xhr) => {
+                        alert('Something went wrong..!');
+                    }
+                });
+            }
+        </script>
 
     @endsection
