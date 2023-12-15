@@ -10,7 +10,7 @@
       "url": "/admin/courses",
       "name": "Courses",
       "icon": "menu-icon tf-icons bx bx-book",
-      "slug": "admin-courses"
+      "slug": "manage-courses"
     },
 
     {

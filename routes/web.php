@@ -37,6 +37,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/dashboard', 'App\Http\Controllers\dashboard\Analytics@index')->name('admin-dashboard');
 
 
+    // courses(Admin)
+
+    Route::get('/admin/courses', $controller_path . '\Admin\ManageCourseController@manage_courses')->name('manage-courses');
+
+
     // Tests (Admin)
     Route::get('/admin/manage-test/manage-test', $controller_path . '\Admin\ManageTestController@manage_test')->name('manage-test');
     Route::post('/admin/manage-test/save-test', $controller_path . '\Admin\ManageTestController@save_test')->name('save-test');
