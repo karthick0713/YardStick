@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use League\CommonMark\Extension\SmartPunct\EllipsesParser;
 use Yajra\DataTables\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -474,14 +475,23 @@ class QuestionBankController extends Controller
     public function get_filtered_question(Request $request)
     {
 
-        $exclude_test = $request->input('exclude_tests');
-        $difficulties = $request->input('difficulties');
-        $topic_array = $request->input('topics');
-        $skill_array = $request->input('skills');
-        $difficulty_array = !is_null($difficulties) ? explode(',', $difficulties) : [];
-        $category_array =  $request->input('categories');
+        if ($request->input('exclude_tests') != null) {
+            $exclude_test = $request->input('exclude_tests');
+        } else {
+            $exclude_test = null;
+        }
 
-        if (isset($exclude_test)) {
+        if ($request->input('question_type') == "for_filter_questions") {
+            $question_type = $request->input('question_type');
+        } else {
+            $question_type = null;
+        }
+
+        $difficulties = $request->input('difficulties');
+
+        if ($exclude_test != null && $question_type == null) {
+
+
             $tests = explode(',', $exclude_test);
             $test_questions = [];
             foreach ($tests as $key => $ex_test) {
@@ -497,46 +507,39 @@ class QuestionBankController extends Controller
             }
             $imp_var = implode(',', $test_questions);
 
-            $result = DB::table('question_banks')
-                ->when($skill_array, function ($query) use ($skill_array) {
-                    return $query->leftJoin('master_skills', 'question_banks.skills_id', '=', 'master_skills.skill_id')
-                        ->whereIn('skills_id', $skill_array);
-                })
-                ->when($topic_array, function ($query) use ($topic_array) {
-                    return $query->leftJoin('master_topics', 'question_banks.topics_id', '=', 'master_topics.topic_id')
-                        ->whereIn('topics_id', $topic_array);
-                })
-                ->leftJoin('master_difficulties', 'question_banks.difficulties_id', '=', 'master_difficulties.difficulty_id')
-                ->when($category_array, function ($query) use ($category_array) {
-                    return $query->leftJoin('master_categories', 'question_banks.category', '=', 'master_categories.category_id')
-                        ->whereIn('category', $category_array);
-                })
+            $questions = DB::table('question_banks')
+                ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
+                ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
+                ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
+                ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
+                ->select('question_banks.question_code', 'question_banks.questions', 'master_categories.category_name', 'question_banks.is_active', 'master_topics.topic_name', 'master_skills.skill_name', 'master_difficulties.difficulty_name')
+                // ->whereNotIn('question_banks.question_code', explode(',', $imp_var))
                 ->whereNotIn('question_banks.question_code', explode(',', $imp_var))
+                ->orWhereNull('question_banks.question_code')
+
                 ->where('question_banks.trash_key', 1)
-                ->where('question_banks.is_active', 1);
+                ->get();
 
-            $column_to_select = [
-                'question_banks.*', 'master_difficulties.difficulty_name',
-            ];
 
-            if (!empty($skill_array)) {
-                $column_to_select[] = 'master_skills.skill_id';
-                $column_to_select[] = 'master_skills.skill_name';
-            }
+            return DataTables::of($questions)->toJson();
 
-            if (!empty($topic_array)) {
-                $column_to_select[] = 'master_topics.topic_id';
-                $column_to_select[] = 'master_topics.topic_name';
-            }
-            if (!empty($category_array)) {
-                $column_to_select[] = 'master_categories.category_id';
-                $column_to_select[] = 'master_categories.category_name';
-            }
-            $result->select($column_to_select);
-            $result = $result->get();
 
-            return DataTables::of($result)->toJson();
-        } else {
+            // 
+        } else if ($exclude_test == null && $question_type == null) {
+
+            $questions = DB::table('question_banks')
+                ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
+                ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
+                ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
+                ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
+                ->select('question_banks.question_code', 'question_banks.questions', 'master_categories.category_name', 'question_banks.is_active', 'master_topics.topic_name', 'master_skills.skill_name', 'master_difficulties.difficulty_name')
+                ->where('question_banks.trash_key', 1)
+                ->get();
+
+            return DataTables::of($questions)->toJson();
+
+            // return DataTables::of($result)->toJson();
+        } else if ($question_type == "for_filter_questions" && $exclude_test == null) {
 
             $difficulties = $request->input('difficulties');
             $categories = $request->input('categories');

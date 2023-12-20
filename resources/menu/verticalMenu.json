@@ -12,6 +12,12 @@
       "icon": "menu-icon tf-icons bx bx-book",
       "slug": "manage-courses"
     },
+    {
+      "url": "/admin/courses",
+      "name": "Courses Allocation",
+      "icon": "menu-icon tf-icons bx bxs-book-reader",
+      "slug": "manage-courses"
+    },
 
     {
       "name": "Manage Tests",
@@ -92,11 +98,6 @@
       "icon": "menu-icon tf-icons bx bxl-mastodon",
       "slug": "masters",
       "submenu": [
-        {
-          "url": "/admin/masters/difficulty",
-          "name": "Manage Difficulties",
-          "slug": "manage-difficulty"
-        },
         {
           "url": "/admin/masters/categories",
           "name": "Manage Categories",

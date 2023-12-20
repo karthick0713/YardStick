@@ -19,6 +19,7 @@
     <script src="{{ asset('assets/js/jquery-repeater.js') }}"></script>
     <script src="{{ asset('assets/js/forms-extras.js') }}"></script>
     <script src="{{ asset('assets/js/datatable-bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert2.js') }}"></script>
 @endsection
 
 @section('content')
@@ -92,6 +93,10 @@
                 <form action="{{ route('save-test') }}" method="POST">
                     @csrf
                     {{-- Add test fields --}}
+
+
+
+
                     <div class="col-12 fw-bold">
                         <div class="row  mb-5 ms-2">
 
@@ -100,7 +105,7 @@
                                 <input type="text" name="test_title" id="title" class="form-control mb-3"
                                     placeholder="Title" required>
                             </div>
-
+                            {{--
                             <div class="col-md-4">
                                 <label for="skills" class="mb-2">Skills <span class="text-danger"> *</span></label>
                                 <div class="select2-dark">
@@ -120,54 +125,14 @@
                                         <option>All</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->category_id }}">{{ $category->category_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-1 text-center mt-2">
-                                <button type="button" class="btn btn-sm mt-4 background-secondary text-white"
-                                    title="Choose time for each category" data-bs-toggle="modal"
-                                    data-bs-target="#selectTiming">
-                                    Duration</button>
-                            </div>
+                        </option>
+                        @endforeach
+                        </select>
+                    </div>
+                </div> --}}
 
-                            <div class="col-md-4">
-                                <label for="visibility" class="mb-2">Visibility <span class="text-danger">
-                                        *</span></label>
-                                <select name="visibility" class="form-control mb-3" id="visibility"
-                                    onchange="visible_change(this.value)" required>
-                                    <option value="" selected disabled>SELECT</option>
-                                    <option value="1">Private</option>
-                                    <option value="2">Public</option>
-                                </select>
-                            </div>
 
-                            {{-- <div class="col-md-4">
-                                <label for="duration" class="mb-2">Duration (In Mins) <span class="text-danger">
-                                        *</span></label>
-                                <input type="text" name="duration" placeholder="Duration" id=""
-                                    oninput="this.value = this.value.replace(/[^0-9.]/g, '');" class="form-control  mb-3"
-                                    required>{{-- Only numbers should be allowed --}}
-                            {{-- </div>  --}}
-
-                            <div class="col-md-4">
-                                <label for="marks" class="mb-2">Marks <span class="text-danger"> *</span></label>
-                                <select name="marks" class="form-control mb-3" id="marks" required>
-                                    <option value="" selected disabled>SELECT</option>
-                                    <option value="1">Mode</option>
-                                    <option value="2">Auto</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="pass-percentage" class="mb-2">Pass Percentage % <span class="text-danger">
-                                        *</span></label>
-                                <input type="text" name="pass_percentage" placeholder="Pass Percentage" id=""
-                                    oninput="this.value = this.value.replace(/[^0-9.]/g, '');" class="form-control  mb-3"
-                                    required>{{-- Only numbers should be allowed --}}
-                            </div>
-
+                            {{--
                             <div class="col-md-4">
                                 <label for="shuffle-questions" class="mb-2">Shuffle Questions <span class="text-danger">
                                         *</span></label>
@@ -179,322 +144,173 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="restrict-attempts" class="mb-2">Restrict Attempts <span class="text-danger">
+                                <label for="shuffle-questions" class="mb-2">Shuffle Options <span class="text-danger">
                                         *</span></label>
-                                <select name="restrict_attempts" class="form-control mb-3" id="restrict-attempts" required>
+                                <select name="shuffle_questions" class="form-control mb-3" id="shuffle-questions" required>
                                     <option value="" selected disabled>SELECT</option>
                                     <option value="1">Yes</option>
                                     <option value="2">No</option>
                                 </select>
-                            </div>
+                            </div> --}}
 
-                            <div class="col-md-4">
-                                <label for="disable-finish-button" class="mb-2">Disable Finish Button <span
-                                        class="text-danger"> *</span></label>
-                                <select name="disable_finish_button" class="form-control mb-3" id="disable-finish-button"
-                                    required>
-                                    <option value="" selected disabled>SELECT</option>
-                                    <option value="1">Yes</option>
-                                    <option value="2">No</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="enable-question-list" class="mb-2">Enable Question List View <span
-                                        class="text-danger"> *</span></label>
-                                <select name="enable_question_list" class="form-control mb-3" id="enable-question-list"
-                                    required>
-                                    <option value="" selected disabled>SELECT</option>
-                                    <option value="1">Yes</option>
-                                    <option value="2">No</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="hide-solutions" class="mb-2">Hide Solutions <span class="text-danger">
-                                        *</span></label>
-                                <select name="hide_solutions" class="form-control mb-3" id="hide-solutions"
-                                    onchange="solution_show(this.value)" required>
-                                    <option value="" selected disabled>SELECT</option>
-                                    <option value="1">Yes</option>
-                                    <option value="2">No</option>
-                                    <option value="3">Show After Particular Date</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4 " style="display:none" id="solution_show_date">
-                                <label for="solution_date" class="mb-2 ">Solution Show Date <span class="text-danger">
-                                        *</span></label>
-                                <input type="date" name="solution_date" class="form-control"
-                                    id="solution-date">{{-- Html date format --}}
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="show-leaderboard" class="mb-2">Show Leaderboard <span class="text-danger">
-                                        *</span></label>
-                                <select name="show_leaderboard" class="form-control mb-3" id="show-leaderboard" required>
-                                    <option value="" selected disabled>SELECT</option>
-                                    <option value="1">Yes</option>
-                                    <option value="2">No</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="schedule-type" class="mb-2">Schedule Type <span class="text-danger">
-                                        *</span></label>
-                                <select name="schedule_type" class="form-control mb-3" id="schedule-type" required>
-                                    <option value="" selected disabled>SELECT</option>
-                                    <option value="1">Fixed</option>
-                                    <option value="2">Flexible</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4  ">
-                                <label for="start_date" class="mb-2">Start Date</label>
-                                <input type="date" name="start_date" id="start-date" class="form-control"
-                                    onchange="date_val(this.value)">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="end_date" class="mb-2 ms-2 ">End Date </label>
-                                <input type="date" name="end_date" id="end-date"
-                                    class="form-control">{{-- Html date format --}}
-                            </div>
-
-                            <div class="col-md-4 d-flex ">
-                                <div class="col">
-                                    <label for="start_time" class="mb-2">Start Time</label>
-                                    <input type="time" name="start_time" id="" class="form-control">
-                                </div>
-                                <div class="col">
-                                    <label for="end_time" class="mb-2 ms-2 ">End Time</label>
-                                    <input type="time" name="end_time" id=""
-                                        class="ms-2 form-control  mb-3">
-                                    {{-- Html time format --}}
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-4">
-                                <label for="test-assigned" class="mb-2">Test Assigned to <span class="text-danger">
-                                        *</span></label>
-                                <input type="text" name="test_assigned_to" placeholder="Test Assigned to"
-                                    id="test-assigned" class="form-control mb-3" required>
-                            </div>
 
                             <div class="col-md-4">
                                 <label for="test-assigned" class="mb-2">Questions <span class="text-danger">
                                         *</span></label>
-                                <select name="question_type" id="" class="form-control"
-                                    onchange="questiontype(this.value)">
-                                    <option selected disabled>SELECT</option>
+                                <select name="question_type" id="question_type" class="form-control">
+                                    <option value="0" disabled selected>SELECT</option>
                                     <option value="1">Select Questions</option>
                                     <option value="2">Random Questions</option>
                                 </select>
                             </div>
 
-                            <div class="col mt-2">
+                            <div class="col-md-2 text-center mt-2">
+                                <button type="button" class="btn btn-sm mt-4 background-secondary text-white"
+                                    onclick="open_section_modal()" {{-- title="Choose time for each category" data-bs-toggle="modal"
+                                    data-bs-target="#selectTiming" --}}>
+                                    Section & Duration</button>
+                            </div>
+
+                            <div class="col-md-4 exclude-prev-test mt-2">
                                 <h5 class="fw-bold">Exclude questions from previous Tests?</h5>
+
                                 <div class="form-check form-check-inline">
-                                    <input style="height:30px;width:30px;" class="form-check-input" type="checkbox"
+                                    <input style="height:30px;width:30px;" class="form-check-input ms-3" type="checkbox"
                                         id="excludeYes" value="yes">
-                                    <label style="margin-top:5px" class="form-check-label ms-3"
-                                        for="excludeYes">Yes</label>
+                                    <label style="margin-top:5px" class="form-check-label ms-3" for="excludeYes">Yes</label>
                                 </div>
+
                                 <div class="form-check form-check-inline">
                                     <input style="height:30px;width:30px;" class="form-check-input ms-3" type="checkbox"
                                         id="excludeNo" value="no">
-                                    <label style="margin-top:5px" class="form-check-label ms-3"
-                                        for="excludeNo">No</label>
+                                    <label style="margin-top:5px" class="form-check-label ms-3" for="">No</label>
                                 </div>
+
+                                <button type="button" id="selected-tests" data-bs-toggle="modal"
+                                    data-bs-target="#PreviousTestModal" style="display:none"
+                                    class="btn background-secondary btn-sm text-white ms-3">SELECTED
+                                    TESTS</button>
                             </div>
 
+                            <div class="col-md-2 question-select-module mt-2 ">
 
-                            <div class="col-md-3 question-select-module mt-2" style="display:none">
-
-                                <button type="button"
-                                    class="btn btn-sm selectQuesiton mt-4 background-secondary text-white">Select
-                                    Questions</button>
                                 <button type="button" onclick="openModal()"
-                                    class="btn  ms-3  btn-sm mt-4 background-info text-white">View Selected
+                                    class="btn ms-5 btn-sm mt-4 background-info text-white">View Selected
+                                    Questions</button>
+                            </div>
+
+                            <div class="col show-after-question-select mt-2 mx-5" style="display: none">
+                                <button type="button" onclick="show_div_table()"
+                                    class="btn btn-sm ms-0 mt-4 background-secondary text-white">Show
                                     Questions</button>
                             </div>
 
 
-                            <div class="mt-3 random-question-module" style="display: none">
-                                <label class="align-items-center" for="">Difficulties:</label>
-                                <br>
-                                <div class="row col-12">
 
-                                    @foreach ($difficulties as $difficulty)
-                                        <div class="col-md-2 text-center  ">
-                                            <label class="ms-2"
-                                                for="">{{ ucfirst($difficulty->difficulty_name) }}
-                                                (<span id="diff_{{ lcfirst($difficulty->difficulty_id) }}">
-                                                    @php
-                                                        $arrays = [];
-                                                        foreach ($question_banks as $key => $ques) {
-                                                            if ($ques->difficulties_id == $difficulty->difficulty_id) {
-                                                                array_push($arrays, $ques->difficulties_id);
-                                                            }
-                                                        }
-                                                        echo count($arrays);
-                                                    @endphp
-                                                </span>)
-                                            </label>{{-- change the numbers to dynamically from db --}}
-                                            <input type="hidden" name="difficulty_id[]" class="form-control"
-                                                value="{{ $difficulty->difficulty_id }}">
-                                            <input type="number" class="form-control" name="difficulty_questions[]"
-                                                id="diff_{{ lcfirst($difficulty->difficulty_name) }}"
-                                                placeholder="{{ ucfirst($difficulty->difficulty_name) }}" id="">
-                                        </div>
-                                    @endforeach
-                                </div>
+                            <div class="col-md-1"></div>
+
+
+                            {{-- --}}
+                            <br>
+
+                            <div class="random_questions_modules mt-5 mb-5">
+
+
+
                             </div>
-                            <input type="hidden" name="timing_category_name">
+
+
+                            <input type="hidden" name="section_name_select">
                             <input type="hidden" name="category_duration">
                             <input type="hidden" name="exclude_previous_test_question" id="exclude-tests">
-                            <div class="">
+                            {{-- <div class="">
                                 <input type="hidden" name="selected_questions" class="store-selected-values">
-                            </div>
+                            </div> --}}
 
                             <br>
 
                         </div>
-                        <div class="visibility-view col-12">
-                            <div style="background-color:#f9fafb" class="card">
-                                <div class="ms-2 mx-3 mt-1 ">
-                                    <div class="form-repeater">
-                                        <div class="d-flex background-secondary  " style="align-items: center;">
-                                            {{-- Select the fields to assign the test --}}
-                                            <div class="mb-3 col text-center mb-0">
-                                                <label class="form-label text-white" for="form-repeater-1-1"><b
-                                                        style="  position: relative;bottom: -10px;">College</b></label>
-                                            </div>
-                                            <div class="mb-3 col text-center mb-0">
-                                                <label class="form-label text-white" for="form-repeater-1-1"><b
-                                                        style="  position: relative;bottom: -10px;">department</b></label>
-                                            </div>
-                                            <div class="mb-3 col text-center mb-0">
-                                                <label class="form-label text-white" for="form-repeater-1-1"><b
-                                                        style="  position: relative;bottom: -10px;">year</b></label>
-                                            </div>
-                                            <div class="mb-3 col text-center mb-0">
-                                                <label class="form-label text-white" for="form-repeater-1-1"><b
-                                                        style="  position: relative;bottom: -10px;">select
-                                                        group</b></label>
-                                            </div>
-                                            <div class="mb-3 col text-center mb-0">
-                                                <label class="form-label text-white" for="form-repeater-1-1"><b
-                                                        style="  position: relative;bottom: -10px;">actions</b></label>
-                                            </div>
-                                        </div>
-                                        <div class="form-repeater-group" data-repeater-list="group-a">
-                                            <div data-repeater-item>
-                                                <div class="row rows-div mt-1">
-                                                    <div class=" mb-2 col mb-0">
-                                                        <label class="form-label" for="form-repeater-1-1"><b></b></label>
-                                                        <div class="d-flex align-items-center">
-                                                            <select name="colleges" class="form-control colleges">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class=" mb-2 col mb-0">
-                                                        <label class="form-label" for="form-repeater-1-1"><b></b></label>
-                                                        <div class="d-flex align-items-center">
-                                                            <select name="departments" class="form-control departments">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class=" mb-2 col mb-0">
-                                                        <label class="form-label" for="form-repeater-1-1"><b></b></label>
-                                                        <div class="d-flex align-items-center">
-                                                            <select name="year" class="form-control year">
-                                                                <option value="" selected disabled>SELECT
-                                                                </option>
-                                                                <option value="1">1st Year</option>
-                                                                <option value="2">2nd Year</option>
-                                                                <option value="3">3rd Year</option>
-                                                                <option value="4">4th Year</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class=" mb-2 col mb-0">
-                                                        <label class="form-label" for="form-repeater-1-1"><b></b></label>
-                                                        <div class=" select2-dark">
-                                                            <select id="select2Darks" name="groups"
-                                                                class=" select-id-change form-select group-select"
-                                                                multiple>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="text-center pt-0 col-lg-2 ">
-                                                        <button type="button" style="margin-top:24px"
-                                                            class="btn background-info text-white " data-repeater-delete>
-                                                            -
-                                                        </button>{{-- delete current field --}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-4 mb-5 ms-3">
-                                            <button type="button" class="btn background-secondary add-btn text-white"
-                                                id="changeIdButton" data-repeater-create>
-                                                <i class="bx bx-plus me-1"></i>{{-- options to add multiple fields --}}
-                                                <span class="align-middle">Add</span>
-                                            </button>
+
+
+                        <div class="selected_questions_modules">
+                            <div class="row mb-3 text-center">
+                                <div class="col-md-3 ms-4">
+                                    <label for="section_name">SECTION NAME</label>
+                                </div>
+                            </div>
+                            <div class="select_question_append_body">
+
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+
+                    {{-- table starts --}}
+                    <div class="card dtable">
+
+                    </div>
+                    {{-- table ends --}}
+
+
+                    <div class="modal fade" id="select_questions_modal" tabindex="-1" data-bs-backdrop="static"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-bold" id="staticBackdropLabel">SELECT QUESTIONS </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="div-table-responsive">
+
+                                        <table id="example" class="table table-stripped ex-table dt-column-search">
+                                            <thead class="">
+                                                <tr>
+                                                    <th scope="col" class="text-black text-center">
+                                                    </th>
+                                                    <th scope="col" class="text-black text-center">Question Code</th>
+                                                    <th scope="col" class="text-black text-center">
+                                                        Skills
+                                                    </th>
+                                                    <th scope="col" class="text-black text-center">
+                                                        Categories
+                                                    </th>
+                                                    <th scope="col" class="text-black text-center">
+                                                        Difficulties
+                                                    </th>
+                                                    <th scope="col" class="text-black text-center">Questions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="tbodys">
+                                            </tbody>
+                                        </table>
+                                        <input type="hidden" name="" id="index" value="">
+                                        <div class="mt-5 d-flex justify-content-end">
+                                            <button type="button"
+                                                class="btn background-info select-submit mx-4 text-white"
+                                                onclick="select_questions()">SELECT
+                                                QUESTIONS</button>
+                                            <br>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
-                        </div>
-
-                        <pre>
-
-
-                        </pre>
-
-                        {{-- table starts --}}
-                        <div class="card dtable">
-                            <div class="div-table-responsive" style="display:none">
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" id="select-submit"
-                                        class="btn background-info text-white mt-2 mx-3">SELECT </button>
-                                </div>
-                                <table id="example" class="table table-stripped ex-table dt-column-search">
-                                    <thead class="">
-                                        <tr>
-                                            <th scope="col" class="text-black text-center">
-                                            </th>
-                                            <th scope="col" class="text-black text-center">Question Code</th>
-                                            <th scope="col" class="text-black text-center">
-                                                Skills
-                                            </th>
-                                            <th scope="col" class="text-black text-center">
-                                                Categories
-                                            </th>
-                                            <th scope="col" class="text-black text-center">
-                                                Difficulties
-                                            </th>
-                                            <th scope="col" class="text-black text-center">Questions</th>
-                                            <th scope="col" class="text-black text-center">ACTIONS</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody class="tbodys">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        {{-- table ends --}}
-
-                        <div class="mt-5 d-flex justify-content-end">
-                            <button type="submit" class="btn background-secondary text-white">Submit</button>
                         </div>
                     </div>
-                </form>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="mx-3 btn text-white" onclick="openPreviewModal()"
+                            style="background-color:#4a6064">Preview</button>
+                        <button type="submit" class="btn background-secondary text-white">Submit
+                            Form</button>
+                    </div>
             </div>
+            </form>
         </div>
+    </div>
     </div>
 
     <div id="successPopup" class="hidden">
@@ -538,6 +354,7 @@
                     <button type="button" class="btn  background-secondary text-white" onclick="exclude_tests()"
                         id="timing-submit">UPDATE</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -555,7 +372,7 @@
                     <table class="table table-display category-time-table">
                         <thead class="background-info ">
                             <tr>
-                                <th class="text-white">Category </th>
+                                <th class="text-white">Sections </th>
                                 <th class="text-white">Duration (In Mins)</th>
                                 <th class="text-white">Action</th>
                             </tr>
@@ -563,20 +380,18 @@
                         <tbody class="category-body">
                             <tr>
                                 <td>
-                                    <select name="" class="form-control timing_category_name" id="">
-                                        <option value="">SELECT</option>
-                                        @foreach ($categories as $cat)
-                                            <option value="{{ $cat->category_id }}">{{ $cat->category_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" class="form-control sec_name_select" name="section_name[]"
+                                        placeholder="Enter Section Name ">
                                 </td>
                                 <td>
-                                    <input type="text" name="" class="form-control category_duration"
-                                        oninput=" this.value = this.value.replace(/[^0-9]/g, ''); " id="">
+                                    <input type="text" name="section_duration[]"
+                                        class="form-control category_duration"
+                                        oninput=" this.value = this.value.replace(/[^0-9]/g, ''); " id=""
+                                        placeholder="Enter Duration">
                                 </td>
                                 <td>
                                     <button style="border-radius:0%" class="btn background-secondary text-white"
-                                        onclick = "add_row()" type="button">+</button>
+                                        onclick="add_row()" type="button">+</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -654,15 +469,29 @@
         </div>
     </div>
 
+
+
     <script>
         $(document).ready(function() {
-            $('.form-check-input').on('change', function() {
-                if (this.value == "yes" && this.checked) {
-                    $("#PreviousTestModal").modal('show');
-                }
-                $('.form-check-input').not(this).prop('checked', false);
 
+            $(".selected_questions_modules").hide();
+
+            $('.exclude-prev-test input[type="checkbox"]').prop('checked', false);
+            $('#excludeNo').prop('checked', true);
+
+            $('.exclude-prev-test input[type="checkbox"]').click(function(e) {
+                var checkboxes = $(this).closest('.col-md-4').find('input[type="checkbox"]');
+
+                checkboxes.prop('checked',
+                    false);
+                $(this).prop('checked', true);
+                if ($(this).attr('id') === 'excludeYes' && $(this).prop('checked')) {
+                    $('#PreviousTestModal').modal('show');
+                }
             });
+
+
+            $(".question-select-module").hide();
 
             $('#testsTable').DataTable({
                 paging: true,
@@ -671,16 +500,26 @@
                 info: true
             });
 
-        });
 
-        function showSuccessPopup(message, color) {
-            var successPopup = document.getElementById('successPopup');
-            successPopup.style.display = 'block';
-            successPopup.style.backgroundColor = color;
-            $("#succ_mess").text(message);
-            setTimeout(function() {
-                successPopup.style.display = 'none';
-            }, 3000);
+        });
+        let timerInterval;
+
+        function showSuccessPopup(message, time_limit, type) {
+            Swal.fire({
+                title: message,
+                timer: time_limit,
+                icon: type,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    $(".swal2-loader").css('display', 'none');
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            })
+
         }
 
 
@@ -688,30 +527,344 @@
         var groups = @json($groups);
 
         function time_update() {
-            var selected_categories = $(".timing_category_name option:selected");
-            var categoryValue = [];
-            selected_categories.each(function() {
-                categoryValue.push($(this).val());
-            });
+            $("input[name='section_name_select']").val("");
+            $("input[name='category_duration']").val("");
 
+            var section_name = $(".sec_name_select");
+            var sectionValue = [];
+            section_name.each(function() {
+                var vals = $(this).val().trim();
+                if (vals !== '') {
+                    sectionValue.push(vals);
+                }
+            });
+            console.log(section_name);
             var duration = $(".category_duration");
             var duration_value = [];
             duration.map(function() {
-                duration_value.push($(this).val());
+                var value = $(this).val().trim();
+                if (value !== '') {
+                    duration_value.push(value);
+                }
             });
 
-            $("input[name='timing_category_name']").val(categoryValue);
+
+            var len = $(".category-body tr").length;
+            $("input[name='section_name_select']").val(sectionValue);
             $("input[name='category_duration']").val(duration_value);
-            var message = "Duration for category Updated Successfully.";
             $("#selectTiming").modal('hide');
-            showSuccessPopup(message, 'green');
+            showSuccessPopup("Section and Duration will be Updated.", 1500, 'success');
+            add_section_rows();
         }
 
-        function date_val(value) {
-            $("#end-date").prop('min', value);
-            $("#end-date").val("");
+
+        function add_section_rows() {
+
+
+            var section_name = $("input[name='section_name_select']").val().split(',');
+
+            if ($("#question_type").val() == 1) {
+
+                var sec_name_map = section_name.map((e, index) => {
+                    return `
+                        <div class="row">
+                        <div class="col-md-3 ms-4">
+                            <input type="text" name="input_section_name[]" value="${e}" class="form-control" > 
+                        </div>
+                        <div class=" col-md-4 d-flex">
+                            <button type="button" onclick="openSelectQuestionModal(${index})" class="btn btn-sm ms-4 background-secondary text-white">SELECT QUESTIONS</button>
+                            <button type="button" onclick="openViewQuestionModal(${index})" class="btn btn-sm ms-4 background-info text-white">VIEW SELECTED QUESTIONS</button>
+                            <input type="hidden" name="selected_questions_value[]" id="selected_questions_value${index}" class="selected_questions_value" >
+                        </div>
+                        </div>
+                        </div>
+                        <br>
+                        `;
+                })
+
+                $(".select_question_append_body").html(sec_name_map);
+                $(".selected_questions_modules").show();
+                $(".random_questions_modules").hide();
+
+            } else {
+                var sec_name_map = section_name.map((e, index) => {
+                    return `<div class="row col-12 mb-5">
+                                    <div class="col text-center text-center">
+                                        <label for="">SECTION</label>
+                                        <input type="text" name="rand_section_name[]" id="" value="${e}" class="form-control" >
+                                    </div>
+                                    <div class="col text-center">
+                                        <label for="">CATEGORY</label>
+                                        <div class=" select2-dark">
+                                            <select id="category${index}" name="category[${index}][]" class=" category_class select2 form-select " multiple>
+                                                <option>All</option>
+                                                @foreach ($categories as $category)
+                                                    <option value="{{ $category->category_id }}">
+                                                        {{ $category->category_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col text-center">
+
+                                        <label for="">SKILLS</label>
+                                        <select id="skills${index}" name="skills[${index}][]" class="select2 form-select" onchange="set_topics(${index})" multiple>
+                                            @foreach ($skills as $skill)
+                                                <option value="{{ $skill->skill_id }}">
+                                                    {{ $skill->skill_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col text-center">
+                                        <label for="">TOPICS</label>
+                                        <select id="topics${index}" name="topics[${index}][]" class="select2 form-select "  multiple>
+                                           
+                                        </select>
+                                    </div>
+                                    <div class="col text-center">
+
+                                        <table style=" border-collapse: collapse;">
+                                            <thead style="background-color: #dddddd;">
+                                                <th
+                                                    style=" border: 1px solid black; text-align: center; font-weight: bold;">
+                                                    Easy</th>
+                                                <th
+                                                    style=" border: 1px solid black; text-align: center; font-weight: bold;">
+                                                    Medium</th>
+                                                <th
+                                                    style=" border: 1px solid black; text-align: center; font-weight: bold;">
+                                                    Hard</th>
+                                                <th
+                                                    style=" border: 1px solid black; text-align: center; font-weight: bold;">
+                                                    Very Hard</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input type="text" name="easy[]" id=""  oninput=" this.value = this.value.replace(/[^0-9]/g, ''); "></td>
+                                                    <td><input type="text" name="medium[]" id=""  oninput=" this.value = this.value.replace(/[^0-9]/g, ''); "></td>
+                                                    <td><input type="text" name="hard[]" id="" oninput=" this.value = this.value.replace(/[^0-9]/g, ''); "></td>
+                                                    <td><input type="text" name="very_hard[]" id="" oninput=" this.value = this.value.replace(/[^0-9]/g, ''); "></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="col text-center">
+                                        <label for="">TAGS</label>
+                                        <select name="question_tags[]" id="" class="form-control">
+                                            <option value="">SELECT</option>
+                                        </select>
+                                    </div>
+                                </div>`;
+                });
+
+                select2_func();
+
+                $(".random_questions_modules").html(sec_name_map);
+                $(".selected_questions_modules").hide();
+                $(".random_questions_modules").show();
+
+            }
+
         }
 
+
+        function openSelectQuestionModal(index) {
+
+            function truncateText(text, maxWords) {
+                var words = text.split(' ');
+                if (words.length > maxWords) {
+                    return words.slice(0, maxWords).join(' ') + '...';
+                }
+                return text;
+            }
+
+            if ($('#example thead tr').length > 1) {
+                $('#example thead tr').last().remove();
+            }
+
+
+            var existingTable = $('#example').DataTable();
+            existingTable.destroy();
+
+            t = $(".dt-column-search");
+            if (t.length) {
+                $(".dt-column-search thead tr")
+                    .clone(!0)
+                    .appendTo(".dt-column-search thead"),
+                    $(".dt-column-search thead tr:eq(1) th").each(function(a) {
+                        var t = $(this).text();
+                        $(this).html(
+                                '<input type="text" class="form-control" placeholder="Search ' +
+                                t +
+                                '" />'
+                            ),
+                            $("input", this).on("keyup change", function() {
+                                c.column(a).search() !== this.value &&
+                                    c.column(a).search(this.value).draw();
+                            });
+                    });
+
+
+                var c = t.DataTable({
+                    ajax: {
+                        url: "{{ route('get-filtered-questions') }}",
+                        type: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                .attr(
+                                    'content')
+                        },
+                        data: function(d) {
+                            d.exclude_tests = $("#exclude-tests").val();
+                        }
+                    },
+                    pageLength: 6,
+                    columns: [{
+                            data: "question_code",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                var d = row.question_code;
+                                return `
+                                                 <input type="checkbox" style="height:25px;width:25px" name="select_question[]" value="${row.question_code}" class="select_question${index}" >
+                `;
+                            },
+                        },
+                        {
+                            data: "question_code",
+                            orderable: false
+                        },
+                        {
+                            data: "skill_name",
+                            orderable: false
+                        },
+                        {
+                            data: "category_name",
+                            orderable: false
+                        },
+                        {
+                            data: "difficulty_name",
+                            orderable: false
+                        },
+                        {
+                            data: "questions",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                var val = truncateText(data, 10);
+                                var html = $("<html>").append(val);
+                                return html.text();
+                            }
+                        }
+
+                    ],
+
+                    orderCellsTop: !0,
+                    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                });
+            }
+
+            $('thead tr input').first().hide();
+            $('thead tr input').last().hide();
+            $(".dataTables_length").parent().parent().remove();
+            $('#index').val(index);
+            $("#select_questions_modal").modal('show');
+        }
+
+
+
+        function openViewQuestionModal(index) {
+
+            $(".select-body").empty();
+            var question_code = $(`#selected_questions_value${index}`).val();
+            $.ajax({
+                url: "{{ route('get-selected-questions') }}",
+                type: "GET",
+                data: {
+                    question_code: question_code,
+                },
+                success: function(data) {
+                    $(".select-body").html(data);
+                    $("#viewSelectedQuestions").modal('show');
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr.responseText);
+                },
+            });
+
+        }
+
+
+        function openPreviewModal() {
+            $(".select-body").empty();
+            var question_code = $('.selected_questions_value').map(function() {
+                return $(this).val();
+            }).get().join(',');
+
+            console.log(question_code);
+
+            $.ajax({
+                url: "{{ route('get-selected-questions') }}",
+                type: "GET",
+                data: {
+                    question_code: question_code,
+                },
+                success: function(data) {
+                    $(".select-body").html(data);
+                    $("#viewSelectedQuestions").modal('show');
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr.responseText);
+                },
+            });
+        }
+
+
+        function select_questions() {
+            var index = $("#index").val();
+            var checkedValues = [];
+            $(`.select_question${index}:checked`).each(function() {
+                checkedValues.push($(this).val());
+            });
+            $(`#selected_questions_value${index}`).val(checkedValues);
+            $("#select_questions_modal").modal('hide');
+            showSuccessPopup("Questions Selected..!", 1500, 'success');
+        }
+
+        var topics = @json($topics);
+
+        function set_topics(index) {
+            var skill_select = $(`#skills${index}`);
+            var topic_select = $(`#topics${index}`);
+            var selected_skills = skill_select.val();
+            var filtered_topics = topics.filter(topic => {
+                var topic_skill_id = topic.skills_id.split(',');
+                return selected_skills.some(skill => topic_skill_id.includes(skill));
+            });
+
+            topic_select.empty();
+
+            filtered_topics.forEach(topic => {
+                topic_select.append(`<option value="${topic.topic_id}">${topic.topic_name}</option>`);
+            });
+
+            topic_select.trigger('change');
+        }
+
+
+
+        function select2_func() {
+            setTimeout(() => {
+                var selects = $("select.select2");
+                selects.each(function(i, select) {
+                    $(select).select2({
+                        placeholder: "Select Value",
+                        allowClear: true
+                    });
+                });
+            }, 200);
+        }
 
         function exclude_tests() {
             var tests = [];
@@ -721,212 +874,43 @@
 
             $("#exclude-tests").val(tests);
             $("#PreviousTestModal").modal('hide');
+            var questions = $("select[name='question_type']").val();
+            showSuccessPopup("Selected Tests Questions will be Exluded.", 1500, 'success');
+            $("#selected-tests").show();
         }
 
-        $(document).ready(() => {
-
-            $('#select-submit').on('click', function() {
-                var checkedValues = [];
-                $('.select_question:checked').each(function() {
-                    checkedValues.push($(this).val());
-                });
-                $(".store-selected-values").val(checkedValues);
-                showSuccessPopup('Questions selected successfully !', 'green');
-                $(".div-table-responsive").hide();
-            });
-
-            $('.selectQuesiton').on('click', function() {
-
-                var cat_check = $("#category").val();
-                var skill_check = $("#skills").val();
-                var visibility_check = $("#visibility").val();
-                var exclu_test = $(".form-check-input:checked").val();
-                var input_test_values = $("input[name='exclude_previous_test_question']").val();
-
-                if (cat_check != "" && skill_check != "" && visibility_check != null) {
-
-                    showSuccessPopup('Scroll down to see the questions !', 'green')
-                    if ($('#example thead tr').length > 1) {
-                        $('#example thead tr').last().remove();
-                    }
-
-                    $('.div-table-responsive').show();
-                    var skills = $("#skills").val();
-                    var category = $("#category").val();
-
-                    var existingTable = $('#example').DataTable();
-                    existingTable.destroy();
 
 
-                    function truncateText(text, maxWords) {
-                        var words = text.split(' ');
-                        if (words.length > maxWords) {
-                            return words.slice(0, maxWords).join(' ') + '...';
-                        }
-                        return text;
-                    }
-
-                    t = $(".dt-column-search");
-                    if (t.length) {
-                        $(".dt-column-search thead tr")
-                            .clone(!0)
-                            .appendTo(".dt-column-search thead"),
-                            $(".dt-column-search thead tr:eq(1) th").each(function(a) {
-                                var t = $(this).text();
-                                $(this).html(
-                                        '<input type="text" class="form-control" placeholder="Search ' +
-                                        t +
-                                        '" />'
-                                    ),
-                                    $("input", this).on("keyup change", function() {
-                                        c.column(a).search() !== this.value &&
-                                            c.column(a).search(this.value).draw();
-                                    });
-                            });
 
 
-                        var c = t.DataTable({
-                            ajax: {
-                                url: "{{ route('get-filtered-questions') }}",
-                                type: "GET",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                                        .attr(
-                                            'content')
-                                },
-                                data: function(d) {
-                                    d.skills = skills;
-                                    d.categories = category;
-                                    d.exclude_tests = $("#exclude-tests").val();
-                                }
-                            },
-                            columns: [{
-                                    data: "question_code",
-                                    orderable: false,
-                                    render: function(data, type, row) {
-                                        var d = row.question_code;
-                                        return `
-                                                 <input type="checkbox" style="height:25px;width:25px" name="select_question[]" value="${row.question_code}" class="select_question" >
-                `;
-                                    },
-                                },
-                                {
-                                    data: "question_code",
-                                    orderable: false
-                                },
-                                {
-                                    data: "skill_name",
-                                    orderable: false
-                                },
-                                {
-                                    data: "category_name",
-                                    orderable: false
-                                },
-                                {
-                                    data: "difficulty_name",
-                                    orderable: false
-                                },
-                                {
-                                    data: "questions",
-                                    orderable: false,
-                                    render: function(data, type, row) {
-                                        var val = truncateText(data, 10);
-                                        var html = $("<html>").append(val);
-                                        return html.text();
-                                    }
-                                },
-                                {
-                                    data: "question_code",
-                                    orderable: false,
-                                    searchable: false,
-                                    render: function(data, type, row) {
-                                        var d = row.question_code;
-                                        return `<div class="text-center">
-                        <a class="icon-buttons text-center"  onclick="viewQuestion('${row.question_code}')">
-                            <i class="bx bx-show-alt"></i>
-                        </a>
-                    </div>
-                    `;
-                                    },
-                                },
+        // $(document).ready(() => {
 
-                            ],
+        //     $('.select-submit').on('click', function() {
+        //         var checkedValues = [];
+        //         $('.select_question:checked').each(function() {
+        //             checkedValues.push($(this).val());
+        //         });
+        //         // console.log(checkedValues);
+        //         if (checkedValues != "") {
+        //             $(".store-selected-values").val(checkedValues);
+        //             showSuccessPopup('Questions selected', 1000, 'success');
+        //             $(".div-table-responsive").hide();
+        //             $(".show-after-question-select").show();
+        //             $(".question-select-module").show();
+        //         } else {
+        //             showSuccessPopup('No Questions selected', 1500, 'warning');
+        //         }
 
-                            orderCellsTop: !0,
-                            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-                        });
-                    }
-                } else {
-                    var cat_check = $("#category").val();
-                    var skill_check = $("#skills").val();
-                    var visibility_check = $("#visibility").val();
+        //     });
 
-                    var missingFields = [];
-
-                    if (cat_check == "") {
-                        missingFields.push('Category');
-                    }
-
-                    if (skill_check == "") {
-                        missingFields.push('Skills');
-                    }
-
-                    if (!visibility_check) {
-                        missingFields.push('Visibility');
-                    }
-
-                    if (missingFields.length > 0) {
-                        var missingFieldsString = missingFields.join(', ');
-                        showSuccessPopup('Please fill in the following fields: ' +
-                            missingFieldsString +
-                            '!',
-                            '#dd3131')
-                    }
-                }
-
-            });
+        //     $('.selectQuestion').on('click', function() {
+        //         $('thead tr input').first().hide();
+        //         $('thead tr input').last().hide();
+        //         $(".dataTables_length").parent().parent().remove();
+        //     });
+        // });
 
 
-            $('.selectQuesiton').on('click', function() {
-                $('thead tr input').first().hide();
-                $('thead tr input').last().hide();
-                $(".dataTables_length").parent().parent().remove();
-            });
-        });
-
-
-        $(document).ready(function() {
-            $('.container').on('change', '.colleges , .departments , .year', function() {
-                var nameAttribute = $(this).attr('name');
-                var match = nameAttribute.match(/\[([0-9]+)\]/);
-                var newRow = $(this).parent().parent().parent().parent();
-                var collegesDropdown = newRow.find('.colleges');
-                var departmentsDropdown = newRow.find('.departments');
-                var yearDropdown = newRow.find('.year');
-                var groupsDropdown = newRow.find('.group-select');
-                var selectedCollege = collegesDropdown.val();
-                var selectedDepartment = departmentsDropdown.val();
-                var selectedYear = yearDropdown.val();
-                if (selectedCollege !== null && selectedDepartment !== null &&
-                    selectedYear !==
-                    null) {
-                    var filteredGroups = groups.filter(function(group) {
-                        return group.college_id == selectedCollege &&
-                            group.department_id == selectedDepartment &&
-                            group.year == selectedYear;
-                    });
-                    groupsDropdown.empty();
-                    groupsDropdown.append('<option value="all">All</option>');
-                    $.each(filteredGroups, function(index, value) {
-                        groupsDropdown.append(
-                            '<option value="' + value.group_id + '">' + value
-                            .group_name +
-                            '</option>');
-                    });
-                }
-            });
-
-        });
 
         function viewQuestion(value) {
             $(".question-details").empty();
@@ -947,29 +931,29 @@
 
         }
 
-        function count() {
-            var skills = $("#skills").val() || [];
-            var categories = $("#category").val() || [];
-            let difficulty = @json($difficulties);
+        // function count() {
+        //     var skills = $("#skills").val() || [];
+        //     var categories = $("#category").val() || [];
+        //     let difficulty = @json($difficulties);
 
-            difficulty.forEach((el) => {
-                el.count = 0;
+        //     difficulty.forEach((el) => {
+        //         el.count = 0;
 
-                skills.forEach((skill) => {
-                    categories.forEach((category) => {
-                        el.count += questions.filter(q =>
-                            q.skills_id == skill &&
-                            el.difficulty_id == q.difficulties_id &&
-                            (Array.isArray(q.category) ? q.category.includes(category) :
-                                q
-                                .category == category)
-                        ).length;
-                    });
-                });
+        //         skills.forEach((skill) => {
+        //             categories.forEach((category) => {
+        //                 el.count += questions.filter(q =>
+        //                     q.skills_id == skill &&
+        //                     el.difficulty_id == q.difficulties_id &&
+        //                     (Array.isArray(q.category) ? q.category.includes(category) :
+        //                         q
+        //                         .category == category)
+        //                 ).length;
+        //             });
+        //         });
 
-                $("span#diff_" + el.difficulty_id).html('&nbsp;' + el.count + '&nbsp;');
-            });
-        }
+        //         $("span#diff_" + el.difficulty_id).html('&nbsp;' + el.count + '&nbsp;');
+        //     });
+        // }
 
 
         $(document).ready(function() {
@@ -990,84 +974,6 @@
                 }
             });
 
-            $('.visibility-view').hide();
-            $(".add-btn,#visibility").on('click change', () => {
-                setTimeout(() => {
-                    $.ajax({
-                        url: "{{ route('ajax-get-colleges') }}",
-                        type: "GET",
-                        dataType: "json",
-                        success: function(data) {
-                            var html =
-                                '<option value="" selected disabled>SELECT</option>';
-                            var i;
-                            for (i = 0; i < data.length; i++) {
-                                html += '<option value="' + data[i].college_id +
-                                    '">' +
-                                    data[i].college_name +
-                                    '</option>';
-                            }
-
-                            $('.colleges').map(function() {
-                                if (!$(this).val()) {
-                                    $(this).html(html);
-                                }
-                            });
-
-                        },
-                        error: function(data) {
-                            console.log('Error:', data);
-                        }
-                    })
-
-                    $.ajax({
-                        url: "{{ route('ajax-get-departments') }}",
-                        type: "GET",
-                        dataType: "json",
-                        success: function(data) {
-                            var html =
-                                '<option value="" selected disabled>SELECT</option>';
-                            var i;
-                            for (i = 0; i < data.length; i++) {
-                                html += '<option value="' + data[i].department_id +
-                                    '">' + data[i].department_name +
-                                    '</option>';
-                            }
-                            $('.departments').map(function() {
-                                if (!$(this).val()) {
-                                    $(this).html(html);
-                                }
-                            });
-                        },
-                        error: function(data) {
-                            console.log('Error:', data);
-                        }
-                    })
-                }, 200);
-
-            });
-
-
-            setTimeout(() => {
-                var selects = $("select.select-id-change");
-                selects.each(function(i, select) {
-                    $(select).select2({
-                        placeholder: "SELECT GROUPS",
-                        allowClear: true
-                    });
-                });
-            }, 200);
-            $('#changeIdButton').on('click', () => {
-                setTimeout(() => {
-                    var selects = $("select.select-id-change");
-                    selects.each(function(i, select) {
-                        $(select).select2({
-                            placeholder: "SELECT GROUPS",
-                            allowClear: true
-                        });
-                    });
-                }, 1);
-            });
 
             $.ajax({
                 url: "{{ route('ajax-get-skills') }}",
@@ -1089,63 +995,66 @@
 
         });
 
-        function visible_change(value) {
-            if (value == 1) {
-                $('.visibility-view').show();
+
+        function open_section_modal() {
+            if ($("#question_type").val() != null) {
+                $("#selectTiming").modal('show');
             } else {
-                $('.visibility-view').hide();
+                showSuccessPopup('Please Select Question Type', 1500, 'warning');
             }
         }
 
-        function openModal() {
-            $(".select-body").empty();
-            var question_code = $(".store-selected-values").val();
-            $.ajax({
-                url: "{{ route('get-selected-questions') }}",
-                type: "GET",
-                data: {
-                    question_code: question_code,
-                },
-                success: function(data) {
-                    $(".select-body").html(data);
-                    $("#viewSelectedQuestions").modal('show');
-                },
-                error: function(xhr) {
-                    console.log('Error:', xhr.responseText);
-                },
-            });
-        }
 
-        function questiontype(value) {
-            if (value == 1) {
-                $(".question-select-module").show();
-                $(".random-question-module").hide();
-            } else {
-                $(".random-question-module").show();
-                $(".question-select-module").hide();
-            }
-        }
+        // function openModal() {
+        //     $(".select-body").empty();
+        //     var question_code = $(".store-selected-values").val();
+        //     $.ajax({
+        //         url: "{{ route('get-selected-questions') }}",
+        //         type: "GET",
+        //         data: {
+        //             question_code: question_code,
+        //         },
+        //         success: function(data) {
+        //             $(".select-body").html(data);
+        //             $("#viewSelectedQuestions").modal('show');
+        //         },
+        //         error: function(xhr) {
+        //             console.log('Error:', xhr.responseText);
+        //         },
+        //     });
+        // }
+
+        // function questiontype(value) {
+        //     if ($("#skills").val() != "" && $("#category").val() != "") {
+        //         if (value == 1) {
+        //             // $(".question-select-module").show();
+        //             $(".random-question-module").hide();
+        //             get_questions();
+        //         } else {
+        //             $(".random-question-module").show();
+        //             // $(".question-select-module").hide();
+        //             $(".div-table-responsive").hide();
+        //         }
+        //     } else {
+        //         $("select[name='question_type']").val(0)
+        //         showSuccessPopup('Please Select Both Skills and Categories..', 1500, 'warning');
+        //     }
+        // }
 
 
         function add_row() {
 
-            var categories = @json($categories);
-
-            var selectOptions = categories.map(category => {
-                return '<option value="' + category.category_id + '">' + category.category_name +
-                    '</option>';
-            });
 
             var row = `
         <tr>
             <td>
-                <select name="timing_category_name[]" class="form-control timing_category_name ">
-                    <option>SELECT</option>
-                    ${selectOptions}
-                </select>
+                <input type="text" class="form-control sec_name_select" name="section_name[]"
+                    placeholder="Enter Section Name ">
             </td>
             <td>
-                <input type="text" name="category_duration[]" class="form-control category_duration numeric-input">
+                <input type="text" name="section_duration[]" class="form-control category_duration"
+                    oninput=" this.value = this.value.replace(/[^0-9]/g, ''); " id=""
+                    placeholder="Enter Duration">
             </td>
             <td>
                 <button style="border-radius:0%" class="btn background-info text-white remove-row" type="button">-</button>
@@ -1173,16 +1082,17 @@
             });
         }
 
-        function solution_show(value) {
-            if (value == 3) {
-                $("#solution_show_date").show();
-                $("#solution-date").prop('required', true)
-                showSuccessPopup("Please Select solution date !", '#665E00')
-            } else {
-                $("#solution_show_date").hide();
-                $("#solution-date").prop('required', false)
-            }
-        }
+        // function show_div_table() {
+
+        //     var t = $(".dt-column-search");
+        //     var tbody = t.find("tbody tr").html();
+
+        //     if ($("#skills").val() != "" && $("#category").val() != "" && tbody.length > 0) {
+        //         $(".div-table-responsive").show();
+        //     } else {
+        //         showSuccessPopup('Please Select Skills and Categories..', 1500, 'warning');
+        //     }
+        // }
     </script>
 
 

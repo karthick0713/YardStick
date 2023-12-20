@@ -17,6 +17,12 @@
 @endsection
 
 @section('content')
+
+
+    <style>
+
+    </style>
+
     <div class="container mt-4">
         @if (session('error'))
             <div class="error-message col-md-5">
@@ -48,12 +54,11 @@
                 <table id="example" class="table table-striped dt-column-search">
                     <thead>
                         <tr class="background-secondary">
-                            <th scope="col" class="text-white text-center">Test Code</th>
-                            <th scope="col" class="text-white text-center">Test Date</th>
-                            <th scope="col" class="text-white text-center">Test Title</th>
-                            <th scope="col" class="text-white text-center">Test Assigned To</th>
-                            <th scope="col" class="text-white text-center">Status</th>
-                            <th scope="col" class="text-white text-center">Actions</th>
+                            <th scope="col" class="text-white text-center">Test Name</th>
+                            <th scope="col" class="text-white text-center">No Of Sections</th>
+                            <th scope="col" class="text-white text-center">No of Questions</th>
+                            <th scope="col" class="text-white text-center">Total Duration</th>
+                            <th scope="col" class="text-white text-center">Test Type</th>
                         </tr>
                     </thead>
 
@@ -117,47 +122,40 @@
                     var c = t.DataTable({
                         ajax: "{{ route('get-test-details') }}",
                         columns: [{
-                                data: "test_code",
-                                orderable: false
-                            },
-                            {
-                                data: "start_date",
-                                orderable: false
-                            },
-                            {
                                 data: "title",
-                                orderable: false
-                            },
-                            {
-                                data: "test_assigned_to",
-                                orderable: false
-                            },
-                            {
-                                data: "is_active",
                                 orderable: false,
-                                searchable: false,
-                                render: function(data, type, row) {
-                                    return `
-                                        <label class="switch">
-                                            <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.test_code}',${data})" id="statusToggle">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    `;
-                                },
                             },
                             {
-                                data: "test_assigned_to",
+                                data: "section_count",
                                 orderable: false,
-                                searchable: false,
                                 render: function(data, type, row) {
-                                    var d = row.question_code;
-                                    return `
-                                        <a class="icon-buttons"  onclick="openViewModal('${row.test_code}')">
-                                            <i class="bx bx-show-alt"></i>
-                                        </a>
-                                        
-                                    `;
-                                },
+                                    return data + ' SECTIONS';
+                                }
+                            },
+                            {
+                                data: "total_questions",
+                                orderable: false,
+                                render: function(data, type, row) {
+                                    return data + ' QUESTIONS';
+                                }
+                            },
+                            {
+                                data: "total_duration",
+                                orderable: false,
+                                render: function(data, type, row) {
+                                    return data + ' MINUTES';
+                                }
+                            },
+                            {
+                                data: "test_type",
+                                orderable: false,
+                                render: function(data, type, row) {
+                                    if (data == 1) {
+                                        return "SELECTED QUESTIONS"
+                                    } else {
+                                        return "RANDOM QUESTIONS"
+                                    }
+                                }
                             },
                         ],
 
@@ -165,36 +163,12 @@
                         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                     });
 
-                    $(".dt-column-search tbody").on({
-                        mouseenter: function() {
-                            $(this).data("originalContent", $(this).text());
-                            var orig = $(this).text($(this).text() + "📋");
-                            $(this).css("cursor", "pointer");
-                        },
-                        mouseleave: function() {
-                            $(this).text($(this).data("originalContent"));
-                            $(this).css("cursor", "pointer");
-                        },
-                        click: function() {
-                            var contentToCopy = $(this).data("originalContent");
-                            var tempInput = $("<input>");
-                            $("body").append(tempInput);
-                            tempInput.val(contentToCopy).select();
-                            document.execCommand("copy");
-                            tempInput.remove();
-                            $(this).text(contentToCopy + "✅");
-                            setTimeout(function() {
-                                $(this).text(contentToCopy);
-                            }.bind(this), 2000);
-                        },
-                    }, "td:first-child");
                 }
 
 
                 $(".success-message").fadeIn().delay(3000).fadeOut();
                 $(".error-message").fadeIn().delay(3000).fadeOut();
             });
-
 
             function openViewModal(test_code) {
                 $(".test-modal").empty();

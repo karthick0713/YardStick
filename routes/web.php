@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
     // courses(Admin)
 
     Route::get('/admin/courses', $controller_path . '\Admin\ManageCourseController@manage_courses')->name('manage-courses');
+    Route::get('/admin/new-course', $controller_path . '\Admin\ManageCourseController@create_new_course')->name('create-new-course');
 
 
     // Tests (Admin)

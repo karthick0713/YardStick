@@ -123,6 +123,7 @@
                             d.categories = categories;
                             d.topics = topics;
                             d.skills = skills;
+                            d.question_type = "for_filter_questions";
                         }
                     },
                     columns: [{
