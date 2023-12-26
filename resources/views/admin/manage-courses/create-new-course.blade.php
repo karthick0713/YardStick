@@ -89,22 +89,41 @@
             max-width: 100%;
             height: auto;
         }
+
+        #testsTable th,
+        #testsTable td {
+            border: 1px solid #ddd;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-item input {
+            margin-right: 10px;
+        }
+
+        table thead th {
+            pointer-events: none;
+        }
     </style>
 
 
     <div class="card">
         <div class="container">
             <div class="card-body">
-                <form action="{{ route('save-test') }}" method="POST">
+                <form action="{{ route('save-course') }}" method="POST">
                     @csrf
                     {{-- Add test fields --}}
                     <div class="col-12 fw-bold">
-                        <div class="row  mb-5 ms-2">
+                        <div class="row  mb-3 ms-2">
 
                             <div class="col-md-6  text-center">
                                 <label for="title" class="mb-2">Title <span class="text-danger">
                                         *</span></label>
-                                <input type="text" style="height:45px" name="test_title" id="title"
+                                <input type="text" style="height:45px" name="course_name" id="title"
                                     class="form-control mb-3" placeholder="Title" required>
                             </div>
 
@@ -125,7 +144,7 @@
                         </div>
                         <div class="visibility-view col-12">
                             <div style="background-color:#f9fafb" class="card">
-                                <div class="ms-2 mx-3 mt-1 ">
+                                <div class="ms-2 mx-3  ">
                                     <div class="form-repeater">
                                         <div class="d-flex background-secondary  " style="align-items: center;">
                                             <div class="mb-3 col text-center mb-0">
@@ -208,8 +227,24 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="d-flex mt-3 ">
+                                <button type="button" style="background-color:#cd0000"
+                                    class="btn text-white mx-4">Create
+                                    Course</button>
+                                <button type="button" style="background-color:#cd0000" data-bs-toggle="modal"
+                                    onclick="openTestModal()" data-bs-target="#testModal" class="btn text-white ms-4">Add
+                                    Test</button>
+                            </div>
+
+                            <br>
                         </div>
 
+                        <div class="mt-3 test_append_div">
+
+                        </div>
+
+                        <br>
 
 
                         <div class="mt-5 d-flex justify-content-end">
@@ -218,14 +253,344 @@
 
                     </div>
 
+                    <div class="modal fade" id="testModal" tabindex="-1" data-bs-backdrop="static"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-bold" id="staticBackdropLabel">Select Tests</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="row col-12">
+                                        <table id="testsTable" style=""
+                                            class="table table-striped table-bordered display ">
+                                            <thead>
+                                                <tr>
+                                                    <th>Select</th>
+                                                    <th>Title</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($tests as $tt)
+                                                    <tr>
+
+                                                        <td>
+                                                            <input style="height:30px;width:30px;" type="checkbox"
+                                                                name="select_test[]" class="select-test"
+                                                                onclick="test_params(this.value)"
+                                                                value="{{ $tt->test_code }},{{ $tt->title }}"
+                                                                id="">
+                                                        </td>
+                                                        <td>{{ strtoupper($tt->title) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn  background-secondary text-white"
+                                        data-bs-dismiss="modal" aria-label="Close" id="tests-submit">OK</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
 
                     <script>
-                        $(document).ready(function() {
-                            $('input[type="checkbox"]').click(function(e) {
-                                var checkboxes = $(this).closest('.col-md-2').find('input[type="checkbox"]');
-                                checkboxes.prop('checked', false);
-                                $(this).prop('checked', true);
+                        function openTestModal() {
+
+                            var existingTable = $('#testsTable').DataTable();
+                            existingTable.destroy();
+
+                            $('#testsTable').DataTable({
+                                pageLength: 6,
+                                orderable: false,
+                                searchable: false
                             });
+                            $("th").removeClass("sorting");
+                            $(".dataTables_length").parent().remove();
+                        }
+
+
+                        let timerInterval;
+
+                        function showSuccessPopup(message, time_limit, type) {
+                            Swal.fire({
+                                title: message,
+                                timer: time_limit,
+                                icon: type,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    $(".swal2-loader").css('display', 'none');
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                }
+                            })
+                        }
+
+                        var selectedTests = [];
+
+                        function test_params(value) {
+                            var index = selectedTests.indexOf(value);
+                            if (index === -1) {
+                                selectedTests.push(value);
+                            } else {
+                                selectedTests.splice(index, 1);
+                            }
+                            add_tests(selectedTests);
+                        }
+
+
+
+                        function add_tests(tests) {
+
+                            var rows = '';
+                            tests.forEach((test, i) => {
+                                var testCode = test.split(',')[0];
+                                var title = test.split(',')[1];
+
+                                rows += `
+                                <div class="row col-12 mb-3">
+                                <div class="col-md-3">
+                                    <input type="hidden" name="test_code[]" class="form-control test_code${i}" value="${testCode}" >
+                                    <input type="text"  name="title[]" class="form-control test_title${i}" value="${title}" readonly>
+                                </div>
+                                <input type="hidden" name="shuffle_ques[]" class="form-control shuffle_ques${i}" >
+                                <input type="hidden" name="dis_fin_btn[]" class="form-control dis_fin_btn${i}" >
+                                <input type="hidden" name="re_att[]" class="form-control re_att${i}" >
+                                <input type="hidden" name="start_test_date[]" class="form-control start_test_date${i}" >
+                                <input type="hidden" name="end_test_date[]" class="form-control end_test_date${i}" >
+                                <input type="hidden" name="display_result[]" class="form-control display_result${i}" >
+                                <input type="hidden" name="select_reattempt[]" class="form-control select_reattempt${i}" >
+                                <input type="hidden" name="display_result_date[]" class="form-control display_result_date${i}" >
+
+                                <div class="col-md-2">
+                                <button type="button" style="background-color:#cd0000" class="btn text-white openParamButton"
+                                    onclick="openParamsModal(${i})" class="btn text-white ms-4">Set Parameters</button>
+                                    <i title='Please Fill the Parameter..!' style='cursor:pointer;color:red' class='bx bxs-info-circle icon-info${i}' ></i>
+                                    <i title='Validated..!' style='cursor:pointer;color:green;display:none' class='bx bxs-check-circle icon-check${i}'></i>
+                                </div>
+                                <div class="col-md-2">
+                                <button type="button" style="background-color:#cd0000" onclick="openNegativeModal(${i})" 
+                                    class="btn text-white ms-4">Add -Ve Marks 
+                                    </button>
+                                </div>
+                              
+                                <br>
+                                </div>
+
+                                <div class="modal fade" id="openParamsModal${i}" tabindex="-1" data-bs-backdrop="static"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body ms-4 mx-4">
+                                    <div class="form-div">
+                                        <div class="row   col-12">
+                                            <div class="col">
+                                                <label for="">Start Date Time</label>
+                                                <input type="datetime-local" name="start_date_time" id=""
+                                                    class="form-control">
+                                            </div>
+                                            <div class="col text-center">
+                                                <span class="fw-bold">to</span>
+                                            </div>
+                                            <div class="col">
+                                                <label for="">End Date Time</label>
+                                                <input type="datetime-local" name="end_date_time" id=""
+                                                    class="form-control">
+
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <input type="hidden" name="index" id="index" class="form-control">
+                                        <div class="row col-12">
+                                            <div class="col-md-6 "
+                                                style="border: 2px solid rgb(116, 119, 119); padding: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                                                <div class="mt-3 checkbox-item">
+                                                    <input type="checkbox" name="shuffle_questions" id="shuffleQuestions"
+                                                        value="1">
+                                                    <label for="shuffleQuestions">Shuffle Questions</label>
+                                                </div>
+                                                <div class="mt-3 checkbox-item">
+                                                    <input type="checkbox" name="disable_finish_button"
+                                                        id="disableFinishButton" value="1">
+                                                    <label for="disableFinishButton">Disable Finish Button</label>
+                                                </div>
+                                                <div class="mt-3 checkbox-item">
+                                                    <label for="reAttempts">Re-Attempts</label>
+                                                    <select style="width:95px" name="re_attempts"
+                                                        class="ms-2 form-control" id="">
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="Unlimited">Unlimited</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+
+                                            </div>
+                                            <div class="col-md-5"
+                                                style="border: 2px solid rgb(116, 119, 119); padding: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                                                <h6>Display Result</h6>
+                                                <div class="">
+                                                    <input type="radio" name="result_status" id="" checked
+                                                        value="1">
+                                                    <label for="">Immediate</label>
+                                                </div>
+
+                                                <div class="">
+                                                    <input type="radio" name="result_status" id=""
+                                                        value="2">
+                                                    <label for="">Later</label>
+                                                    <input style="width:200px" type="datetime-local" name="result_date"
+                                                        class="form-control" id="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn  background-secondary text-white"
+                                        data-bs-dismiss="modal" aria-label="Close" onclick="param_value_update()"
+                                        id="tests-submit">UPDATE</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="openNegativeMarkModal${i}" tabindex="-1" data-bs-backdrop="static"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-bold" id="staticBackdropLabel">Select Tests</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="row col-12">
+                                        <table id="negativeMarkentry${i}" 
+                                            class="table table-striped table-bordered display ">
+                                            <thead>
+                                                    <th>Questions Code</th>
+                                                    <th>Questions</th>
+                                                    <th>Negative Mark</th>
+                                            </thead>
+                                            <tbody class='neg_body${i}'>
+                                              
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn  background-secondary text-white"
+                                        data-bs-dismiss="modal" aria-label="Close" id="tests-submit">OK</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                                `;
+                            });
+                            $(".test_append_div").html(rows);
+                        }
+
+
+
+                        function openParamsModal(index) {
+                            $("#index").val(index);
+                            $("#openParamsModal" + index).modal('show');
+                        }
+
+                        function param_value_update() {
+                            var shuffle_questions;
+                            var disable_finish_button;
+                            var result_date;
+                            var index = $("#index").val();
+                            var display_result = $("input[type='radio']:checked").val();
+
+                            if ($("input[name='shuffle_questions']:checked").length > 0) {
+                                shuffle_questions = $("input[name='shuffle_questions']:checked").val();
+                            } else {
+                                shuffle_questions = 0;
+                            }
+
+                            if ($("input[name='disable_finish_button']:checked").length > 0) {
+                                disable_finish_button = $("input[name='disable_finish_button']:checked").val();
+                            } else {
+                                disable_finish_button = 0;
+                            }
+
+                            if (display_result == 1) {
+                                result_date = 0;
+                            } else {
+                                result_date = $("input[name='result_date']").val();
+                            }
+
+                            console.log($("input[name='end_date_time']").val());
+
+                            $(".shuffle_ques" + index).val(shuffle_questions);
+                            $(".dis_fin_btn" + index).val(disable_finish_button);
+                            $(".re_att" + index).val($("select[name='re_attempts']").val());
+                            $(".start_test_date" + index).val($("input[name='start_date_time']").val());
+                            $(".end_test_date" + index).val($("input[name='end_date_time']").val());
+                            $(".display_result" + index).val(display_result);
+                            $(".display_result_date" + index).val(result_date);
+                            $(".icon-info" + index).hide();
+                            $(".icon-check" + index).show();
+                        }
+
+
+                        function openNegativeModal(index) {
+                            $(".neg_body" + index).empty();
+                            var test_code = $(".test_code" + index).val();
+                            $.ajax({
+                                url: "{{ route('get-test-questions') }}",
+                                type: "GET",
+                                data: {
+                                    test_code: test_code,
+                                },
+                                success: (data) => {
+                                    $(".neg_body" + index).append(data);
+                                    $("#openNegativeMarkModal" + index).modal('show');
+                                    var existingTable = $('#negativeMarkentry' + index).DataTable();
+                                    existingTable.destroy();
+                                    $("#negativeMarkentry" + index).DataTable({
+                                        pageLength: 6,
+                                        orderable: false,
+                                        searchable: false,
+                                    });
+                                    $("th").removeClass("sorting");
+                                    $(`#negativeMarkentry${index}_length`).parent().parent().remove();
+                                },
+                                error: (xhr) => {
+                                    alert('Something went wrong!');
+                                }
+                            })
+                        }
+
+                        $(document).ready(function() {
 
                             $.ajax({
                                 url: "{{ route('ajax-get-colleges') }}",

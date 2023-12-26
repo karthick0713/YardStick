@@ -41,6 +41,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/admin/courses', $controller_path . '\Admin\ManageCourseController@manage_courses')->name('manage-courses');
     Route::get('/admin/new-course', $controller_path . '\Admin\ManageCourseController@create_new_course')->name('create-new-course');
+    Route::get('/admin/get-test-questions', $controller_path . '\Admin\ManageCourseController@get_test_questions')->name('get-test-questions');
+    Route::post('/admin/save-course', $controller_path . '\Admin\ManageCourseController@save_course')->name('save-course');
+    Route::get('/admin/get-course-details', $controller_path . '\Admin\ManageCourseController@get_course_details')->name('get-course-details');
+
 
 
     // Tests (Admin)
@@ -205,6 +209,9 @@ Route::get('/ajax/ajax-get-colleges', $controller_path . '\AjaxController@get_co
 Route::get('/ajax/ajax-get-questions', $controller_path . '\AjaxController@get_questions')->name('ajax-get-questions');
 Route::get('/ajax/ajax-get-categories', $controller_path . '\AjaxController@get_categories')->name('ajax-get-categories');
 
+
+
+Route::post('admin/run-code', $controller_path . '\Compiler\CompilerController@run_code')->name('run-code');
 
 //   Admin
 

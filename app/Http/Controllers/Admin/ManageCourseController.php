@@ -13,6 +13,13 @@ use Carbon\Carbon;
 
 class ManageCourseController extends Controller
 {
+
+    public function __construct()
+    {
+        date_default_timezone_set("Asia/Kolkata");
+    }
+
+
     public function manage_courses()
     {
         $heading = 'Manage Courses';
@@ -34,5 +41,160 @@ class ManageCourseController extends Controller
         $heading = "Manage Course";
         $sub_heading = "Create New Course";
         return view("admin.manage-courses.create-new-course", compact('heading', 'sub_heading', 'difficulties', 'question_banks', 'groups', 'group_entry', 'categories', 'tests'));
+    }
+
+    public function get_test_questions(Request $request)
+    {
+        $test_code = $request->input('test_code');
+        $tests = DB::table('test_creation')->where('test_code', $test_code)->first();
+        if ($tests->test_type == 1) {
+            $questions = DB::table('test_section_wise_questions')->where('test_code', $test_code)->get();
+            $exp_questions = '';
+            foreach ($questions as $question) {
+                $exp_questions .= $question->common_test_question . ',';
+            }
+            $imp_questions = rtrim($exp_questions, ',');
+            $val_ques = explode(',', $imp_questions);
+            foreach ($val_ques as $vq) {
+                $que = DB::table('question_banks')->where('question_code', $vq)->first();
+                $words = str_word_count($que->questions, 1);
+                $truncated_questions = implode(' ', array_slice($words, 0, 50));
+
+                if (count($words) > 50) {
+                    $truncated_questions .= '...';
+                }
+                echo '
+                <tr>
+                <td style="width: 20% !important">' . $que->question_code . '</td>
+                <td style="width: 60% !important">' . $truncated_questions  . '</td>
+                <td style="width: 20% !important">
+                <input type="number" name="negative_marks[]" class="form-control" value="0">
+                <input type="hidden" name="question_code[]" class="form-control" value="' . $que->question_code . '">
+                </td>
+                </tr>
+                ';
+            }
+        } else {
+            $questions = DB::table('test_section_wise_questions')->where('test_code', $test_code)->get();
+            $easy_questions = null;
+            $medium_questions = null;
+            $hard_questions = null;
+            $very_hard_questions = null;
+            foreach ($questions as $question) {
+                $easy_questions .= $question->easy . ',';
+                $medium_questions .= $question->medium . ',';
+                $hard_questions .= $question->hard . ',';
+                $very_hard_questions .= $question->very_hard . ',';
+            }
+
+            $all_questions = rtrim($easy_questions . $medium_questions . $hard_questions . $very_hard_questions, ',');
+            $imploded_all_questions = implode(',', explode(',', $all_questions));
+            $val_ques = explode(',', $imploded_all_questions);
+            foreach ($val_ques as $vq) {
+
+                $que = DB::table('question_banks')->where('question_code', $vq)->first();
+                $words = str_word_count($que->questions, 1);
+                $truncated_questions = implode(' ', array_slice($words, 0, 50));
+
+                if (count($words) > 50) {
+                    $truncated_questions .= '...';
+                }
+                echo '
+                <tr>
+                <td style="width: 20% !important">' . $que->question_code . '</td>
+                <td style="width: 60% !important">' . $truncated_questions  . '</td>
+                <td style="width: 20% !important">
+                <input type="number" name="negative_marks[]" class="form-control" value="0">
+                <input type="hidden" name="question_code[]" class="form-control" value="' . $que->question_code . '">
+                </td>
+                </tr>
+                ';
+            }
+        }
+    }
+
+    public function save_course(Request $request)
+    {
+        $data = [
+            'course_title' => $request->input('course_name'),
+            'validity_from' => $request->input('validity_from'),
+            'validity_to' => $request->input('validity_to'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+
+        $course_id = DB::table('course_creation')->insertGetId($data);
+
+        $group_a = $request->input('group-a');
+
+        if (isset($group_a)) {
+            foreach ($group_a as $group) {
+                $ins_data[] = [
+                    'course_id' => $course_id,
+                    'college_id' => $group['colleges'],
+                    'department_id' => $group['departments'],
+                    'year' => $group['year'],
+                    'groups_id' => implode(',', $group['groups']),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            DB::table('course_allocate_to_students')->insert($ins_data);
+        }
+
+        $test_code =  $request->input('test_code');
+
+        if (isset($test_code)) {
+            foreach ($test_code as $key => $tc) {
+                $up_data[] = [
+                    'test_code' => $tc,
+                    'course_id' => $course_id,
+                    'start_date' =>  $request->input('start_test_date')[$key],
+                    'end_date' =>  $request->input('end_test_date')[$key],
+                    'shuffle_questions' => $request->input('shuffle_ques')[$key],
+                    'disable_finish_button' =>  $request->input('dis_fin_btn')[$key],
+                    're_attempts' =>  $request->input('re_att')[$key],
+                    'display_result_status' =>  $request->input('display_result')[$key],
+                    'display_result_date' =>  $request->input('display_result_date')[$key],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            DB::table('course_test_parameters')->insert($up_data);
+        }
+
+        Session::flash('success', 'Courses Added Successfully..!');
+        return redirect()->route('manage-courses');
+    }
+
+    public function get_course_details(Request $request)
+    {
+
+
+
+        $courses = DB::table('course_creation')
+            ->where('is_active', 1)
+            ->where('trash_key', 1)
+            ->get();
+
+        $data = [];
+
+        foreach ($courses as $course) {
+
+            $total_col = DB::table('course_allocate_to_students')->where('course_id', $course->course_id)->count();
+
+
+            $data[] = [
+                'course_title' => $course->course_title,
+                'validity_from' => $course->validity_from,
+                'validity_to' => $course->validity_to,
+                'total_colleges' => $total_col,
+                'course_id' => $course->course_id,
+            ];
+        }
+
+        return DataTables::of($data)->toJson();
     }
 }

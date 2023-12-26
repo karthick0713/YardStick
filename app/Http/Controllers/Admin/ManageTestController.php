@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Carbon\Carbon;
-
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class ManageTestController extends Controller
 {
@@ -187,21 +187,45 @@ class ManageTestController extends Controller
 
     public function get_test_details()
     {
-
         $tests = DB::table('test_creation')
-            ->leftJoin('test_section_wise_questions as ts', 'ts.test_code', '=', 'test_creation.test_code')
-            ->where('test_creation.is_active', 1)
-            ->where('test_creation.trash_key', 1)
-            ->select(
-                DB::raw('UPPER(test_creation.title) as title'),
-                'test_creation.test_type',
-                DB::raw('COUNT(ts.section_name) as section_count'),
-                DB::raw('SUM(ts.duration) as total_duration'),
-            )
-            ->groupBy('test_creation.test_code', 'test_creation.title', 'test_creation.test_type')
+            ->where('is_active', 1)
+            ->where('trash_key', 1)
             ->get();
 
-        return DataTables::of($tests)->toJson();
+        $data = [];
+
+        foreach ($tests as $test) {
+            $ts = DB::table('test_section_wise_questions')->where('test_code', $test->test_code)->get();
+            $easyCount = 0;
+            $mediumCount = 0;
+            $hardCount = 0;
+            $veryHardCount = 0;
+            $common_test_questionCount = 0;
+            $total_duration = 0;
+            $total_sections = "";
+            foreach ($ts as $record) {
+                $easyCount += $record->easy ? count(explode(',', $record->easy)) : 0;
+                $mediumCount += $record->medium ? count(explode(',', $record->medium)) : 0;
+                $hardCount += $record->hard ? count(explode(',', $record->hard)) : 0;
+                $veryHardCount += $record->very_hard ? count(explode(',', $record->very_hard)) : 0;
+                $common_test_questionCount += count(explode(',', $record->common_test_question));
+                $total_duration += $record->duration;
+                $total_sections .= $record->section_name . ',';
+                $section_count = count(explode(',', $total_sections)) - 1;
+            }
+
+            $total_questions = $easyCount + $mediumCount + $hardCount + $veryHardCount + $common_test_questionCount;
+
+            $data[] = [
+                'title' => $test->title,
+                'section_count' => $section_count,
+                'total_questions' => $total_questions,
+                'total_duration' => $total_duration,
+                'test_type' => $test->test_type,
+            ];
+        }
+
+        return DataTables::of($data)->toJson();
     }
 
 
@@ -354,6 +378,7 @@ class ManageTestController extends Controller
 
     public function save_test(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'test_title' => 'required',
             'question_type' => 'required',
@@ -367,24 +392,22 @@ class ManageTestController extends Controller
 
         if ($request->input('question_type') == 1) {
 
-            $test_questions = implode(',', $request->input('selected_questions_value'));
-
             $data = [
                 'test_code' => $test_code,
                 'title' => $request->input('test_title'),
                 'test_type' => $request->input('question_type'),
-                'test_questions' => $test_questions
             ];
 
             $value = DB::table('test_creation')->insert($data);
 
             $sec_duration = explode(',', $request->input('category_duration'));
-
+            $questions = $request->input('selected_questions_value');
             foreach ($request->input('input_section_name') as $key => $sec_name) {
                 $ins_data[] = [
                     'test_code' => $test_code,
                     'section_name' => $sec_name,
                     'duration' => $sec_duration[$key],
+                    'common_test_question' => $questions[$key],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

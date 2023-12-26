@@ -48,11 +48,10 @@
                 <table id="example" class="table table-striped dt-column-search">
                     <thead>
                         <tr class="background-secondary">
-                            <th scope="col" class="text-white text-center">Test Code</th>
-                            <th scope="col" class="text-white text-center">Test Date</th>
-                            <th scope="col" class="text-white text-center">Test Title</th>
-                            <th scope="col" class="text-white text-center">Test Assigned To</th>
-                            <th scope="col" class="text-white text-center">Status</th>
+                            <th scope="col" class="text-white text-center">Course Name</th>
+                            <th scope="col" class="text-white text-center"> Validate From</th>
+                            <th scope="col" class="text-white text-center"> Validate To</th>
+                            <th scope="col" class="text-white text-center">Total Colleges</th>
                             <th scope="col" class="text-white text-center">Actions</th>
                         </tr>
                     </thead>
@@ -93,48 +92,63 @@
 
 
                 var c = t.DataTable({
-                    ajax: "{{ route('get-test-details') }}",
+                    ajax: "{{ route('get-course-details') }}",
                     columns: [{
-                            data: "test_code",
-                            orderable: false
-                        },
-                        {
-                            data: "start_date",
-                            orderable: false
-                        },
-                        {
-                            data: "title",
+                            data: "course_title",
                             orderable: false,
-                        },
-                        {
-                            data: "test_assigned_to",
-                            orderable: false
-                        },
-                        {
-                            data: "is_active",
-                            orderable: false,
-                            searchable: false,
                             render: function(data, type, row) {
-                                return `
-                        <label class="switch">
-                            <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.test_code}',${data})" id="statusToggle">
-                            <span class="slider round"></span>
-                        </label>
-                    `;
-                            },
+                                return data.toUpperCase();
+                            }
                         },
                         {
-                            data: "test_assigned_to",
+                            data: "validity_from",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                var dateObject = new Date(data);
+                                var options = {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                };
+                                return dateObject.toLocaleDateString('en-US', options);
+                            }
+                        },
+                        {
+                            data: "validity_to",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                var dateObject = new Date(data);
+                                var options = {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                };
+                                return dateObject.toLocaleDateString('en-US', options);
+                            }
+                        },
+                        {
+                            data: "total_colleges",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                return data + ' COLLEGES';
+                            }
+                        },
+
+                        {
+                            data: "course_id",
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
                                 var d = row.question_code;
                                 return `
-                        <a class="icon-buttons"  onclick="openViewModal('${row.test_code}')">
-                            <i class="bx bx-show-alt"></i>
-                        </a>
-
-                    `;
+                                <div class=''>
+                    <a class="icon-buttons"  onclick="openViewModal('${row.test_code}')">
+                        <i class="bx bx-show-alt"></i>
+                    </a>
+                    </div>
+                `;
                             },
                         },
                     ],
@@ -169,9 +183,13 @@
             }
 
 
+
+        });
+
+        $(document).ready(function() {
             $(".success-message").fadeIn().delay(3000).fadeOut();
             $(".error-message").fadeIn().delay(3000).fadeOut();
-        });
+        })
     </script>
 
 

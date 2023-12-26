@@ -13,13 +13,6 @@
       "slug": "manage-courses"
     },
     {
-      "url": "/admin/courses",
-      "name": "Courses Allocation",
-      "icon": "menu-icon tf-icons bx bxs-book-reader",
-      "slug": "manage-courses"
-    },
-
-    {
       "name": "Manage Tests",
       "icon": "menu-icon tf-icons bx bx-building",
       "slug": " manage-tests",

@@ -19,7 +19,7 @@ class AjaxController extends Controller
 
     public function get_skills()
     {
-        $skills = DB::table('master_skills')->where('is_active', 1)->where('trash_key', 1)->get();
+        $skills = DB::table('master_skills')->where('is_active', 1)->where('trash_key', 1)->orderBy('skill_name', 'asc')->get();
         return $skills;
     }
 
@@ -42,6 +42,7 @@ class AjaxController extends Controller
             ->where('is_active', 1)
             ->where('trash_key', 1)
             ->whereRaw("FIND_IN_SET($skill_id, skills_id)")
+            ->orderBy('topic_name', 'asc')
             ->get();
         return $topics;
     }

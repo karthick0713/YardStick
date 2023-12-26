@@ -54,67 +54,85 @@ class QuestionBankController extends Controller
         return view("admin.question-bank.add-questions", compact("heading", 'sub_heading', 'categories'));
     }
 
+    // public function save_questions(Request $request)
+    // {
+
+
+    //     $validator = Validator::make($request->all(), [
+    //         'skill' => 'required',
+    //         'difficulty' => 'required',
+    //         'topic' => 'required',
+    //         'category' => 'required',
+    //         'marks' => 'required',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         Session::flash('error', __('An error has occurred'));
+    //         return redirect()->back()->withErrors($validator)->withInput();
+    //     }
+    //     $randomCode = $this->generate_random_code();
+    //     $data = array(
+    //         'question_code' => $randomCode,
+    //         'skills_id' => $request->input('skill'),
+    //         'difficulties_id' => $request->input('difficulty'),
+    //         'topics_id' => $request->input('topic'),
+    //         'category' => $request->input('category'),
+    //         'marks' => $request->input('marks'),
+    //         'created_at' => now(),
+    //         'updated_at' => now(),
+    //     );
+    //     if ($request->input('category') == 1) {
+    //         $data['questions'] = $request->input('programming_question');
+    //         $data['solutions'] = $request->input('programming_solution');
+    //     } else {
+    //         $data['questions'] = $request->input('mcq_question');
+    //         $data['option_a'] = $request->input('opt_answer_a');
+    //         $data['option_b'] = $request->input('opt_answer_b');
+    //         $data['option_c'] = $request->input('opt_answer_c');
+    //         $data['option_d'] = $request->input('opt_answer_d');
+    //         $data['correct_option'] = $request->input('correct_option');
+    //     }
+    //     $value = DB::table('question_banks')->insertGetId($data);
+    //     $question_code = DB::table('question_banks')->where('question_id', $value)->first();
+    //     if ($question_code->category == 1) {
+    //         $dataToInsert = [];
+    //         foreach ($request->input('group-a') as $data) {
+    //             $dataToInsert[] = [
+    //                 'question_code' => $question_code->question_code,
+    //                 'title_name' => $data['question_sub_title'],
+    //                 'description' => $data['question_sub_description'],
+    //                 'created_at' => now(),
+    //                 'updated_at' => now(),
+    //             ];
+    //         }
+
+    //         $insert_data = DB::table('question_bank_entry')->insert($dataToInsert);
+    //         if ($insert_data) {
+    //             Session::flash('success', __('Question Added Successfully'));
+    //             return redirect()->route('manage-questions');
+    //         }
+    //     }
+    //     if ($value) {
+    //         Session::flash('success', __('Question Added Successfully'));
+    //         return redirect()->route('manage-questions');
+    //     }
+    // }
+
+
+
     public function save_questions(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'skill' => 'required',
-            'difficulty' => 'required',
-            'topic' => 'required',
-            'category' => 'required',
-            'marks' => 'required',
-        ]);
-        if ($validator->fails()) {
-            Session::flash('error', __('An error has occurred'));
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-        $randomCode = $this->generate_random_code();
-        $data = array(
-            'question_code' => $randomCode,
-            'skills_id' => $request->input('skill'),
-            'difficulties_id' => $request->input('difficulty'),
-            'topics_id' => $request->input('topic'),
-            'category' => $request->input('category'),
-            'marks' => $request->input('marks'),
-            'created_at' => now(),
-            'updated_at' => now(),
-        );
-        if ($request->input('category') == 1) {
-            $data['questions'] = $request->input('programming_question');
-            $data['solutions'] = $request->input('programming_solution');
-        } else {
-            $data['questions'] = $request->input('mcq_question');
-            $data['option_a'] = $request->input('opt_answer_a');
-            $data['option_b'] = $request->input('opt_answer_b');
-            $data['option_c'] = $request->input('opt_answer_c');
-            $data['option_d'] = $request->input('opt_answer_d');
-            $data['correct_option'] = $request->input('correct_option');
-        }
-        $value = DB::table('question_banks')->insertGetId($data);
-        $question_code = DB::table('question_banks')->where('question_id', $value)->first();
-        if ($question_code->category == 1) {
-            $dataToInsert = [];
-            foreach ($request->input('group-a') as $data) {
-                $dataToInsert[] = [
-                    'question_code' => $question_code->question_code,
-                    'title_name' => $data['question_sub_title'],
-                    'description' => $data['question_sub_description'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-
-            $insert_data = DB::table('question_bank_entry')->insert($dataToInsert);
-            if ($insert_data) {
-                Session::flash('success', __('Question Added Successfully'));
-                return redirect()->route('manage-questions');
-            }
-        }
-        if ($value) {
-            Session::flash('success', __('Question Added Successfully'));
-            return redirect()->route('manage-questions');
-        }
+        dd($request->input());
     }
+
+
+
+
+
+
+
+
+
+
 
     public function view_detailed_question(Request $request)
     {

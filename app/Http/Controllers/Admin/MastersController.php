@@ -51,6 +51,7 @@ class MastersController extends Controller
             return response()->json(['message' => 'Something went wrong!']);
         }
     }
+    
 
     //edit difficulty status
     public function difficulty_status(Request $request)

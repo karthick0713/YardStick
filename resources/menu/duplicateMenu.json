@@ -7,103 +7,116 @@
       "slug": "admin-dashboard"
     },
     {
+      "url": "/admin/courses",
+      "name": "Courses",
+      "icon": "menu-icon tf-icons bx bx-book",
+      "slug": "manage-courses"
+    },
+    {
+      "url": "/admin/courses",
+      "name": "Courses Allocation",
+      "icon": "menu-icon tf-icons bx bxs-book-reader",
+      "slug": "manage-courses"
+    },
+
+    {
       "name": "Manage Tests",
       "icon": "menu-icon tf-icons bx bx-building",
-      "slug": "manage-tests",
+      "slug": " manage-tests",
       "submenu": [
         {
-          "url": "/admin/manage-test/create-test",
-          "name": "Create Test",
-          "slug": "create-test"
-        },
-        {
-          "url": "/admin/manage-test/create-quiz",
-          "name": "Create Quiz",
-          "slug": "create-quiz"
+          "url": "/admin/manage-test/manage-test",
+          "name": "Manage Test",
+          "slug": "manage-test"
         }
       ]
     },
     {
-      "name": "Manage Learning",
-      "icon": "menu-icon tf-icons bx bx-news",
-      "slug": "manage-learning",
-      "submenu": [
-        {
-          "url": "/admin/manage-learning/practice-set",
-          "name": "Practice Sets",
-          "slug": "practice-set"
-        },
-        {
-          "url": "/admin/manage-learning/lessions",
-          "name": "Lessions",
-          "slug": "lessions"
-        },
-        {
-          "url": "/admin/manage-learning/videos",
-          "name": "Videos",
-          "slug": "videos"
-        }
-      ]
-    },
-    {
-      "url": "/admin/question-bank",
-      "name": "Question Bank",
+      "name": "Question Banks",
       "icon": "menu-icon tf-icons bx bx-question-mark",
-      "slug": "question-bank"
-    },
-    {
-      "url": "/admin/lession-bank",
-      "name": "Lession Bank",
-      "icon": "menu-icon tf-icons bx bx-file",
-      "slug": "lession-bank"
-    },
-    {
-      "url": "/admin/video-bank",
-      "name": "Video Bank",
-      "icon": "menu-icon tf-icons bx bxs-videos",
-      "slug": "video-bank"
-    },
-    {
-      "name": "Manage Users",
-      "icon": "menu-icon tf-icons bx bx-user",
-      "slug": "manage-users",
+      "slug": " manage-questions",
       "submenu": [
         {
-          "url": "/admin/manage-users/users",
-          "name": "Users",
-          "slug": "manageUser-users"
+          "url": "/admin/question-bank/manage-questions",
+          "name": "Manage Questions",
+          "slug": "manage-questions"
         },
         {
-          "url": "/admin/manage-users/usersGroup",
-          "name": "Users Group ",
-          "slug": "manageUser-usersgroup"
-        },
-        {
-          "url": "/admin/manage-users/importUsers",
-          "name": "Import Users",
-          "slug": "manageUser-importusers"
-        },
-        {
-          "url": "/admin/manage-users/importUsersGroup",
-          "name": "Import Users Group",
-          "slug": "manageUser-importusersgroup"
+          "url": "#",
+          "name": "Skills and Difficulties",
+          "slug": "filter-questions"
         }
       ]
     },
     {
-      "name": "Manage Clients",
-      "icon": "menu-icon tf-icons bx bx-briefcase",
-      "slug": "manage-users",
+      "name": "Manage Students",
+      "icon": "menu-icon tf-icons bx bx-user",
+      "slug": " manage-students",
       "submenu": [
         {
-          "url": "/admin/manage-clients/clients",
-          "name": "Clients",
-          "slug": "layouts-without-menu"
+          "url": "/admin/manage-students/students",
+          "name": "Students",
+          "slug": "manage-students-students"
         },
         {
-          "url": "/admin/manage-clients/importClients",
-          "name": "Import Clients",
-          "slug": "layouts-without-navbar"
+          "url": "/admin/manage-students/importstudents",
+          "name": "Import Students",
+          "slug": "managestudents-importstudents"
+        },
+        {
+          "url": "/admin/manage-students/students-group",
+          "name": "Students Group",
+          "slug": "managestudents-studentsgroup"
+        },
+        {
+          "url": "/admin/manage-students/import-students-group",
+          "name": "Import Students Group",
+          "slug": "manageUser-importgroup"
+        }
+      ]
+    },
+    {
+      "name": "Manage College",
+      "icon": "menu-icon tf-icons bx bx-briefcase",
+      "slug": "manage-colleges",
+      "submenu": [
+        {
+          "url": "/admin/manage-colleges/colleges",
+          "name": "College",
+          "slug": "managecolleges-colleges"
+        },
+        {
+          "url": "/admin/manage-colleges/importcollege",
+          "name": "Import College",
+          "slug": "managecolleges-importcolleges"
+        }
+      ]
+    },
+
+    {
+      "name": "Masters",
+      "icon": "menu-icon tf-icons bx bxl-mastodon",
+      "slug": "masters",
+      "submenu": [
+        {
+          "url": "/admin/masters/categories",
+          "name": "Manage Categories",
+          "slug": "manage-categories"
+        },
+        {
+          "url": "/admin/masters/skills",
+          "name": "Manage Skills",
+          "slug": "manage-skills"
+        },
+        {
+          "url": "/admin/masters/topics",
+          "name": "Manage Topics",
+          "slug": "manage-topics"
+        },
+        {
+          "url": "/admin/masters/department",
+          "name": "Manage Departments",
+          "slug": "manage-department"
         }
       ]
     },

@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="ms-3" style="padding-top: 10px">
                                     <label class="fw-bold" for="">Total Tests</label><br>
-                                    <span class="text-sec-color fw-bold">{{ $data['total_duration'] }} hrs
+                                    {{-- <span class="text-sec-color fw-bold">{{ $data['total_duration'] }} hrs --}}
                                     </span>
                                 </div>
                             </div>
