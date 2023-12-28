@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tagify.css') }}">
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.css') }}">
 
 @endsection
 
@@ -21,6 +22,8 @@
     <script src="{{ asset('assets/js/forms-extras.js') }}"></script>
     <script src="{{ asset('assets/js/tagify.js') }}"></script>
     <script src="{{ asset('assets/js/form-tagify.js') }}"></script>
+    <script src="{{ asset('assets/js/form-select.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.js') }}"></script>
 
 @endsection
 
@@ -31,7 +34,6 @@
         .border-2 {
             border: 2px solid black;
         }
-
 
         table {
             border-collapse: unset !important;
@@ -65,12 +67,13 @@
             outline: none;
         }
 
-        select,
-        input {
-            margin: 10px 0 10px 0;
-            height: 45px;
-            border-radius: 0% !important;
-        }
+
+        /* select #language_for_test:not(),
+                                                                                                                                                                                                                                                                                                                                                                                                                            input {
+                                                                                                                                                                                                                                                                                                                                                                                                                                margin: 10px 0 10px 0;
+                                                                                                                                                                                                                                                                                                                                                                                                                                height: 45px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                border-radius: 0% !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                            } */
 
         textarea {
             margin: 10px 0 10px 0;
@@ -137,20 +140,20 @@
                             <label for="difficulties">Difficulty :</label>
                             <div class="d-flex">
                                 <div class="col d-flex">
-                                    <input type="radio" name="difficulty" id="easy">
-                                    <label class="mt-4 ms-2 mx-1" for="easy">Easy</label>
+                                    <input type="radio" name="difficulty" value="1" id="easy">
+                                    <label class="mt-1 ms-2 mx-1" for="easy">Easy</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <input type="radio" name="difficulty" id="medium">
-                                    <label class="mt-4 ms-2 mx-1" for="medium">Medium</label>
+                                    <input type="radio" name="difficulty" value="2" id="medium">
+                                    <label class="mt-1 ms-2 mx-1" for="medium">Medium</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <input type="radio" name="difficulty" id="hard">
-                                    <label class="mt-4 ms-2 mx-1" for="hard">Hard</label>
+                                    <input type="radio" name="difficulty" value="3" id="hard">
+                                    <label class="mt-1 ms-2 mx-1" for="hard">Hard</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <input type="radio" name="difficulty" id="very-hard">
-                                    <label class="mt-4 ms-2 mx-1" for="very-hard">Very Hard</label>
+                                    <input type="radio" name="difficulty" value="4" id="very-hard">
+                                    <label class="mt-1 ms-2 mx-1" for="very-hard">Very Hard</label>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +173,6 @@
                                 @foreach ($categories as $cat)
                                     <option value="{{ $cat->category_id }}">{{ $cat->category_name }}</option>
                                 @endforeach
-                                <option value="mcq_grouping">MCQ Grouping</option>
                             </select>
                         </div>
 
@@ -193,7 +195,7 @@
                         <div class="row">
                             <div class="mt-2">
                                 <label for="programming-questions">Question :</label>
-                                <div id="question-editor" onkeyup="get_programming_value(this)" class="rice-text-area"
+                                <div id="question-editor" onkeyup="get_value(this)" class="rice-text-area"
                                     style="height: 250px;background-color:white">
                                 </div>
                                 <input type="hidden" name="programming_question" class="full-editor-value">
@@ -223,18 +225,18 @@
                                     <label for="">SELECT LANGUAGE: </label>
                                     <select name="language_select" class="form-control" id="languageSelect">
                                         <option value="customlang">SELECT LANGUAGE</option>
-                                        <option value="abap">ABAP</option>
+                                        {{-- <option value="abap">ABAP</option>
                                         <option value="apex">Apex</option>
                                         <option value="azcli">Azure CLI</option>
                                         <option value="bat">Batch File</option>
                                         <option value="bicep">Bicep</option>
                                         <option value="cameligo">Cameligo</option>
                                         <option value="clojure">Clojure</option>
-                                        <option value="coffee">CoffeeScript</option>
+                                        <option value="coffee">CoffeeScript</option> --}}
                                         <option value="csharp">C</option>
                                         <option value="csharp">C++</option>
                                         <option value="csharp">C#</option>
-                                        <option value="csp">CSP</option>
+                                        {{-- <option value="csp">CSP</option>
                                         <option value="css">CSS</option>
                                         <option value="dart">Dart</option>
                                         <option value="dockerfile">Dockerfile</option>
@@ -247,9 +249,9 @@
                                         <option value="handlebars">Handlebars</option>
                                         <option value="hcl">HashiCorp Configuration Language</option>
                                         <option value="html">HTML</option>
-                                        <option value="ini">INI</option>
+                                        <option value="ini">INI</option> --}}
                                         <option value="java">Java</option>
-                                        <option value="javascript">JavaScript</option>
+                                        {{-- <option value="javascript">JavaScript</option>
                                         <option value="julia">Julia</option>
                                         <option value="kotlin">Kotlin</option>
                                         <option value="less">Less</option>
@@ -272,9 +274,9 @@
                                         <option value="powerquery">PowerQuery</option>
                                         <option value="powershell">PowerShell</option>
                                         <option value="protobuf">Protocol Buffers</option>
-                                        <option value="pug">Pug</option>
+                                        <option value="pug">Pug</option> --}}
                                         <option value="python">Python</option>
-                                        <option value="qsharp">Q#</option>
+                                        {{-- <option value="qsharp">Q#</option>
                                         <option value="r">R</option>
                                         <option value="razor">Razor</option>
                                         <option value="redis">Redis</option>
@@ -299,12 +301,24 @@
                                         <option value="typescript">TypeScript</option>
                                         <option value="vb">Visual Basic</option>
                                         <option value="xml">XML</option>
-                                        <option value="yaml">YAML</option>
+                                        <option value="yaml">YAML</option> --}}
                                     </select>
                                 </div>
-                                <div class="col-2 ms-3 mt-5">
+                                <div class="col-2 ms-3 mt-4">
                                     <button type="button" class="btn btn-sm btn-primary play-button"
                                         onclick="run_code()">Run Code</button>
+                                </div>
+
+                                <div class="col-3">
+                                    <label for=""class="fw-bold">Select language for Test:</label>
+                                    <select id="language_for_test" name="language_for_test[]"
+                                        class="select2 select-id-change form-select group-select" multiple>
+                                        <option value="csharp">C</option>
+                                        <option value="csharp">C++</option>
+                                        <option value="csharp">C#</option>
+                                        <option value="java">Java</option>
+                                        <option value="python">Python</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -417,7 +431,8 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_a" id="opt_answer_1">
+                                <input type="hidden" name="opt_answer[]" id="opt_answer_1">
+
                             </div>
                         </div>
                         <pre>
@@ -435,7 +450,8 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_b" id="opt_answer_2">
+                                <input type="hidden" name="opt_answer[]" id="opt_answer_2">
+
                             </div>
                         </div>
                         <pre>
@@ -454,7 +470,8 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_c" id="opt_answer_3">
+                                <input type="hidden" name="opt_answer[]" id="opt_answer_3">
+
                             </div>
                         </div>
                         <pre>
@@ -472,7 +489,8 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_d" id="opt_answer_4">
+                                <input type="hidden" name="opt_answer[]" id="opt_answer_4">
+
 
                             </div>
                         </div>
@@ -484,11 +502,14 @@
 
                     <br>
                     <div class="mt-5">
+
                         <h5 class="fw-bold">Explanation</h5>
-                        <div id="explanation-editor" onkeyup="" class=""
-                            style="height: 100px;background-color:white">
+                        <div class="">
+                            <div id="explanation-editor" onkeyup="get_value(this)" class=""
+                                style="height: 100px;background-color:white">
+                            </div>
                         </div>
-                        <input type="hidden" name="mcq_explanation" class="">
+                        <input type="hidden" name="mcq_explanation" class="mcq_explanation">
                     </div>
                 </div>
 
@@ -497,7 +518,7 @@
 
                     <div class="mt-4 title">
                         <h5 class="fw-bold">Title:</h5>
-                        <div id="grouping-title-editor" onkeyup="" class=""
+                        <div id="grouping-title-editor" onkeyup="get_value(this)" class=""
                             style="height: 150px;background-color:white">
                         </div>
                         <input type="hidden" name="mcq_grouping_title" class="">
@@ -534,90 +555,85 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="mcq_question" id="mcq-question">
+                                <input type="hidden" name="grouping_mcq_question[1]" id="mcq-question">
                             </div>
                             <pre>
                             
         
-                        </pre>
-                            <div class="ms-3 mx-3 mcq-grouping-options grouping-options-append-div1">
-                                <label for="" class="">( Click the Checkbox which has Correct Answer.
-                                    )</label>
-                                <div class="mt-2">
-                                    <label for="">Option A :</label>
-                                    <div class="d-flex">
-                                        <input type="checkbox" name="correct_option" value ="a"
-                                            class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                            id="">
-
-                                        <div style="height: 50px;width:100%">
-                                            <div class="question-options" onkeyup="get_value(this)"
-                                                style="background-color:white">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="opt_answer_a" id="opt_answer_1">
-                                    </div>
-                                </div>
-                                <pre>
-    
-    
-                        </pre>
-                                <div class="mt-2">
-                                    <label for="">Option B :</label>
-                                    <div class="d-flex">
-                                        <input type="checkbox" name="correct_option" value ="b"
-                                            class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                            id="">
-                                        <div style="height: 50px;width:100%">
-                                            <div class="question-options" onkeyup="get_value(this)"
-                                                style="background-color:white">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="opt_answer_b" id="opt_answer_2">
-                                    </div>
-                                </div>
-                                <pre>
-    
-                            
-                        </pre>
-
-                                <div class="mt-2">
-                                    <label for="">Option C :</label>
-                                    <div class="d-flex">
-                                        <input type="checkbox" name="correct_option" value ="c"
-                                            class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                            id="">
-                                        <div style="height:50px;width:100%">
-                                            <div class="question-options" onkeyup="get_value(this)"
-                                                style="background-color:white">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="opt_answer_c" id="opt_answer_3">
-                                    </div>
-                                </div>
-                                <pre>
-    
-    
-                        </pre>
-                                <div class="mt-2">
-                                    <label for="">Option D :</label>
-                                    <div class="d-flex">
-                                        <input type="checkbox" name="correct_option" value ="d"
-                                            class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                            id="">
-                                        <div style="height: 50px;width:100%">
-                                            <div class="question-options" onkeyup="get_value(this)"
-                                                style="background-color:white">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="opt_answer_d" id="opt_answer_4">
-
-                                    </div>
-                                </div>
-                                <pre>
-    
-                            
                                 </pre>
+                            <div class="ms-3  mx-3 mcq-grouping-options ">
+                                <label for="" class="">( Click the Checkbox which has Correct
+                                    Answer.
+                                    )</label>
+                                <div class=" row grouping-options-append-div1">
+                                    <div class="col-6">
+                                        <div class="mt-2">
+                                            <label for="">Option A :</label>
+                                            <div class="d-flex">
+                                                <input type="checkbox" name="grouping_correct_option[1]" value ="a"
+                                                    class="checkbox flex-column align-items-center"
+                                                    onclick="toggleCheck(this)" id="">
+
+                                                <div style="height: 50px;width:100%;margin-bottom:60px">
+                                                    <div class="question-options" onkeyup="get_value(this)"
+                                                        style="background-color:white">
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mt-2">
+                                            <label for="">Option B :</label>
+                                            <div class="d-flex">
+                                                <input type="checkbox" name="grouping_correct_option[1]" value ="b"
+                                                    class="checkbox flex-column align-items-center"
+                                                    onclick="toggleCheck(this)" id="">
+                                                <div style="height: 50px;width:100%;margin-bottom:60px">
+                                                    <div class="question-options" onkeyup="get_value(this)"
+                                                        style="background-color:white">
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mt-2">
+                                            <label for="">Option C :</label>
+                                            <div class="d-flex">
+                                                <input type="checkbox" name="grouping_correct_option[1]" value ="c"
+                                                    class="checkbox flex-column align-items-center"
+                                                    onclick="toggleCheck(this)" id="">
+                                                <div style="height:50px;width:100%;margin-bottom:60px">
+                                                    <div class="question-options" onkeyup="get_value(this)"
+                                                        style="background-color:white">
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mt-2">
+                                            <label for="">Option D :</label>
+                                            <div class="d-flex">
+                                                <input type="checkbox" name="grouping_correct_option[1]" value ="d"
+                                                    class="checkbox flex-column align-items-center"
+                                                    onclick="toggleCheck(this)" id="">
+                                                <div style="height: 50px;width:100%;margin-bottom:60px">
+                                                    <div class="question-options" onkeyup="get_value(this)"
+                                                        style="background-color:white">
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_4">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
 
@@ -628,7 +644,17 @@
                 </div>
 
 
-
+                <div class="mt-3" style="display:none" id="tagsContainer">
+                    <div class="col-10 select2-dark">
+                        <label for="tags" class="fw-bold">Tags:</label>
+                        <select id="select2Darks" name="tags[]"
+                            class="select2 select-id-change form-select group-select" multiple>
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
 
                 <br>
@@ -638,32 +664,36 @@
                     <button type="button" style="background-color:#eceef1" value="draft"
                         onclick="saving_status(this.value)" class="btn ms-3 mx-3 fw-bold">Save as
                         Draft</button>
-                    <button type="button" style="background-color:#eceef1" data-bs-toggle="modal"
-                        data-bs-target="#tagModal" class="btn ms-3 mx-3 fw-bold">Add
+                    <button type="button" style="background-color:#eceef1" onclick="tag_display()" id="toggleButton"
+                        class="btn ms-3 mx-3  fw-bold">Add
                         Tags</button>
                 </div>
+
+
+
             </form>
         </div>
     </div>
 
-    <div class="modal" id="tagModal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="d-flex">
-                        <input id="TagifyBasic" class="form-control" name="TagifyBasic" placeholder="Enter Tags" />
-                        <button type="button" class="btn ms-3 background-info text-white">OK</button>
-                    </div>
-                </div>
 
-            </div>
-        </div>
-    </div>
 
     <script src="{{ asset('assets/quill/quill.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 
     <script>
+        function tag_display() {
+            var tagsContainer = document.getElementById("tagsContainer");
+            var button = document.getElementById("toggleButton");
+
+            if (tagsContainer.style.display === "none") {
+                tagsContainer.style.display = "flex";
+                button.innerText = "Hide Tags";
+            } else {
+                tagsContainer.style.display = "none";
+                button.innerText = "Add Tags";
+            }
+        }
+
         const languages = {
             java: {
                 id: 'java',
@@ -964,10 +994,12 @@
                 success: function(data) {
                     if (data.stdout != null) {
                         $("#code-output").removeClass('fw-bold text-danger');
+                        $("#code-output").val("");
                         $("#code-output").val(data.stdout);
                     } else {
                         $("#code-output").addClass('fw-bold text-danger');
-                        $("#code-output").val(data.stderr);
+                        $("#code-output").val("");
+                        $("#code-output").val(data.stdout);
                     }
                 },
                 error: function(data) {
@@ -990,8 +1022,8 @@
             var rows = `
         <tr>
             <td class='text-center'>${index}</td>
-            <td class='text-center'><textarea name="text_case_input[]" class="form-control" rows="4">${input}</textarea></td>
-            <td class='text-center'><textarea name="text_case_output[]" class="form-control" rows="4">${output}</textarea></td>
+            <td class='text-center'><textarea name="test_case_input[]" class="form-control" rows="4">${input}</textarea></td>
+            <td class='text-center'><textarea name="test_case_output[]" class="form-control" rows="4">${output}</textarea></td>
             <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="0"></td>
             <td class='text-center'><input type="number" name="test_case_weightage[]" value="0" class="form-control"></td>
             <td class='text-center'><button type="button" onclick="remove_row(this)" class="btn btn-danger btn-sm">DELETE</button></td>
@@ -1028,15 +1060,9 @@
             get_difficulties();
             var newOptions = document.querySelectorAll('.question-options:not(.quill-initialized)');
             quill_editor(newOptions);
-
-
         });
 
-        function get_programming_value(element) {
-            var quillContent = $(element).find('.ql-editor').html();
-            var edit_value = $(element).parent().find('input[type="hidden"]');
-            edit_value.val(quillContent);
-        }
+
 
         function quill_editor(options) {
             options.forEach(function(editor, index) {
@@ -1056,30 +1082,30 @@
                                 }, {
                                     'background': []
                                 }],
-                                [{
-                                    'script': 'super'
-                                }, {
-                                    'script': 'sub'
-                                }],
-                                [{
-                                    'header': '1'
-                                }, {
-                                    'header': '2'
-                                }, 'blockquote', 'code-block'],
-                                [{
-                                    'list': 'ordered'
-                                }, {
-                                    'list': 'bullet'
-                                }, {
-                                    'indent': '-1'
-                                }, {
-                                    'indent': '+1'
-                                }],
-                                [{
-                                    'direction': 'rtl'
-                                }],
-                                ['link', 'image', 'video'],
-                                ['clean']
+                                // [{
+                                //     'script': 'super'
+                                // }, {
+                                //     'script': 'sub'
+                                // }],
+                                // [{
+                                //     'header': '1'
+                                // }, {
+                                //     'header': '2'
+                                // }, 'blockquote', 'code-block'],
+                                // [{
+                                //     'list': 'ordered'
+                                // }, {
+                                //     'list': 'bullet'
+                                // }, {
+                                //     'indent': '-1'
+                                // }, {
+                                //     'indent': '+1'
+                                // }],
+                                // [{
+                                //     'direction': 'rtl'
+                                // }],
+                                // ['link', 'image', 'video'],
+                                // ['clean']
                             ]
                         }
                     });
@@ -1105,7 +1131,8 @@
                     <div class="question-options" onkeyup="get_value(this)" style="background-color: white">
                     </div>
                 </div>
-                <input type="hidden" name="opt_answer_${optionLetter}" id="opt_answer_${optionCounter}">
+                <input type="hidden" name="opt_answer[]" id="opt_answer_${optionCounter}">
+                
             </div>
         </div>
     `;
@@ -1120,9 +1147,9 @@
 
         function get_value(element) {
             var quillContent = $(element).find('.ql-editor').html();
-            console.log(quillContent);
             var edit_value = $(element).parent().parent().find('input[type="hidden"]');
             edit_value.val(quillContent);
+
         }
 
 
@@ -1251,10 +1278,11 @@
                         'direction': 'rtl'
                     }],
                     ['link', 'image', 'video'],
-                    ['clean']
+                    ['clean'],
                 ],
             }
         });
+
 
 
         function get_desc_value(element) {
@@ -1267,116 +1295,112 @@
         function add_question_for_mcq() {
             question_index++;
             var row = `
-            <div style="background-color:#ececec" class="question_${question_index}">
+            <div style="background-color:#ececec" class="question-index question_${question_index}">
 
-                    <div class="mt-4 ms-3 mx-3">
-                        <br>
-                        <div class="d-flex justify-content-end">
-                            <button type="button"  onclick="add_grouping_question_options(this.value)"
-                                        class="btn background-secondary text-white btn-sm mx-3 mcq-grouping-option-add-button">ADD
-                                        OPTION
-                                    </button>
-                                    <button type="button" onclick="remove_questions(this)"
-                                        class="btn background-info text-white btn-sm remove-questions">DELETE
-                                        QUESTION</button>
-                        </div>
-                        <label for="mcq-questions">Question ${question_index} :</label>
-                        <div style="height: 75px;width:100%">
-                            <div class="question-options" onkeyup="get_value(this)"
-                                style="background-color:white">
-                            </div>
-                        </div>
-                        <input type="hidden" name="mcq_question" id="mcq-question">
+            <div class="mt-4 ms-3 mx-3">
+                <br>
+                <div class="d-flex justify-content-end">
+                    <button type="button" value=""
+                        onclick="add_grouping_question_options(this.value)"
+                        class="btn background-secondary text-white btn-sm mx-3 mcq-grouping-option-add-button">ADD
+                        OPTION
+                    </button>
+                    <button type="button" onclick="remove_questions(this)"
+                        class="btn background-info text-white btn-sm remove-questions">DELETE
+                        QUESTION</button>
+                </div>
+                <label for="mcq-questions">Question ${question_index}:</label>
+                <div style="height: 75px;width:100%">
+                    <div class="question-options" onkeyup="get_value(this)"
+                        style="background-color:white">
                     </div>
-                    <pre>
+                </div>
+                <input type="hidden" name="grouping_mcq_question[${question_index}]" id="mcq-question">
+            </div>
+            <pre>
 
 
-                    </pre>
-                    <div class="ms-3 mx-3 mcq-grouping-options grouping-options-append-div${question_index}">
-                        <label for="" class="">( Click the Checkbox which has Correct Answer.
-                            )</label>
+                </pre>
+            <div class="ms-3  mx-3 mcq-grouping-options ">
+                <label for="" class="">( Click the Checkbox which has Correct
+                    Answer.
+                    )</label>
+                <div class=" row grouping-options-append-div${question_index}">
+                    <div class="col-6">
                         <div class="mt-2">
                             <label for="">Option A :</label>
                             <div class="d-flex">
-                                <input type="checkbox" name="correct_option" value ="a"
-                                    class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                    id="">
+                                <input type="checkbox" name="grouping_correct_option[${question_index}]" value ="a"
+                                    class="checkbox flex-column align-items-center"
+                                    onclick="toggleCheck(this)" id="">
 
-                                <div style="height: 50px;width:100%">
+                                <div style="height: 50px;width:100%;margin-bottom:60px">
                                     <div class="question-options" onkeyup="get_value(this)"
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_a" id="opt_answer_1">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_1">
                             </div>
                         </div>
-                        <pre>
-
-
-                    </pre>
+                    </div>
+                    <div class="col-6">
                         <div class="mt-2">
                             <label for="">Option B :</label>
                             <div class="d-flex">
-                                <input type="checkbox" name="correct_option" value ="b"
-                                    class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                    id="">
-                                <div style="height: 50px;width:100%">
+                                <input type="checkbox" name="grouping_correct_option[${question_index}]" value ="b"
+                                    class="checkbox flex-column align-items-center"
+                                    onclick="toggleCheck(this)" id="">
+                                <div style="height: 50px;width:100%;margin-bottom:60px">
                                     <div class="question-options" onkeyup="get_value(this)"
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_b" id="opt_answer_2">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_2">
                             </div>
                         </div>
-                        <pre>
-
-
-                    </pre>
-
+                    </div>
+                    <div class="col-6">
                         <div class="mt-2">
                             <label for="">Option C :</label>
                             <div class="d-flex">
-                                <input type="checkbox" name="correct_option" value ="c"
-                                    class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                    id="">
-                                <div style="height:50px;width:100%">
+                                <input type="checkbox" name="grouping_correct_option[${question_index}]" value ="c"
+                                    class="checkbox flex-column align-items-center"
+                                    onclick="toggleCheck(this)" id="">
+                                <div style="height:50px;width:100%;margin-bottom:60px">
                                     <div class="question-options" onkeyup="get_value(this)"
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_c" id="opt_answer_3">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_3">
                             </div>
                         </div>
-                        <pre>
-
-
-                    </pre>
+                    </div>
+                    <div class="col-6">
                         <div class="mt-2">
                             <label for="">Option D :</label>
                             <div class="d-flex">
-                                <input type="checkbox" name="correct_option" value ="d"
-                                    class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                    id="">
-                                <div style="height: 50px;width:100%">
+                                <input type="checkbox" name="grouping_correct_option[${question_index}]" value ="d"
+                                    class="checkbox flex-column align-items-center"
+                                    onclick="toggleCheck(this)" id="">
+                                <div style="height: 50px;width:100%;margin-bottom:60px">
                                     <div class="question-options" onkeyup="get_value(this)"
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="opt_answer_d" id="opt_answer_4">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_4">
 
                             </div>
                         </div>
-                        <pre>
-
-
-                        </pre>
                     </div>
+                </div>
+
+            </div>
 
 
-                    </div>
+            </div>
             `;
             $(".questions-for-mcq-grouping").append(row);
-            $(".mcq-grouping-option-add-button").val(question_index)
+            $(`.question_${question_index}`).find('.mcq-grouping-option-add-button').val(question_index)
             var newOptions = document.querySelectorAll('.question-options:not(.quill-initialized)');
             quill_editor(newOptions);
         }
@@ -1386,37 +1410,42 @@
         }
 
 
+        var optionCounterGrouping = {
+            1: 5
+        };
+
         function add_grouping_question_options(value) {
+
+            if (!(optionCounterGrouping[value])) {
+                optionCounterGrouping[value] = 5;
+            }
 
             var mcq_grouping = $(".mcq-grouping-options");
             var grouping_add_options = $(".grouping-options-append-div" + value);
 
-            var optionLetter = String.fromCharCode(96 + optionCounter);
+            var optionLetter = String.fromCharCode(96 + optionCounterGrouping[value]);
 
             var newOptionHtml = `
-        <div class="">
+        <div class="col-6" style="">
             <label for="">Option ${optionLetter.toUpperCase()} :</label>
             <div class="d-flex">
-                <input type="checkbox" name="correct_option" value="${optionLetter}"
+                <input type="checkbox" name="grouping_correct_option[${value}]" value="${optionLetter}"
                     class="checkbox flex-column align-items-center" onclick="toggleCheck(this)" id="">
-                <div style="height: 50px; width: 100%">
+                <div style="height: 50px; width: 100%;margin-bottom:60px">
                     <div class="question-options" onkeyup="get_value(this)" style="background-color: white">
                     </div>
                 </div>
-                <input type="hidden" name="opt_answer_${optionLetter}" id="opt_answer_${optionCounter}">
+                <input type="hidden" name="grouping_opt_answer[${value}][]" id="opt_answer_${optionCounterGrouping}">
             </div>
         </div>
-        <pre>
-            
-
-        </pre>
     `;
 
             $(grouping_add_options).append(newOptionHtml);
-            optionCounter++;
+            optionCounterGrouping[value]++;
             var newOptions = document.querySelectorAll('.question-options:not(.quill-initialized)');
             quill_editor(newOptions);
         }
+
 
 
 
@@ -1549,7 +1578,7 @@
                 $("#marks").prop('readonly', false);
                 $(".mcq").hide();
                 $(".mcq_grouping").hide();
-            } else if (value == 'mcq_grouping') {
+            } else if (value == 3) {
                 $(".programming").hide();
                 $("#marks").val('');
                 $("#marks").prop('readonly', false);
@@ -1565,12 +1594,16 @@
         }
 
         function toggleCheck(checkbox) {
+
             var checkboxes = document.getElementsByClassName('checkbox');
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i] !== checkbox) {
-                    checkboxes[i].checked = false;
+            if ($("#category").val() == 2) {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i] !== checkbox) {
+                        checkboxes[i].checked = false;
+                    }
                 }
             }
+
         }
 
         function saving_status(value) {

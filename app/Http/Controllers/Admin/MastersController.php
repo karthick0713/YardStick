@@ -51,7 +51,7 @@ class MastersController extends Controller
             return response()->json(['message' => 'Something went wrong!']);
         }
     }
-    
+
 
     //edit difficulty status
     public function difficulty_status(Request $request)
@@ -483,6 +483,88 @@ class MastersController extends Controller
     public function delete_category(Request $request)
     {
         $value = DB::table('master_categories')->where('category_id', $request->input('id'))->update(['trash_key' => 2]); // change the trash key to 2.
+        if ($value) {
+            Session::flash('success', 'Deleted successfully!');
+        } else {
+            Session::flash('error', 'Something went wrong!');
+        }
+    }
+
+
+
+
+    public function tags(Request $request)
+    {
+        $heading = "Masters";
+        $sub_heading = "Tags";
+        $data = DB::table('master_tags')->where('trash_key', 1)->get();
+        return view('admin.masters.tags', compact('heading', 'sub_heading', 'data'));
+    }
+
+
+    public function tags_add(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'tags' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errorMessages = $validator->errors()->all();
+            Session::flash('error', $errorMessages);
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $data = [
+            'tag_name' => $request->input('tags'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+        if (DB::table('master_tags')->insert($data)) {
+            Session::flash('success', 'Added successfully!');
+            return response()->json(['message' => 'Added successfully!']);
+        } else {
+            Session::flash('error', 'Something went wrong!');
+            return response()->json(['message' => 'Something went wrong!']);
+        }
+    }
+
+    //edit tag status
+    public function tags_status(Request $request)
+    {
+
+        $val =  DB::table('master_tags')->where('tag_id', $request->input('value'))->first();
+
+        if ($val->is_active == 1) {
+            $data['is_active'] = 2;
+            $data['updated_at'] = now();
+        } else {
+            $data['is_active'] = 1;
+            $data['updated_at'] = now();
+        }
+
+        DB::table('master_tags')->where('tag_id', $request->input('value'))->update($data);
+
+        return response()->json(['message' => ' Updated successfully!']);
+    }
+
+    //edit tag
+    public function edit_tags(Request $request)
+    {
+
+        $value = DB::table('master_tags')->where('tag_id', $request->input('id'))->update([
+            'tag_name' => $request->input('tags'),
+            'updated_at' => now(),
+        ]);
+        if ($value) {
+            Session::flash('success', 'Updated successfully!');
+        } else {
+            Session::flash('error', 'Something went wrong!');
+        }
+    }
+
+    // delete tag
+    public function delete_tags(Request $request)
+    {
+        $value = DB::table('master_tags')->where('tag_id', $request->input('id'))->update(['trash_key' => 2]); // change the trash key to 2.
         if ($value) {
             Session::flash('success', 'Deleted successfully!');
         } else {

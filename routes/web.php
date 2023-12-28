@@ -177,6 +177,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('admin/masters/department-delete', $controller_path . '\Admin\MastersController@delete_department')->name('department-delete');
 
 
+    Route::get('admin/masters/tags', $controller_path . '\Admin\MastersController@tags')->name('manage-tags');
+    Route::post('admin/masters/tags-add', $controller_path . '\Admin\MastersController@tags_add')->name('tags-add');
+    Route::post('admin/masters/tags-status', $controller_path . '\Admin\MastersController@tags_status')->name('tags-status');
+    Route::post('admin/masters/tags-update', $controller_path . '\Admin\MastersController@edit_tags')->name('tags-update');
+    Route::post('admin/masters/tags-delete', $controller_path . '\Admin\MastersController@delete_tags')->name('tags-delete');
+
+
+
+
     Route::get('admin/masters/batch', $controller_path . '\Admin\MastersController@batch')->name('manage-batch');
     Route::get('admin/masters/semester', $controller_path . '\Admin\MastersController@semester')->name('manage-semester');
 
@@ -208,6 +217,7 @@ Route::get('/ajax/ajax-get-topics', $controller_path . '\AjaxController@get_topi
 Route::get('/ajax/ajax-get-colleges', $controller_path . '\AjaxController@get_colleges')->name('ajax-get-colleges');
 Route::get('/ajax/ajax-get-questions', $controller_path . '\AjaxController@get_questions')->name('ajax-get-questions');
 Route::get('/ajax/ajax-get-categories', $controller_path . '\AjaxController@get_categories')->name('ajax-get-categories');
+Route::get('/ajax/ajax-get-tags', $controller_path . '\AjaxController@get_tags')->name('ajax-get-tags');
 
 
 

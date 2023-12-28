@@ -53,23 +53,55 @@ class AjaxController extends Controller
         return $colleges;
     }
 
-    public function get_questions()
-    {
-        $questions = DB::table('question_banks')
-            ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
-            ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
-            ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
-            ->select('question_banks.question_code', 'question_banks.questions', 'question_banks.is_active', 'master_topics.topic_name', 'master_skills.skill_name', 'master_difficulties.difficulty_name')
-            ->where('question_banks.trash_key', 1)
-            ->get();
 
-        return DataTables::of($questions)->toJson();
-    }
 
     public function get_categories()
     {
         $categories = DB::table('master_categories')->where('trash_key', 1)->orderBy('category_id')->get();
 
         return DataTables::of($categories)->toJson();
+    }
+
+    public function get_tags()
+    {
+        $tags = DB::table('master_tags')->where('trash_key', 1)->orderBy('tag_id')->get();
+
+        return DataTables::of($tags)->toJson();
+    }
+
+
+    public function get_questions()
+    {
+        $questions = [];
+
+        $que = DB::table('question_banks')->where('is_active', 1)->where('trash_key', 1)->get();
+
+        foreach ($que as $ques) {
+            $category = $ques->category;
+
+            $questionData = DB::table('question_banks')
+                ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
+                ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
+                ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
+                ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
+                ->select('question_banks.question_code', 'question_banks.is_active', 'master_topics.topic_name', 'master_skills.skill_name', 'master_categories.category_name', 'master_difficulties.difficulty_name');
+
+            if ($category == 3) {
+                $questionData->addSelect('question_banks.title as questions');
+            } else {
+                $questionData->addSelect('question_banks.questions');
+            }
+
+            $questionData = $questionData->where('category', $category)->get();
+            if ($category != 4) {
+                foreach ($questionData as $question) {
+                    $question->questions = strip_tags($question->questions);
+                }
+            }
+
+            $questions = array_merge($questions, $questionData->toArray());
+        }
+
+        return DataTables::of($questions)->toJson();
     }
 }

@@ -164,7 +164,7 @@
                 var c = t.DataTable({
                     ajax: "{{ route('ajax-get-questions') }}",
                     columns: [{
-                            data: "question_code",
+                            data: "category_name",
                             orderable: false
                         },
                         {
@@ -225,29 +225,6 @@
                     dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                 });
 
-                $(".dt-column-search tbody").on({
-                    mouseenter: function() {
-                        $(this).data("originalContent", $(this).text());
-                        var orig = $(this).text($(this).text() + "📋");
-                        $(this).css("cursor", "pointer");
-                    },
-                    mouseleave: function() {
-                        $(this).text($(this).data("originalContent"));
-                        $(this).css("cursor", "pointer");
-                    },
-                    click: function() {
-                        var contentToCopy = $(this).data("originalContent");
-                        var tempInput = $("<input>");
-                        $("body").append(tempInput);
-                        tempInput.val(contentToCopy).select();
-                        document.execCommand("copy");
-                        tempInput.remove();
-                        $(this).text(contentToCopy + "✅");
-                        setTimeout(function() {
-                            $(this).text(contentToCopy);
-                        }.bind(this), 2000);
-                    },
-                }, "td:first-child");
             }
 
 

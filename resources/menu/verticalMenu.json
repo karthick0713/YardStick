@@ -110,6 +110,11 @@
           "url": "/admin/masters/department",
           "name": "Manage Departments",
           "slug": "manage-department"
+        },
+        {
+          "url": "/admin/masters/tags",
+          "name": "Manage Tags",
+          "slug": "manage-tags"
         }
       ]
     },
