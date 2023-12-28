@@ -69,11 +69,11 @@
 
 
         /* select #language_for_test:not(),
-                                                                                                                                                                                                                                                                                                                                                                                                                            input {
-                                                                                                                                                                                                                                                                                                                                                                                                                                margin: 10px 0 10px 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                height: 45px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                border-radius: 0% !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        input {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            margin: 10px 0 10px 0;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            height: 45px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            border-radius: 0% !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } */
 
         textarea {
             margin: 10px 0 10px 0;
@@ -128,7 +128,7 @@
                 @csrf
                 <div class="  col-12 fw-bold">
                     <div class="row">
-                        <div class="col-md-2 mb-1">
+                        <div class="col-md-2 mb-2">
                             <label for="skills">Skills :</label>
                             <select name="skill" class="form-control" id="skills" onchange="get_topics(this.value)"
                                 required>
@@ -176,10 +176,21 @@
                             </select>
                         </div>
 
-                        <div class="col-md-1 mb-1 marks">
+                        <div class="col-md-1 mt-1 marks">
                             <label for="category">Marks :</label>
                             <input type="text" name="marks" class="form-control" id="marks" placeholder=" Marks"
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 2)">
+                        </div>
+                        <div class="col-md-3" id="tagsContainer">
+                            <div class="col-10 select2-dark">
+                                <label for="tags" class="fw-bold">Tags:</label>
+                                <select id="select2Darks" name="tags[]"
+                                    class="select2 select-id-change form-select group-select" multiple>
+                                    @foreach ($tags as $tag)
+                                        <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
                     </div>
@@ -233,9 +244,9 @@
                                         <option value="cameligo">Cameligo</option>
                                         <option value="clojure">Clojure</option>
                                         <option value="coffee">CoffeeScript</option> --}}
-                                        <option value="csharp">C</option>
-                                        <option value="csharp">C++</option>
-                                        <option value="csharp">C#</option>
+                                        <option value="csharp" data-keyword = "C">C</option>
+                                        <option value="csharp" data-keyword = "cpp">C++</option>
+                                        <option value="csharp" data-keyword = "csharp">C#</option>
                                         {{-- <option value="csp">CSP</option>
                                         <option value="css">CSS</option>
                                         <option value="dart">Dart</option>
@@ -250,7 +261,7 @@
                                         <option value="hcl">HashiCorp Configuration Language</option>
                                         <option value="html">HTML</option>
                                         <option value="ini">INI</option> --}}
-                                        <option value="java">Java</option>
+                                        <option value="java" data-keyword = "java">Java</option>
                                         {{-- <option value="javascript">JavaScript</option>
                                         <option value="julia">Julia</option>
                                         <option value="kotlin">Kotlin</option>
@@ -275,7 +286,7 @@
                                         <option value="powershell">PowerShell</option>
                                         <option value="protobuf">Protocol Buffers</option>
                                         <option value="pug">Pug</option> --}}
-                                        <option value="python">Python</option>
+                                        <option value="python" data-keyword = "python">Python</option>
                                         {{-- <option value="qsharp">Q#</option>
                                         <option value="r">R</option>
                                         <option value="razor">Razor</option>
@@ -644,17 +655,7 @@
                 </div>
 
 
-                <div class="mt-3" style="display:none" id="tagsContainer">
-                    <div class="col-10 select2-dark">
-                        <label for="tags" class="fw-bold">Tags:</label>
-                        <select id="select2Darks" name="tags[]"
-                            class="select2 select-id-change form-select group-select" multiple>
-                            @foreach ($tags as $tag)
-                                <option value="{{ $tag->tag_id }}">{{ $tag->tag_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+
 
 
                 <br>
@@ -664,9 +665,9 @@
                     <button type="button" style="background-color:#eceef1" value="draft"
                         onclick="saving_status(this.value)" class="btn ms-3 mx-3 fw-bold">Save as
                         Draft</button>
-                    <button type="button" style="background-color:#eceef1" onclick="tag_display()" id="toggleButton"
+                    {{-- <button type="button" style="background-color:#eceef1" onclick="tag_display()" id="toggleButton"
                         class="btn ms-3 mx-3  fw-bold">Add
-                        Tags</button>
+                        Tags</button> --}}
                 </div>
 
 
@@ -976,7 +977,7 @@
         function run_code() {
             var codes = $('#code').val();
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            var lang = $("#languageSelect option:selected").text().toLowerCase();
+            var lang = $("#languageSelect option:selected").attr('data-keyword').toLowerCase();
             const languageIdToFind = lang;
             const foundLanguage = findLanguageById(languageIdToFind);
             $.ajax({
@@ -1024,7 +1025,7 @@
             <td class='text-center'>${index}</td>
             <td class='text-center'><textarea name="test_case_input[]" class="form-control" rows="4">${input}</textarea></td>
             <td class='text-center'><textarea name="test_case_output[]" class="form-control" rows="4">${output}</textarea></td>
-            <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="0"></td>
+            <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="1"></td>
             <td class='text-center'><input type="number" name="test_case_weightage[]" value="0" class="form-control"></td>
             <td class='text-center'><button type="button" onclick="remove_row(this)" class="btn btn-danger btn-sm">DELETE</button></td>
         </tr>

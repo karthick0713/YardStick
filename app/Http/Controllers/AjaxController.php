@@ -73,35 +73,44 @@ class AjaxController extends Controller
     public function get_questions()
     {
         $questions = [];
+        $processedCategories = [];
 
         $que = DB::table('question_banks')->where('is_active', 1)->where('trash_key', 1)->get();
 
         foreach ($que as $ques) {
             $category = $ques->category;
 
-            $questionData = DB::table('question_banks')
+            if (in_array($category, $processedCategories)) {
+                continue;
+            }
+
+            $query = DB::table('question_banks')
                 ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
                 ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
                 ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
                 ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
-                ->select('question_banks.question_code', 'question_banks.is_active', 'master_topics.topic_name', 'master_skills.skill_name', 'master_categories.category_name', 'master_difficulties.difficulty_name');
+                ->select(
+                    'question_banks.question_code',
+                    'question_banks.is_active',
+                    'master_topics.topic_name',
+                    'master_skills.skill_name',
+                    'master_categories.category_name',
+                    'master_difficulties.difficulty_name'
+                );
 
-            if ($category == 3) {
-                $questionData->addSelect('question_banks.title as questions');
-            } else {
-                $questionData->addSelect('question_banks.questions');
+            $questionsField = ($category == 3) ? 'question_banks.title as questions' : 'question_banks.questions as questions';
+            $query->addSelect(DB::raw($questionsField));
+
+            $questionData = $query->where('category', $category)->get();
+
+            foreach ($questionData as $question) {
+                $question->questions = strip_tags($question->questions);
+                $questions[] = $question;
             }
 
-            $questionData = $questionData->where('category', $category)->get();
-            if ($category != 4) {
-                foreach ($questionData as $question) {
-                    $question->questions = strip_tags($question->questions);
-                }
-            }
-
-            $questions = array_merge($questions, $questionData->toArray());
+            $processedCategories[] = $category;
         }
 
-        return DataTables::of($questions)->toJson();
+        return Datatables::of($questions)->toJson();
     }
 }
