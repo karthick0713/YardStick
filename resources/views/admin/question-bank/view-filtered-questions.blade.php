@@ -38,9 +38,9 @@
                 <table class="dt-column-search table table-striped display">
                     <thead class="background-secondary ">
                         <tr>
-                            <th class="text-white">Question Code</th>
                             <th class="text-white">Questions</th>
-                            <th class="text-white">Status</th>
+                            <th class="text-white">Saved Status</th>
+                            <th class="text-white">Published Status</th>
                             <th class="text-white">Actions</th>
                         </tr>
                     </thead>
@@ -126,10 +126,7 @@
                             d.question_type = "for_filter_questions";
                         }
                     },
-                    columns: [{
-                            data: "question_code",
-                            orderable: false
-                        },
+                    columns: [
 
                         {
                             data: "questions",
@@ -142,16 +139,29 @@
                         },
 
                         {
-                            data: "is_active",
+                            data: "saving_status",
                             orderable: false,
-                            searchable: false,
                             render: function(data, type, row) {
                                 return `
-                                        <label class="switch">
-                                            <input type="checkbox" ${data == 1 ? 'checked' : ''} disabled id="statusToggle">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    `;
+                                <label class="switch">
+                                    <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.question_code}',${data})" disabled value="draft" id="statusToggle">
+                                    <span class="slider round"></span>
+                                    <span style="display:none" class="slider round">${data == 1 ? 'active' : 'draft'}</span>
+                                </label>
+                            `;
+                            },
+                        },
+                        {
+                            data: "is_active",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                return `
+                                <label class="switch">
+                                    <input type="checkbox"  ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.question_code}',${data})" value="draft" id="statusToggle">
+                                    <span class="slider round"></span>
+                                    <span style="display:none" class="slider round">${data == 1 ? 'published' : 'not active'}</span>
+                                </label>
+                            `;
                             },
                         },
                         {
@@ -174,29 +184,6 @@
                     dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                 });
 
-                $(".dt-column-search tbody").on({
-                    mouseenter: function() {
-                        $(this).data("originalContent", $(this).text());
-                        var orig = $(this).text($(this).text() + "📋");
-                        $(this).css("cursor", "pointer");
-                    },
-                    mouseleave: function() {
-                        $(this).text($(this).data("originalContent"));
-                        $(this).css("cursor", "pointer");
-                    },
-                    click: function() {
-                        var contentToCopy = $(this).data("originalContent");
-                        var tempInput = $("<input>");
-                        $("body").append(tempInput);
-                        tempInput.val(contentToCopy).select();
-                        document.execCommand("copy");
-                        tempInput.remove();
-                        $(this).text(contentToCopy + "✅");
-                        setTimeout(function() {
-                            $(this).text(contentToCopy);
-                        }.bind(this), 2000);
-                    },
-                }, "td:first-child");
             }
 
 

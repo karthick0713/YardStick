@@ -67,14 +67,6 @@
             outline: none;
         }
 
-
-        /* select #language_for_test:not(),
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        input {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            margin: 10px 0 10px 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            height: 45px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            border-radius: 0% !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } */
-
         textarea {
             margin: 10px 0 10px 0;
             border-radius: 0% !important;
@@ -1025,7 +1017,7 @@
             <td class='text-center'>${index}</td>
             <td class='text-center'><textarea name="test_case_input[]" class="form-control" rows="4">${input}</textarea></td>
             <td class='text-center'><textarea name="test_case_output[]" class="form-control" rows="4">${output}</textarea></td>
-            <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="1"></td>
+            <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="1"> <input type='hidden' name="sample[]" value="0" > </td>
             <td class='text-center'><input type="number" name="test_case_weightage[]" value="0" class="form-control"></td>
             <td class='text-center'><button type="button" onclick="remove_row(this)" class="btn btn-danger btn-sm">DELETE</button></td>
         </tr>
@@ -1039,11 +1031,14 @@
             if ($(val).is(':checked')) {
                 $(val).prop('checked', true);
                 $(val).val(1);
+                $(val).parent().find('input[type="hidden"]').val(1);
             } else {
                 $(val).prop('checked', false);
                 $(val).val(0);
+                $(val).parent().find('input[type="hidden"]').val(0);
             }
         }
+
 
 
         function remove_row(row) {
@@ -1402,12 +1397,15 @@
             `;
             $(".questions-for-mcq-grouping").append(row);
             $(`.question_${question_index}`).find('.mcq-grouping-option-add-button').val(question_index)
+            $('#marks').val(question_index)
             var newOptions = document.querySelectorAll('.question-options:not(.quill-initialized)');
             quill_editor(newOptions);
         }
 
         function remove_questions(val) {
             $(val).parent().parent().parent().remove();
+            var mark = $("#marks").val();
+            $("#marks").val(mark - 1)
         }
 
 
@@ -1581,8 +1579,8 @@
                 $(".mcq_grouping").hide();
             } else if (value == 3) {
                 $(".programming").hide();
-                $("#marks").val('');
-                $("#marks").prop('readonly', false);
+                $("#marks").val(1);
+                $("#marks").prop('readonly', true);
                 $(".mcq").hide();
                 $(".mcq_grouping").show();
             } else {

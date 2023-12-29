@@ -69,11 +69,11 @@
 
 
         /* select #language_for_test:not(),
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    input {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        margin: 10px 0 10px 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        height: 45px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        border-radius: 0% !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        input {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            margin: 10px 0 10px 0;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            height: 45px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            border-radius: 0% !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } */
 
         textarea {
             margin: 10px 0 10px 0;
@@ -170,7 +170,8 @@
 
                         <div class="col-md-2 mb-1">
                             <label for="category">Category :</label>
-                            <select name="category" class="custom-select my-select form-control" id="category" required>
+                            <select name="category" class="custom-select my-select form-control" id="category" disabled
+                                required>
                                 <option value="" disabled>SELECT</option>
                                 @foreach ($categories as $cat)
                                     <option value="{{ $cat->category_id }}"
@@ -189,7 +190,24 @@
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 2)">
                         </div>
 
+                        <div class="mt-3 col-md-3 mb-3"id="tagsContainer">
+                            <div class="col-10 select2-dark">
+                                <label for="tags" class="fw-bold">Tags:</label>
+                                <select id="select2Darks" name="tags[]"
+                                    class="select2 select-id-change form-select group-select" multiple>
+                                    @foreach ($tags as $tag)
+                                        <option value="{{ $tag->tag_id }}"
+                                            {{ in_array($tag->tag_id, explode(',', $questions->tags)) ? 'selected' : '' }}>
+                                            {{ $tag->tag_name }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
+                    <input type="hidden" name="question_saving_status" id="question_saving_status">
 
 
 
@@ -226,7 +244,6 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" name="question_saving_status" id="question_saving_status">
 
                             <div class="row col-12">
                                 <div class="d-flex ">
@@ -316,6 +333,7 @@
 
                             {{-- title, descriptions for add example,hints etc... --}}
                             <div class="card" style="background-color:#eceef1">
+
                                 <div id="test-case-div" class="mt-3 ms-3 row col-12">
                                     <h5 class="fw-bold">TEST CASES:</h5>
                                     <div class="">
@@ -356,19 +374,26 @@
                                                         <td class='text-center'><input type='checkbox'
                                                                 name="test_case_sample[]" onclick="testCaseSample(this)"
                                                                 {{ $tc->sample == 1 ? 'checked' : '' }}
-                                                                value="{{ $tc->sample }}"></td>
+                                                                value="{{ $tc->sample }}">
+                                                            <input type="hidden" name="sample[]"
+                                                                value="{{ $tc->sample }}">
+                                                        </td>
                                                         <td class='text-center'><input type="number"
                                                                 name="test_case_weightage[]" value="{{ $tc->weightage }}"
-                                                                class="form-control"></td>
+                                                                class="form-control">
+                                                        </td>
                                                         <td class='text-center'><button type="button"
                                                                 onclick="remove_row(this)"
                                                                 class="btn btn-danger btn-sm">DELETE</button></td>
                                                     </tr>
                                                 @endforeach
+
                                             </tbody>
                                         </table>
+
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                 </div>
@@ -410,7 +435,7 @@
                                 <div class="mt-2">
                                     <label for=""> {{ $mcq->option_name }} </label>
                                     <div class="d-flex">
-                                        <input type="checkbox" name="correct_option[]"
+                                        <input type="checkbox" name="correct_option"
                                             value ="{{ strtolower(chr(65 + $key)) }}"
                                             data-value = "{{ $mcq->correct_answer }}"
                                             class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
@@ -421,7 +446,7 @@
                                                 onkeyup="get_value(this)" style="background-color:white">
                                             </div>
                                         </div>
-                                        <input type="hidden" name="opt_answer[]" id="opt_answer_1">
+                                        <input type="hidden" name="opt_answer[]" id="opt_answer_{{ $mcq->id }}">
 
                                     </div>
                                 </div>
@@ -431,230 +456,132 @@
                     </pre>
                             @endforeach
 
-
-
-                            {{-- <div class="mt-2">
-                                <label for="">Option B :</label>
-                                <div class="d-flex">
-                                    <input type="checkbox" name="correct_option" value ="b"
-                                        class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                        id="">
-                                    <div style="height: 100px;width:100%">
-                                        <div class="question-options" onkeyup="get_value(this)"
-                                            style="background-color:white">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="opt_answer[]" id="opt_answer_2">
-
-                                </div>
-                            </div>
-                            <pre>
-
-                        
-                    </pre>
-
-                            <div class="mt-2">
-                                <label for="">Option C :</label>
-                                <div class="d-flex">
-                                    <input type="checkbox" name="correct_option" value ="c"
-                                        class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                        id="">
-                                    <div style="height:100px;width:100%">
-                                        <div class="question-options" onkeyup="get_value(this)"
-                                            style="background-color:white">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="opt_answer[]" id="opt_answer_3">
-
-                                </div>
-                            </div>
-                            <pre>
-
-
-                    </pre>
-                            <div class="mt-2">
-                                <label for="">Option D :</label>
-                                <div class="d-flex">
-                                    <input type="checkbox" name="correct_option" value ="d"
-                                        class="checkbox flex-column align-items-center" onclick="toggleCheck(this)"
-                                        id="">
-                                    <div style="height: 100px;width:100%">
-                                        <div class="question-options" onkeyup="get_value(this)"
-                                            style="background-color:white">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="opt_answer[]" id="opt_answer_4">
-
-
-                                </div>
-                            </div>
-                        </div> --}}
-
-
-
-
-
-                            <br>
-                            <div class="mt-5">
-
-                                <h5 class="fw-bold">Explanation</h5>
-                                <div class="">
-                                    <div id="explanation-editor" onkeyup="get_value(this)" class=""
-                                        style="height: 100px;background-color:white">
-                                    </div>
-                                </div>
-                                <input type="hidden" name="mcq_explanation" class="mcq_explanation">
-                            </div>
                         </div>
+
+
+
+
+
+                        <br>
+                        <div class="mt-5">
+
+                            <h5 class="fw-bold">Explanation</h5>
+                            <div class="">
+                                <div id="explanation-editor" onkeyup="get_value(this)" class=""
+                                    style="height: 100px;background-color:white">
+                                </div>
+                            </div>
+                            <input type="hidden" name="mcq_explanation" class="mcq_explanation">
+                        </div>
+                    </div>
                 @endif
 
 
-                <div style="display:none" class="mcq_grouping">
+                @if ($questions->category == 3)
+                    <div class="mcq_grouping">
 
-                    <div class="mt-4 title">
-                        <h5 class="fw-bold">Title:</h5>
-                        <div id="grouping-title-editor" onkeyup="get_value(this)" class=""
-                            style="height: 150px;background-color:white">
-                        </div>
-                        <input type="hidden" name="mcq_grouping_title" class="">
-                    </div>
-
-                    <div class="mt-3 d-flex">
-                        <div class="mt-2 mx-3">
-                            <button type="button" class="btn background-secondary text-white"
-                                onclick='add_question_for_mcq()'>Add Questions</button>
-                        </div>
-
-                    </div>
-
-
-                    <div class="questions-for-mcq-grouping ">
-
-                        <div style="background-color:#ececec" class="question-index question_1">
-
-                            <div class="mt-4 ms-3 mx-3">
-                                <br>
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" value="1"
-                                        onclick="add_grouping_question_options(this.value)"
-                                        class="btn background-secondary text-white btn-sm mx-3 mcq-grouping-option-add-button">ADD
-                                        OPTION
-                                    </button>
-                                    <button type="button" onclick="remove_questions(this)"
-                                        class="btn background-info text-white btn-sm remove-questions">DELETE
-                                        QUESTION</button>
-                                </div>
-                                <label for="mcq-questions">Question 1:</label>
-                                <div style="height: 75px;width:100%">
-                                    <div class="question-options" onkeyup="get_value(this)"
-                                        style="background-color:white">
-                                    </div>
-                                </div>
-                                <input type="hidden" name="grouping_mcq_question[1]" id="mcq-question">
+                        <div class="mt-4 title">
+                            <h5 class="fw-bold">Title:</h5>
+                            <div id="grouping-title-editor" onkeyup="get_value(this)" class=""
+                                style="height: 150px;background-color:white">
                             </div>
-                            <pre>
+                            <input type="hidden" name="mcq_grouping_title" class="">
+                        </div>
+                        <div class="mt-3 d-flex">
+                            <div class="mt-2 mx-3">
+                                <button type="button" class="btn background-secondary text-white"
+                                    onclick='add_question_for_mcq()'>Add Questions</button>
+                            </div>
+
+                        </div>
+                        <div class="questions-for-mcq-grouping ">
+                            @foreach ($mcq_grouping_question as $mc => $mcq_group)
+                                <div style="background-color:#ececec" class="question-index question_1">
+
+                                    <div class="mt-4 ms-3 mx-3">
+                                        <br>
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" value="{{ $mc }}"
+                                                onclick="add_grouping_question_options({{ $mc }})"
+                                                class="btn background-secondary text-white btn-sm mx-3 mcq-grouping-option-add-button">ADD
+                                                OPTION
+                                            </button>
+                                            <button type="button" onclick="remove_questions(this)"
+                                                class="btn background-info text-white btn-sm remove-questions">DELETE
+                                                QUESTION</button>
+                                        </div>
+                                        <label for="mcq-questions">Question {{ $mc + 1 }}:</label>
+                                        <div style="height: 75px;width:100%">
+                                            <div class="question-options" onkeyup="get_value(this)"
+                                                id="grouping_mcq_question{{ $mcq_group->id }}"
+                                                style="background-color:white">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="grouping_mcq_question[]"
+                                            id="grouping-mcq-question{{ $mcq_group->id }}">
+                                    </div>
+                                    <pre>
                             
         
                                 </pre>
-                            <div class="ms-3  mx-3 mcq-grouping-options ">
-                                <label for="" class="">( Click the Checkbox which has Correct
-                                    Answer.
-                                    )</label>
-                                <div class=" row grouping-options-append-div1">
-                                    <div class="col-6">
-                                        <div class="mt-2">
-                                            <label for="">Option A :</label>
-                                            <div class="d-flex">
-                                                <input type="checkbox" name="grouping_correct_option[1]" value ="a"
-                                                    class="checkbox flex-column align-items-center"
-                                                    onclick="toggleCheck(this)" id="">
+                                    <div class="ms-3  mx-3 mcq-grouping-options ">
+                                        <label for="" class="">( Click the Checkbox which has Correct
+                                            Answer.
+                                            )</label>
+                                        <div class=" row grouping-options-append-div{{ $mc }}">
 
-                                                <div style="height: 50px;width:100%;margin-bottom:60px">
-                                                    <div class="question-options" onkeyup="get_value(this)"
-                                                        style="background-color:white">
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="mt-2">
-                                            <label for="">Option B :</label>
-                                            <div class="d-flex">
-                                                <input type="checkbox" name="grouping_correct_option[1]" value ="b"
-                                                    class="checkbox flex-column align-items-center"
-                                                    onclick="toggleCheck(this)" id="">
-                                                <div style="height: 50px;width:100%;margin-bottom:60px">
-                                                    <div class="question-options" onkeyup="get_value(this)"
-                                                        style="background-color:white">
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_2">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="mt-2">
-                                            <label for="">Option C :</label>
-                                            <div class="d-flex">
-                                                <input type="checkbox" name="grouping_correct_option[1]" value ="c"
-                                                    class="checkbox flex-column align-items-center"
-                                                    onclick="toggleCheck(this)" id="">
-                                                <div style="height:50px;width:100%;margin-bottom:60px">
-                                                    <div class="question-options" onkeyup="get_value(this)"
-                                                        style="background-color:white">
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_3">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="mt-2">
-                                            <label for="">Option D :</label>
-                                            <div class="d-flex">
-                                                <input type="checkbox" name="grouping_correct_option[1]" value ="d"
-                                                    class="checkbox flex-column align-items-center"
-                                                    onclick="toggleCheck(this)" id="">
-                                                <div style="height: 50px;width:100%;margin-bottom:60px">
-                                                    <div class="question-options" onkeyup="get_value(this)"
-                                                        style="background-color:white">
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="grouping_opt_answer[1][]" id="opt_answer_4">
+                                            @php
+                                                $grouping_mcq_options = DB::table('question_bank_for_mcq')
+                                                    ->where('question_code', $mcq_group->question_code)
+                                                    ->where('grouping_question_id', $mcq_group->id)
+                                                    ->get();
+                                            @endphp
 
-                                            </div>
+                                            @foreach ($grouping_mcq_options as $gm => $grouping_mcq_opt)
+                                                <div class="col-6">
+                                                    <div class="mt-2">
+                                                        <label for=""> {{ $grouping_mcq_opt->option_name }}
+                                                        </label>
+                                                        <div class="d-flex">
+                                                            <input type="checkbox"
+                                                                name="grouping_correct_option[{{ $mc }}]"
+                                                                value ="{{ strtolower(chr(65 + $gm)) }}"
+                                                                data-value = "{{ $grouping_mcq_opt->correct_answer }}"
+                                                                class="checkbox flex-column align-items-center"
+                                                                onclick="toggleCheck(this)"
+                                                                id="grouping_correct_option{{ $mcq_group->id }}{{ $grouping_mcq_opt->id }}">
+
+                                                            <div style="height: 50px;width:100%;margin-bottom:60px">
+                                                                <div class="question-options"
+                                                                    id="option_val{{ $mcq_group->id }}{{ $grouping_mcq_opt->id }}"
+                                                                    onkeyup="get_value(this)"
+                                                                    style="background-color:white">
+                                                                </div>
+                                                            </div>
+                                                            <input type="hidden"
+                                                                name="grouping_opt_answer[{{ $mc }}][]"
+                                                                id="grouping_opt_answer{{ $mcq_group->id }}{{ $grouping_mcq_opt->id }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+
                                         </div>
+
                                     </div>
+
+
                                 </div>
-
-                            </div>
-
-
+                            @endforeach
                         </div>
-                    </div>
 
 
-                </div>
 
-                @if ($questions->category == 1)
-                    <div class="mt-3"id="tagsContainer">
-                        <div class="col-10 select2-dark">
-                            <label for="tags" class="fw-bold">Tags:</label>
-                            <select id="select2Darks" name="tags[]"
-                                class="select2 select-id-change form-select group-select" multiple>
-                                @foreach ($tags as $tag)
-                                    <option value="{{ $tag->tag_id }}"
-                                        {{ in_array($tag->tag_id, explode(',', $questions->tags)) ? 'selected' : '' }}>
-                                        {{ $tag->tag_name }}
-                                    </option>
-                                @endforeach
-
-                            </select>
-                        </div>
                     </div>
                 @endif
+
+
 
 
                 <br>
@@ -685,6 +612,8 @@
     <script>
         var question_datas = @json($questions);
         var mcq_question_datas = @json($mcq_question);
+        var mcq_grouping_question = @json($mcq_grouping_question);
+
 
         $(document).ready(function() {
             let question =
@@ -706,6 +635,7 @@
             if (question_datas.category == 1) {
 
                 $("#question-editor").children().html(question);
+
                 $("textarea[name='programming_question_input']").val(question_datas.input_format);
                 $("textarea[name='programming_question_output']").val(question_datas.output_format);
                 $("textarea[name='programming_question_code_constraints']").val(question_datas.code_constraints);
@@ -717,16 +647,43 @@
                 setTimeout(() => {
                     $("#marks").attr('readonly', true);
                     $("#mcq-opt-question").children().html(question);
+                    $(".mcq_explanation").val(question_datas.explanation);
                     $("#explanation-editor").children().html(question_datas.explanation);
+                    $("input[name='mcq_question']").val(question_datas.questions);
                     $(mcq_question_datas).each((index, e) => {
                         $("#option_val" + e.id).children().html(e.option_answer);
+                        $("#opt_answer_" + e.id).val(e.option_answer);
                         if ($("#correct_option" + e.id).attr('data-value') == 1) {
                             $("#correct_option" + e.id).prop('checked', true);
                         }
-
                     });
                 }, 200);
 
+            }
+
+            if (question_datas.category == 3) {
+                setTimeout(() => {
+                    $("#marks").attr('readonly', true);
+                    $("#grouping-title-editor").children().html(question_datas.title);
+                    $("input[name='mcq_grouping_title']").val(question_datas.title);
+                    $(mcq_grouping_question).each((index, e) => {
+                        $("#grouping-mcq-question" + e.id).val(e.questions);
+                        $("#grouping_mcq_question" + e.id).children().html(e.questions);
+                        $(mcq_question_datas).each((i, opt) => {
+                            $("#option_val" + e.id + String(opt.id)).children().html(opt
+                                .option_answer)
+                            $("#grouping_opt_answer" + e.id + String(opt.id))
+                                .val(opt
+                                    .option_answer)
+
+                            if ($("#grouping_correct_option" + e.id + String(opt.id)).attr(
+                                    'data-value') == 1) {
+                                $("#grouping_correct_option" + e.id + String(opt.id)).prop(
+                                    'checked', true);
+                            }
+                        })
+                    });
+                }, 200);
             }
 
 
@@ -1007,7 +964,9 @@
         if (question_datas.category == 1) {
 
             var editor = ace.edit("compiler-editor");
-            editor.setValue(question_datas.solutions);
+            if (question_datas.solutions != null) {
+                editor.setValue(question_datas.solutions);
+            }
 
             $("#languageSelect option[value='" + question_datas.output_run_language + "']").attr('selected', ($(
                 "#languageSelect").val() == question_datas.output_run_language) ? true : false);
@@ -1085,7 +1044,7 @@
             <td class='text-center'>${index}</td>
             <td class='text-center'><textarea name="test_case_input[]" class="form-control" rows="4">${input}</textarea></td>
             <td class='text-center'><textarea name="test_case_output[]" class="form-control" rows="4">${output}</textarea></td>
-            <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="0"></td>
+            <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="0"> <input type='hidden' name="sample[]" value="0" > </td>
             <td class='text-center'><input type="number" name="test_case_weightage[]" value="0" class="form-control"></td>
             <td class='text-center'><button type="button" onclick="remove_row(this)" class="btn btn-danger btn-sm">DELETE</button></td>
         </tr>
@@ -1099,9 +1058,11 @@
             if ($(val).is(':checked')) {
                 $(val).prop('checked', true);
                 $(val).val(1);
+                $(val).parent().find('input[type="hidden"]').val(1);
             } else {
                 $(val).prop('checked', false);
                 $(val).val(0);
+                $(val).parent().find('input[type="hidden"]').val(0);
             }
         }
 
@@ -1260,50 +1221,52 @@
 
         }
 
+        if (question_datas.category == 3) {
+            var quillFullEditor = new Quill("#grouping-title-editor", {
+                theme: "snow",
+                modules: {
+                    toolbar: [
+                        [{
+                            'font': []
+                        }, {
+                            'size': []
+                        }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{
+                            'color': []
+                        }, {
+                            'background': []
+                        }],
+                        [{
+                            'script': 'super'
+                        }, {
+                            'script': 'sub'
+                        }],
+                        [{
+                            'header': '1'
+                        }, {
+                            'header': '2'
+                        }, 'blockquote', 'code-block'],
+                        [{
+                            'list': 'ordered'
+                        }, {
+                            'list': 'bullet'
+                        }, {
+                            'indent': '-1'
+                        }, {
+                            'indent': '+1'
+                        }],
+                        [{
+                            'direction': 'rtl'
+                        }],
+                        ['link', 'image', 'video'],
+                        ['clean']
+                    ],
+                }
+            });
+        }
 
 
-        var quillFullEditor = new Quill("#grouping-title-editor", {
-            theme: "snow",
-            modules: {
-                toolbar: [
-                    [{
-                        'font': []
-                    }, {
-                        'size': []
-                    }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{
-                        'color': []
-                    }, {
-                        'background': []
-                    }],
-                    [{
-                        'script': 'super'
-                    }, {
-                        'script': 'sub'
-                    }],
-                    [{
-                        'header': '1'
-                    }, {
-                        'header': '2'
-                    }, 'blockquote', 'code-block'],
-                    [{
-                        'list': 'ordered'
-                    }, {
-                        'list': 'bullet'
-                    }, {
-                        'indent': '-1'
-                    }, {
-                        'indent': '+1'
-                    }],
-                    [{
-                        'direction': 'rtl'
-                    }],
-                    ['link', 'image', 'video'],
-                    ['clean']
-                ],
-            }
-        });
 
         if (question_datas.category == 2) {
             var quillFullEditor = new Quill("#explanation-editor", {
@@ -1357,10 +1320,12 @@
             $(element).parent().find('.question-sub-description').val(quillContent);
         }
 
-        var question_index = 1;
+        var question_index = {{ count($mcq_grouping_question) - 1 }};
+
 
         function add_question_for_mcq() {
             question_index++;
+
             var row = `
             <div style="background-color:#ececec" class="question-index question_${question_index}">
 
@@ -1376,13 +1341,13 @@
                         class="btn background-info text-white btn-sm remove-questions">DELETE
                         QUESTION</button>
                 </div>
-                <label for="mcq-questions">Question ${question_index}:</label>
+                <label for="mcq-questions">Question ${question_index + 1}:</label>
                 <div style="height: 75px;width:100%">
                     <div class="question-options" onkeyup="get_value(this)"
                         style="background-color:white">
                     </div>
                 </div>
-                <input type="hidden" name="grouping_mcq_question[${question_index}]" id="mcq-question">
+                <input type="hidden" name="grouping_mcq_question[]" id="mcq-question">
             </div>
             <pre>
 
@@ -1406,7 +1371,7 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_1">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="grouping_opt_answer_">
                             </div>
                         </div>
                     </div>
@@ -1422,7 +1387,7 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_2">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="grouping_opt_answer_">
                             </div>
                         </div>
                     </div>
@@ -1438,7 +1403,7 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_3">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="grouping_opt_answer_">
                             </div>
                         </div>
                     </div>
@@ -1454,7 +1419,7 @@
                                         style="background-color:white">
                                     </div>
                                 </div>
-                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="opt_answer_4">
+                                <input type="hidden" name="grouping_opt_answer[${question_index}][]" id="grouping_opt_answer_">
 
                             </div>
                         </div>
@@ -1468,12 +1433,15 @@
             `;
             $(".questions-for-mcq-grouping").append(row);
             $(`.question_${question_index}`).find('.mcq-grouping-option-add-button').val(question_index)
+            $('#marks').val(question_index + 1)
             var newOptions = document.querySelectorAll('.question-options:not(.quill-initialized)');
             quill_editor(newOptions);
         }
 
         function remove_questions(val) {
             $(val).parent().parent().parent().remove();
+            var mark = $("#marks").val();
+            $("#marks").val(mark - 1)
         }
 
 
@@ -1583,9 +1551,9 @@
                     var html = '<option value=""  disabled>SELECT</option>';
                     var i;
                     for (i = 0; i < data.length; i++) {
-                        html += '<option value="' + data[i].skill_id + '"  ' + (data[i].skill_id ===
-                                {{ $questions->skills_id }} ? 'selected' : '') + '>' + data[i].skill_name +
-                            '</option>';
+                        html += '<option value="' + data[i].skill_id + '" ' + (data[i].skill_id ==
+                                {{ $questions->skills_id ? $questions->skills_id : 0 }} ? 'selected' : '') +
+                            '>' + data[i].skill_name + '</option>';
                     }
                     $('#skills').html(html);
                 },
@@ -1611,9 +1579,9 @@
                     var html = '<option value=""  disabled>SELECT</option>';
                     var i;
                     for (i = 0; i < data.length; i++) {
-                        html += '<option value="' + data[i].topic_id + '"  ' + (data[i].topic_id ===
-                                {{ $questions->topics_id }} ? 'selected' : '') + '>' + data[i].topic_name +
-                            '</option>';
+                        html += '<option value="' + data[i].topic_id + '" ' + (data[i].topic_id ==
+                                {{ $questions->topics_id ? $questions->topics_id : 0 }} ? 'selected' : '') +
+                            '>' + data[i].topic_name + '</option>';
                     }
                     $('#topics').html(html);
                 },
@@ -1632,8 +1600,8 @@
                 $(".mcq_grouping").hide();
             } else if (value == 3) {
                 $(".programming").hide();
-                $("#marks").val('');
-                $("#marks").prop('readonly', false);
+                $("#marks").val(1);
+                $("#marks").prop('readonly', true);
                 $(".mcq").hide();
                 $(".mcq_grouping").show();
             } else {

@@ -92,11 +92,12 @@ class AjaxController extends Controller
                 ->select(
                     'question_banks.question_code',
                     'question_banks.is_active',
+                    'question_banks.saving_status',
                     'master_topics.topic_name',
                     'master_skills.skill_name',
                     'master_categories.category_name',
                     'master_difficulties.difficulty_name'
-                );
+                )->where('question_banks.trash_key', 1);
 
             $questionsField = ($category == 3) ? 'question_banks.title as questions' : 'question_banks.questions as questions';
             $query->addSelect(DB::raw($questionsField));

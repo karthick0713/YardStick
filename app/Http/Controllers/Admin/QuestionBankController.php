@@ -124,22 +124,10 @@ class QuestionBankController extends Controller
     public function save_questions(Request $request)
     {
 
-
-        $validator = Validator::make($request->all(), [
-            'skill' => 'required',
-            'difficulty' => 'required',
-            'topic' => 'required',
-            'category' => 'required',
-            'marks' => 'required',
-        ]);
-        if ($validator->fails()) {
-            Session::flash('error', __('An error has occurred'));
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-
         if ($request->input('category') == 1) {
 
+            $language_for_test = $request->input('language_for_test');
+            $tags = $request->input('tags');
             $question_code = uniqid();
 
             $data = [
@@ -151,40 +139,48 @@ class QuestionBankController extends Controller
                 'marks' => $request->input('marks'),
                 'questions' => $request->input('programming_question'),
                 'solutions' => $request->input('programming_solution'),
-                'tags' => implode(',', $request->input('tags')),
                 'input_format' => $request->input('programming_question_input'),
                 'output_format' => $request->input('programming_question_output'),
                 'code_constraints' => $request->input('programming_question_code_constraints'),
                 'output_run_language' => $request->input('language_select'),
                 'saving_status' => $request->input('question_saving_status'),
-                'language_for_test' => implode(',', $request->input('language_for_test')),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
 
+            if (isset($language_for_test)) {
+                $data['language_for_test'] = implode(',', $request->input('language_for_test'));
+            }
+            if (isset($tags)) {
+                $data['tags'] = implode(',', $request->input('tags'));
+            }
 
             $value = DB::table('question_banks')->insertGetId($data);
 
             $test_case_input = $request->input('test_case_input');
-            foreach ($test_case_input as $key => &$tc_input) {
 
-                $tc_data = [
-                    'question_id' => $value,
-                    'question_code' => $question_code,
-                    'input' => $tc_input,
-                    'output' => $request->input('test_case_output')[$key],
-                    'sample' => $request->input('test_case_sample')[$key],
-                    'weightage' => $request->input('test_case_weightage')[$key],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
+            if (isset($test_case_input)) {
+                foreach ($test_case_input as $key => &$tc_input) {
 
-                $ins_data = DB::table('programming_question_test_case')->insert($tc_data);
+                    $tc_data = [
+                        'question_id' => $value,
+                        'question_code' => $question_code,
+                        'input' => $tc_input,
+                        'output' => $request->input('test_case_output')[$key],
+                        'sample' => $request->input('sample')[$key],
+                        'weightage' => $request->input('test_case_weightage')[$key],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+
+                    $ins_data = DB::table('programming_question_test_case')->insert($tc_data);
+                }
             }
         } else if ($request->input('category') == 2) {
 
             $question_code = uniqid();
-
+            $language_for_test = $request->input('language_for_test');
+            $tags = $request->input('tags');
             $data = [
                 'question_code' => $question_code,
                 'skills_id' => $request->input('skill'),
@@ -192,34 +188,43 @@ class QuestionBankController extends Controller
                 'topics_id' => $request->input('topic'),
                 'category' => $request->input('category'),
                 'marks' => 1,
-                'tags' => implode(',', $request->input('tags')),
                 'questions' => $request->input('mcq_question'),
+                'explanation' => $request->input('mcq_explanation'),
                 'saving_status' => $request->input('question_saving_status'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
 
-
+            if (isset($language_for_test)) {
+                $data['language_for_test'] = implode(',', $request->input('language_for_test'));
+            }
+            if (isset($tags)) {
+                $data['tags'] = implode(',', $request->input('tags'));
+            }
             $value = DB::table('question_banks')->insertGetId($data);
 
-            foreach ($request->input('opt_answer') as $key => $mcq_dup) {
-                $option_name = chr(65 + $key);
-                $correct_answer = ($option_name == strtoupper($request->input('correct_option'))) ? 1 : 0;
-                $mcq_data[] = [
-                    'question_id' => $value,
-                    'question_code' => $question_code,
-                    'option_name' => 'Option ' . $option_name,
-                    'option_answer' => $mcq_dup,
-                    'correct_answer' => $correct_answer,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
+            $opt_answer = $request->input('opt_answer');
+
+            if (isset($opt_answer)) {
+                foreach ($request->input('opt_answer') as $key => $mcq_dup) {
+                    $option_name = chr(65 + $key);
+                    $correct_answer = ($option_name == strtoupper($request->input('correct_option'))) ? 1 : 0;
+                    $mcq_data[] = [
+                        'question_id' => $value,
+                        'question_code' => $question_code,
+                        'option_name' => 'Option ' . $option_name,
+                        'option_answer' => $mcq_dup,
+                        'correct_answer' => $correct_answer,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+
+                $ins_data = DB::table('question_bank_for_mcq')->insert($mcq_data);
             }
-
-            $ins_data = DB::table('question_bank_for_mcq')->insert($mcq_data);
         } else if ($request->input('category') == 3) {
-
-
+            $language_for_test = $request->input('language_for_test');
+            $tags = $request->input('tags');
             $question_code = uniqid();
 
             $data = [
@@ -229,48 +234,65 @@ class QuestionBankController extends Controller
                 'topics_id' => $request->input('topic'),
                 'category' => $request->input('category'),
                 'marks' => 1,
-                'tags' => implode(',', $request->input('tags')),
                 'saving_status' => $request->input('question_saving_status'),
                 'title' => $request->input('mcq_grouping_title'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-
+            if (isset($language_for_test)) {
+                $data['language_for_test'] = implode(',', $request->input('language_for_test'));
+            }
+            if (isset($tags)) {
+                $data['tags'] = implode(',', $request->input('tags'));
+            }
             $value = DB::table('question_banks')->insertGetId($data);
 
-            foreach ($request->input('grouping_mcq_question') as $question) {
-                $insertedId = DB::table('mcq_grouping_questions')->insertGetId([
-                    'question_id' => $value,
-                    'question_code' => $question_code,
-                    'questions' => $question,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+            $grouping_mcq_question = $request->input('grouping_mcq_question');
 
-                $ins_data[] = $insertedId;
-            }
-
-            foreach ($request->input('grouping_opt_answer') as $key => $mcq_dup) {
-
-                foreach ($mcq_dup as $i => $c) {
-                    $option_name = chr(65 + $i);
-                    $correct_answer = ($option_name == strtoupper($request->input('correct_option'))) ? 1 : 0;
-                    $mcq_data = [
+            if (isset($grouping_mcq_question)) {
+                foreach ($request->input('grouping_mcq_question') as $question) {
+                    $insertedId = DB::table('mcq_grouping_questions')->insertGetId([
                         'question_id' => $value,
                         'question_code' => $question_code,
-                        'grouping_question_id' => $ins_data[$key - 1],
-                        'option_name' => 'Option ' . $option_name,
-                        'option_answer' => $c,
-                        'correct_answer' => $correct_answer,
+                        'questions' => $question,
                         'created_at' => now(),
                         'updated_at' => now(),
-                    ];
-                    DB::table('question_bank_for_mcq')->insert($mcq_data);
+                    ]);
+
+                    $ins_data[] = $insertedId;
+                }
+
+                $grouping_opt_answer = $request->input('grouping_opt_answer');
+                if (isset($grouping_opt_answer)) {
+                    foreach ($request->input('grouping_opt_answer') as $key => $mcq_dup) {
+                        foreach ($mcq_dup as $i => $c) {
+                            $option_name = chr(65 + $i);
+                            $co = $request->input('grouping_correct_option');
+                            if (isset($co[$key])) {
+                                $correct_option = strtoupper($co[$key]);
+                                $correct_answer = ($option_name == $correct_option) ? 1 : 0;
+                            } else {
+                                $correct_answer = 0;
+                            }
+
+                            $mcq_data = [
+                                'question_id' => $value,
+                                'question_code' => $question_code,
+                                'grouping_question_id' => $ins_data[$key - 1],
+                                'option_name' => 'Option ' . $option_name,
+                                'option_answer' => $c,
+                                'correct_answer' => $correct_answer,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+
+                            DB::table('question_bank_for_mcq')->insert($mcq_data);
+                        }
+                    }
                 }
             }
         }
 
-        Session::flash('success', 'Question Added Successfully');
         return redirect()->route('manage-questions');
     }
 
@@ -480,6 +502,7 @@ class QuestionBankController extends Controller
        
    </div>
 
+
    <div class="question-statement ' . $class . ' mt-5 ">
        <h5>Question</h5>
        <p>
@@ -507,6 +530,110 @@ class QuestionBankController extends Controller
          </div>
         
      </div>';
+        } else if ($questions->category == 3) {
+
+            $question_grouping = DB::table('mcq_grouping_questions')->where('question_code', $request->input('value'))->get();
+
+            $marks = $questions->marks . ' Mark';
+            $class = "border-bottom border-3";
+
+            echo '<style>
+            .modal-contents {
+                padding: 20px;
+            }
+    
+            .question-details {
+                padding: 20px;
+                border: 1px solid #ccc;
+            }
+
+            .modal img {
+                max-width: 100%;  
+                height: auto;
+            }
+    
+            h5 {
+                margin-bottom: 10px;
+            }
+    
+            .code {
+                font-family: monospace;
+                background-color: #eee;
+                padding: 5px;
+                border: 1px solid #ccc;
+                margin-bottom: 15px;
+            }
+    
+            .example {
+                font-weight: bold;
+            }
+        </style>';
+            echo '<div class="row mb-4">
+       <div class="col-3 border-end border-3">
+           <h5>Skills</h5>
+           <ul>
+               <li>' . $questions->skill_name . '</li>
+           </ul>
+       </div>
+       <div class="col-3 border-end border-3">
+       <h5>Topics</h5>
+       <ul>
+           <li>' . $questions->topic_name . '</li>
+       </ul>
+   </div>
+       <div class="col-3 border-end border-3">
+       <h5>Difficulty</h5>
+           <ul>
+               <li>' . $questions->difficulty_name . '</li>
+           </ul>
+   </div>
+       <div class="col-3">
+           <h5>Marks</h5>
+           <ul>
+               <li>' . $marks . '</li>
+           </ul>
+       </div>
+       
+   </div>
+   <hr>
+   
+   <div class="mt-3 mb-3">
+   <h4 class="fw-bold">Title</h4>
+   <p>
+   ' . $questions->title . '
+</p>
+   </div>
+
+   <hr>
+   
+            ';
+            foreach ($question_grouping as $key => $qg) {
+
+                echo ' <div class="question-statement ' . $class . ' mt-5 ">
+       <h5 class="fw-bold"> Question No : ' . $key + 1 . '</h5>
+       <p>
+           ' . $qg->questions . '
+       </p>
+      
+            </div>';
+
+                $question_title = DB::table('question_bank_for_mcq')->where('question_code', $request->input('value'))->where('grouping_question_id', $qg->id)->get();
+
+                foreach ($question_title as $qt) {
+                    echo "
+                    <div class='question-statement " . ($qt->correct_answer == 1 ? 'code' : '') . " $class mt-5 '>
+                        <h6 >$qt->option_name</h6>
+                        <p>
+                            $qt->option_answer
+                        </p>
+                    </div>
+                ";
+                }
+            }
+
+            echo '
+        
+     </div>';
         }
     }
 
@@ -528,101 +655,30 @@ class QuestionBankController extends Controller
         $programming_question = DB::table('programming_question_test_case')->where('question_code', $question_code)->get();
         $mcq_question = DB::table('question_bank_for_mcq')->where('question_code', $question_code)->get();
         $test_case = DB::table('programming_question_test_case')->where('question_code', $question_code)->get();
+        $mcq_grouping_question = DB::table('mcq_grouping_questions')->where('question_code', $question_code)->get();
         $tags = DB::table('master_tags')->where('is_active', 1)->where('trash_key', 1)->get();
         $heading = "Questions Banks";
         $sub_heading = "Edit Questions";
-        return view("admin.question-bank.edit-questions", compact("heading", 'sub_heading', 'questions', 'programming_question', 'mcq_question', 'categories', 'test_case', 'tags'));
+        return view("admin.question-bank.edit-questions", compact("heading", 'sub_heading', 'questions', 'programming_question', 'mcq_grouping_question', 'mcq_question', 'categories', 'test_case', 'tags'));
     }
-
-
-    // public function update_questions(Request $request)
-    // {
-
-    //     $validator = Validator::make($request->all(), [
-    //         'edit_skills' => 'required',
-    //         'edit_topics' => 'required',
-    //         'edit_difficulty' => 'required',
-    //         'edit_marks' => 'required',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         Session::flash('error', 'Please Check All Fields!');
-    //         return redirect()->back();
-    //     }
-    //     $data = array(
-    //         'question_code' => $request->input('question_code'),
-    //         'skills_id' => $request->input('edit_skills'),
-    //         'difficulties_id' => $request->input('edit_difficulty'),
-    //         'topics_id' => $request->input('edit_topics'),
-    //         'category' => $request->input('edit_category'),
-    //         'marks' => $request->input('edit_marks'),
-    //         'updated_at' => now(),
-    //     );
-    //     if ($request->input('edit_category') == 1) {
-    //         $data['questions'] = $request->input('programming_question');
-    //         $data['solutions'] = $request->input('programming_solution');
-    //     } else {
-    //         $data['questions'] = $request->input('mcq_question');
-    //         $data['option_a'] = $request->input('opt_answer_a');
-    //         $data['option_b'] = $request->input('opt_answer_b');
-    //         $data['option_c'] = $request->input('opt_answer_c');
-    //         $data['option_d'] = $request->input('opt_answer_d');
-    //         $data['correct_option'] = $request->input('correct_option');
-    //     }
-
-    //     $value = DB::table('question_banks')->where('question_code', $request->input('question_code'))->update($data);
-    //     if ($request->input('edit_category') == 1) {
-    //         DB::table('question_bank_entry')->where('question_code', $request->input('question_code'))->delete();
-    //         $update_data = array();
-    //         if ($request->input('title_name')) {
-    //             for ($i = 0; $i < count($request->input('title_name')); $i++) {
-    //                 // dd($request->input('title_name')[$i]);
-    //                 $update_data[$i]['question_code'] = $request->input('question_code');
-    //                 $update_data[$i]['title_name'] = $request->input('title_name')[$i];
-    //                 $update_data[$i]['description'] = $request->input('description')[$i];
-    //                 $update_data[$i]['created_at'] = now();
-    //                 $update_data[$i]['updated_at'] = now();
-    //             }
-    //             // dd($update_data);
-    //             $up =  DB::table('question_bank_entry')->insert($update_data);
-    //         }
-    //         if ($request->input('group-a')[0]['question_sub_title'] != null && $request->input('group-a')[0]['question_sub_description'] != null) {
-    //             dd($request->input('group-a'));
-    //             foreach ($request->input('group-a') as $key => $group) {
-    //                 $insert_data = [
-    //                     'question_code' => $request->input('question_code'),
-    //                     'title_name' => $request->input('question_sub_title')[$key],
-    //                     'description' => $request->input('question_sub_description')[$key],
-    //                     'created_at' => now(),
-    //                     'updated_at' => now(),
-    //                 ];
-    //                 $in =  DB::table('question_bank_entry')->insert($insert_data);
-    //             }
-    //         }
-    //     }
-
-    //     if ($value) {
-    //         Session::flash('success', 'Question Edited Successfully!');
-    //         return redirect()->route('manage-questions');
-    //     } else {
-    //         Session::flash('error', 'Something went wrong! Please try again later.');
-    //         return redirect()->route('manage-questions');
-    //     }
-    // }
 
 
 
     public function update_questions(Request $request)
     {
 
+        // dd($request->input());
 
-        if ($request->input('category') == 1) {
+        if ($request->input('category_edit') == 1) {
 
             DB::table('programming_question_test_case')
                 ->where('question_code', $request->input('question_code'))
                 ->delete();
 
             $question_code = $request->input('question_code');
+
+            $language_for_test = $request->input('language_for_test');
+            $tags = $request->input('tags');
 
             $data = [
                 'question_code' => $request->input('question_code'),
@@ -633,124 +689,175 @@ class QuestionBankController extends Controller
                 'marks' => $request->input('marks'),
                 'questions' => $request->input('programming_question'),
                 'solutions' => $request->input('programming_solution'),
-                'tags' => implode(',', $request->input('tags')),
                 'input_format' => $request->input('programming_question_input'),
                 'output_format' => $request->input('programming_question_output'),
                 'code_constraints' => $request->input('programming_question_code_constraints'),
                 'output_run_language' => $request->input('language_select'),
                 'saving_status' => $request->input('question_saving_status'),
-                'language_for_test' => implode(',', $request->input('language_for_test')),
                 'updated_at' => now(),
             ];
+
+            if (isset($language_for_test)) {
+                $data['language_for_test'] = implode(',', $request->input('language_for_test'));
+            }
+            if (isset($tags)) {
+                $data['tags'] = implode(',', $request->input('tags'));
+            }
 
 
             $value = DB::table('question_banks')->where('question_code', $question_code)->update($data);
             $question_id = DB::table('question_banks')->where('question_code', $question_code)->first();
             $test_case_input = $request->input('test_case_input');
 
-            foreach ($test_case_input as $key => $tc_input) {
-                $tc_data[] = [
-                    'question_id' => $question_id->question_id,
-                    'question_code' => $question_code,
-                    'input' => $tc_input,
-                    'output' => $request->input('test_case_output')[$key],
-                    'sample' => $request->input('test_case_sample')[$key],
-                    'weightage' => $request->input('test_case_weightage')[$key],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
+            if (isset($test_case_input)) {
+                foreach ($test_case_input as $key => $tc_input) {
+                    $tc_data = [
+                        'question_id' => $question_id->question_id,
+                        'question_code' => $question_code,
+                        'input' => $tc_input,
+                        'output' => $request->input('test_case_output')[$key],
+                        'sample' => $request->input('sample')[$key],
+                        'weightage' => $request->input('test_case_weightage')[$key],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                    $ins_data = DB::table('programming_question_test_case')->insert($tc_data);
+                }
             }
+        } else if ($request->input('category_edit') == 2) {
 
-            $ins_data = DB::table('programming_question_test_case')->insert($tc_data);
-        } else if ($request->input('category') == 2) {
+            DB::table('question_bank_for_mcq')
+                ->where('question_code', $request->input('question_code'))
+                ->delete();
 
-            $question_code = uniqid();
+
+            $language_for_test = $request->input('language_for_test');
+            $tags = $request->input('tags');
+
+            $question_code = $request->input('question_code');
 
             $data = [
                 'question_code' => $question_code,
                 'skills_id' => $request->input('skill'),
                 'difficulties_id' => $request->input('difficulty'),
                 'topics_id' => $request->input('topic'),
-                'category' => $request->input('category'),
+                'category' => $request->input('category_edit'),
                 'marks' => 1,
-                'tags' => implode(',', $request->input('tags')),
                 'questions' => $request->input('mcq_question'),
+                'explanation' => $request->input('mcq_explanation'),
                 'saving_status' => $request->input('question_saving_status'),
-                'created_at' => now(),
                 'updated_at' => now(),
             ];
 
-
-            $value = DB::table('question_banks')->insertGetId($data);
-
-            foreach ($request->input('opt_answer') as $key => $mcq_dup) {
-                $option_name = chr(65 + $key);
-                $correct_answer = ($option_name == strtoupper($request->input('correct_option'))) ? 1 : 0;
-                $mcq_data[] = [
-                    'question_id' => $value,
-                    'question_code' => $question_code,
-                    'option_name' => 'Option ' . $option_name,
-                    'option_answer' => $mcq_dup,
-                    'correct_answer' => $correct_answer,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
+            if (isset($language_for_test)) {
+                $data['language_for_test'] = implode(',', $request->input('language_for_test'));
+            }
+            if (isset($tags)) {
+                $data['tags'] = implode(',', $request->input('tags'));
             }
 
-            $ins_data = DB::table('question_bank_for_mcq')->insert($mcq_data);
-        } else if ($request->input('category') == 3) {
+            $value = DB::table('question_banks')->where('question_code', $question_code)->update($data);
+            $question_id = DB::table('question_banks')->where('question_code', $question_code)->first();
 
+            $opt_answer = $request->input('opt_answer');
 
-            $question_code = uniqid();
-
-            $data = [
-                'question_code' => $question_code,
-                'skills_id' => $request->input('skill'),
-                'difficulties_id' => $request->input('difficulty'),
-                'topics_id' => $request->input('topic'),
-                'category' => $request->input('category'),
-                'marks' => 1,
-                'tags' => implode(',', $request->input('tags')),
-                'questions' => $request->input('mcq_questions'),
-                'saving_status' => $request->input('question_saving_status'),
-                'title' => $request->input('mcq_grouping_title'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-
-            $value = DB::table('question_banks')->insertGetId($data);
-
-            foreach ($request->input('grouping_mcq_question') as $question) {
-                $insertedId = DB::table('mcq_grouping_questions')->insertGetId([
-                    'question_id' => $value,
-                    'question_code' => $question_code,
-                    'questions' => $question,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                $ins_data[] = $insertedId;
-            }
-
-            foreach ($request->input('grouping_opt_answer') as $key => $mcq_dup) {
-
-                foreach ($mcq_dup as $i => $c) {
-                    $option_name = chr(65 + $i);
+            if (isset($opt_answer)) {
+                foreach ($request->input('opt_answer') as $key => $mcq_dup) {
+                    $option_name = chr(65 + $key);
                     $correct_answer = ($option_name == strtoupper($request->input('correct_option'))) ? 1 : 0;
                     $mcq_data = [
-                        'question_id' => $value,
+                        'question_id' => $question_id->question_id,
                         'question_code' => $question_code,
-                        'grouping_question_id' => $ins_data[$key - 1],
                         'option_name' => 'Option ' . $option_name,
-                        'option_answer' => $c,
+                        'option_answer' => $mcq_dup,
                         'correct_answer' => $correct_answer,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
-                    DB::table('question_bank_for_mcq')->insert($mcq_data);
+                    $ins_data = DB::table('question_bank_for_mcq')->insert($mcq_data);
+                }
+            }
+        } else if ($request->input('category_edit') == 3) {
+
+
+            DB::table('mcq_grouping_questions')
+                ->where('question_code', $request->input('question_code'))
+                ->delete();
+            DB::table('question_bank_for_mcq')
+                ->where('question_code', $request->input('question_code'))
+                ->delete();
+
+            $question_code = $request->input('question_code');
+
+            $language_for_test = $request->input('language_for_test');
+            $tags = $request->input('tags');
+
+            $data = [
+                'question_code' => $question_code,
+                'skills_id' => $request->input('skill'),
+                'difficulties_id' => $request->input('difficulty'),
+                'topics_id' => $request->input('topic'),
+                'category' => $request->input('category_edit'),
+                'marks' => 1,
+                'questions' => $request->input('mcq_questions'),
+                'saving_status' => $request->input('question_saving_status'),
+                'title' => $request->input('mcq_grouping_title'),
+                'updated_at' => now(),
+            ];
+
+            if (isset($language_for_test)) {
+                $data['language_for_test'] = implode(',', $request->input('language_for_test'));
+            }
+            if (isset($tags)) {
+                $data['tags'] = implode(',', $request->input('tags'));
+            }
+
+            $value = DB::table('question_banks')->where('question_code', $question_code)->update($data);
+
+            $grouping_mcq_question = $request->input('grouping_mcq_question');
+            if (isset($grouping_mcq_question)) {
+                foreach ($grouping_mcq_question as $question) {
+                    $insertedId = DB::table('mcq_grouping_questions')->insertGetId([
+                        'question_id' => $value,
+                        'question_code' => $question_code,
+                        'questions' => $question,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    $ins_data[] = $insertedId;
+                }
+                $grouping_opt_answer = $request->input('grouping_opt_answer');
+                if (isset($grouping_opt_answer)) {
+                    foreach ($request->input('grouping_opt_answer') as $key => $mcq_dup) {
+                        foreach ($mcq_dup as $i => $c) {
+                            $option_name = chr(65 + $i);
+                            $co = $request->input('grouping_correct_option');
+                            if (isset($co[$key])) {
+                                $correct_option = strtoupper($co[$key]);
+                                $correct_answer = ($option_name == $correct_option) ? 1 : 0;
+                            } else {
+                                $correct_answer = 0;
+                            }
+
+                            $mcq_data = [
+                                'question_id' => $value,
+                                'question_code' => $question_code,
+                                'grouping_question_id' => $ins_data[$key],
+                                'option_name' => 'Option ' . $option_name,
+                                'option_answer' => $c,
+                                'correct_answer' => $correct_answer,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+
+                            DB::table('question_bank_for_mcq')->insert($mcq_data);
+                        }
+                    }
                 }
             }
         }
+        return redirect()->route('manage-questions');
     }
 
 
@@ -763,7 +870,9 @@ class QuestionBankController extends Controller
     {
         $value = DB::table('question_banks')->where('question_code', $request->input('question_code'))->update(['trash_key' => 2]);
         if ($value) {
-            return response()->json(['status' => 200]);
+            return response()->json(['status' => 200, 'message' => 'Question deleted successfully']);
+        } else {
+            return response()->json(['message' => 'Something went wrong']);
         }
     }
 
@@ -908,103 +1017,162 @@ class QuestionBankController extends Controller
             $tests = explode(',', $exclude_test);
             $test_questions = [];
             foreach ($tests as $key => $ex_test) {
-                $previous_tests = DB::table('test_creation')->where('test_code', $ex_test)->first();
-                if ($previous_tests->test_type == 2) {
-                    $test_questions[] = $previous_tests->test_questions;
-                } elseif ($previous_tests->test_type == 1) {
-                    $diff_wise_questions = DB::table('test_creation_difficulty_wise_count')->where('test_code', $ex_test)->get();
-                    foreach ($diff_wise_questions as $diff_question) {
-                        $test_questions[] = $diff_question->test_questions;
+
+                $ma_test = DB::table('test_creation')->where('test_code', $ex_test)->first();
+                $prev_test = DB::table('test_section_wise_questions')->where('test_code', $ex_test)->get();
+                foreach ($prev_test as $is => $pt) {
+                    if ($ma_test->test_type == 1) {
+                        $test_questions[] = $pt->common_test_question;
+                    } else {
+                        $test_questions[] = implode(',', [$pt->easy, $pt->medium, $pt->hard, $pt->very_hard]);
                     }
                 }
             }
+
             $imp_var = implode(',', $test_questions);
 
-            $questions = DB::table('question_banks')
-                ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
-                ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
-                ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
-                ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
-                ->select('question_banks.question_code', 'question_banks.questions', 'master_categories.category_name', 'question_banks.is_active', 'master_topics.topic_name', 'master_skills.skill_name', 'master_difficulties.difficulty_name')
-                // ->whereNotIn('question_banks.question_code', explode(',', $imp_var))
-                ->whereNotIn('question_banks.question_code', explode(',', $imp_var))
-                ->orWhereNull('question_banks.question_code')
+            $questions = [];
+            $processedCategories = [];
 
-                ->where('question_banks.trash_key', 1)
-                ->get();
+            $que = DB::table('question_banks')->where('is_active', 1)->where('trash_key', 1)->get();
 
+            foreach ($que as $ques) {
+                $category = $ques->category;
+
+                if (in_array($category, $processedCategories)) {
+                    continue;
+                }
+
+                $query = DB::table('question_banks')
+                    ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
+                    ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
+                    ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
+                    ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
+                    ->select(
+                        'question_banks.question_code',
+                        'question_banks.is_active',
+                        'question_banks.saving_status',
+                        'master_topics.topic_name',
+                        'master_skills.skill_name',
+                        'master_categories.category_name',
+                        'master_difficulties.difficulty_name'
+                    )->where('question_banks.trash_key', 1)
+                    ->whereNotIn('question_banks.question_code', explode(',', $imp_var));
+                // ->orWhereNull('question_banks.question_code');
+
+                $questionsField = ($category == 3) ? 'question_banks.title as questions' : 'question_banks.questions as questions';
+                $query->addSelect(DB::raw($questionsField));
+
+                $questionData = $query->where('category', $category)->get();
+
+                foreach ($questionData as $question) {
+                    $question->questions = strip_tags($question->questions);
+                    $questions[] = $question;
+                }
+
+                $processedCategories[] = $category;
+            }
 
             return DataTables::of($questions)->toJson();
-
-
-            // 
         } else if ($exclude_test == null && $question_type == null) {
 
-            $questions = DB::table('question_banks')
-                ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
-                ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
-                ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
-                ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
-                ->select('question_banks.question_code', 'question_banks.questions', 'master_categories.category_name', 'question_banks.is_active', 'master_topics.topic_name', 'master_skills.skill_name', 'master_difficulties.difficulty_name')
-                ->where('question_banks.trash_key', 1)
-                ->get();
+            $questions = [];
+            $processedCategories = [];
+
+            $que = DB::table('question_banks')->where('is_active', 1)->where('trash_key', 1)->get();
+
+            foreach ($que as $ques) {
+                $category = $ques->category;
+
+                if (in_array($category, $processedCategories)) {
+                    continue;
+                }
+
+                $query = DB::table('question_banks')
+                    ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
+                    ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
+                    ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
+                    ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
+                    ->select(
+                        'question_banks.question_code',
+                        'question_banks.is_active',
+                        'question_banks.saving_status',
+                        'master_topics.topic_name',
+                        'master_skills.skill_name',
+                        'master_categories.category_name',
+                        'master_difficulties.difficulty_name'
+                    )->where('question_banks.trash_key', 1);
+
+                $questionsField = ($category == 3) ? 'question_banks.title as questions' : 'question_banks.questions as questions';
+                $query->addSelect(DB::raw($questionsField));
+
+                $questionData = $query->where('category', $category)->get();
+
+                foreach ($questionData as $question) {
+                    $question->questions = strip_tags($question->questions);
+                    $questions[] = $question;
+                }
+
+                $processedCategories[] = $category;
+            }
 
             return DataTables::of($questions)->toJson();
-
-            // return DataTables::of($result)->toJson();
         } else if ($question_type == "for_filter_questions" && $exclude_test == null) {
 
-            $difficulties = $request->input('difficulties');
-            $categories = $request->input('categories');
-            $topics = $request->input('topics');
-            $skills = $request->input('skills');
+            $questions = [];
+            $processedCategories = [];
 
-            $topicsArray = !is_null($topics) ? explode(',', $topics) : [];
-            $skillsArray = !is_null($skills) ? explode(',', $skills) : [];
-            $difficultiesArray = !is_null($difficulties) ? explode(',', $difficulties) : [];
-            $categoriesArray = !is_null($categories) ? explode(',', $categories) : [];
+            $que = DB::table('question_banks')->where('is_active', 1)->where('trash_key', 1)->get();
 
-            $result = DB::table('question_banks')
-                ->when($skillsArray, function ($query) use ($skillsArray) {
-                    return $query->leftJoin('master_skills', 'question_banks.skills_id', '=', 'master_skills.skill_id')
-                        ->whereIn('skills_id', $skillsArray);
-                })
-                ->when($topicsArray, function ($query) use ($topicsArray) {
-                    return $query->leftJoin('master_topics', 'question_banks.topics_id', '=', 'master_topics.id')
-                        ->whereIn('topics_id', $topicsArray);
-                })
-                ->when($difficultiesArray, function ($query) use ($difficultiesArray) {
-                    return $query->leftJoin('master_difficulties', 'question_banks.difficulties_id', '=', 'master_difficulties.difficulty_id')
-                        ->whereIn('difficulties_id', $difficultiesArray);
-                })
-                ->when($categoriesArray, function ($query) use ($categoriesArray) {
-                    return $query->leftJoin('master_categories', 'question_banks.category', '=', 'master_categories.category_id')
-                        ->whereIn('category_id', $categoriesArray);
-                })
-                ->where('question_banks.trash_key', 1)
-                ->where('question_banks.is_active', 1);
+            foreach ($que as $ques) {
 
-            $column_to_select = [
-                'question_banks.*',
-            ];
+                $category = $ques->category;
 
-            if (!empty($skillsArray)) {
-                $column_to_select[] = 'master_skills.skill_id';
-                $column_to_select[] = 'master_skills.skill_name';
+                if (in_array($category, $processedCategories)) {
+                    continue;
+                }
+
+                $query = DB::table('question_banks')
+                    ->leftJoin('master_skills', 'master_skills.skill_id', '=', 'question_banks.skills_id')
+                    ->leftJoin('master_difficulties', 'master_difficulties.difficulty_id', '=', 'question_banks.difficulties_id')
+                    ->leftJoin('master_topics', 'master_topics.topic_id', '=', 'question_banks.topics_id')
+                    ->leftJoin('master_categories', 'master_categories.category_id', '=', 'question_banks.category')
+                    ->select(
+                        'question_banks.question_code',
+                        'question_banks.is_active',
+                        'question_banks.saving_status',
+                        'master_topics.topic_name',
+                        'master_skills.skill_name',
+                        'master_categories.category_name',
+                        'master_difficulties.difficulty_name'
+                    )->where('question_banks.trash_key', 1);
+
+                $questionsField = ($category == 3) ? 'question_banks.title as questions' : 'question_banks.questions as questions';
+                $query->addSelect(DB::raw($questionsField));
+
+                $filters = [
+                    'skills', 'topics', 'difficulties', 'categories'
+                ];
+
+                foreach ($filters as $filter) {
+                    $filterValues = $request->input($filter);
+                    if (!is_null($filterValues)) {
+                        $filterArray = explode(',', $filterValues);
+                        $query->whereIn("question_banks.{$filter}_id", $filterArray);
+                    }
+                }
+
+                $questionData = $query->where('category', $category)->get();
+
+                foreach ($questionData as $question) {
+                    $question->questions = strip_tags($question->questions);
+                    $questions[] = $question;
+                }
+
+                $processedCategories[] = $category;
             }
 
-            if (!empty($topicsArray)) {
-                $column_to_select[] = 'master_topics.topic_id';
-                $column_to_select[] = 'master_topics.topic_name';
-            }
-            if (!empty($categoriesArray)) {
-                $column_to_select[] = 'master_categories.category_id';
-                $column_to_select[] = 'master_categories.category_name';
-            }
-
-            $result->select($column_to_select);
-            $result = $result->get();
-            return DataTables::of($result)->toJson();
+            return Datatables::of($questions)->toJson();
         }
     }
 }

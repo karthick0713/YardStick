@@ -396,17 +396,18 @@ class ManageTestController extends Controller
                 'test_code' => $test_code,
                 'title' => $request->input('test_title'),
                 'test_type' => $request->input('question_type'),
+                'practice_status' => $request->input('practice_status'),
             ];
 
             $value = DB::table('test_creation')->insert($data);
 
-            $sec_duration = explode(',', $request->input('category_duration'));
             $questions = $request->input('selected_questions_value');
+
             foreach ($request->input('input_section_name') as $key => $sec_name) {
                 $ins_data[] = [
                     'test_code' => $test_code,
                     'section_name' => $sec_name,
-                    'duration' => $sec_duration[$key],
+                    'duration' => $request->input('input_section_duration')[$key],
                     'common_test_question' => $questions[$key],
                     'created_at' => now(),
                     'updated_at' => now(),

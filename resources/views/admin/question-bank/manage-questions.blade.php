@@ -66,7 +66,8 @@
                             <th class="text-white">Skills</th>
                             <th class="text-white">Questions</th>
                             <th class="text-white">Difficulty</th>
-                            <th class="text-white">Status</th>
+                            <th class="text-white">Saved Status</th>
+                            <th class="text-white">Published Status</th>
                             <th class="text-white">Actions</th>
                         </tr>
                     </thead>
@@ -185,16 +186,29 @@
                             orderable: false
                         },
                         {
-                            data: "is_active",
+                            data: "saving_status",
                             orderable: false,
-                            searchable: false,
                             render: function(data, type, row) {
                                 return `
-                <label class="switch">
-                    <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.question_code}',${data})" id="statusToggle">
-                    <span class="slider round"></span>
-                </label>
-            `;
+                                <label class="switch">
+                                    <input type="checkbox" ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.question_code}',${data})" disabled value="draft" id="statusToggle">
+                                    <span class="slider round"></span>
+                                    <span style="display:none" class="slider round">${data == 1 ? 'active' : 'draft'}</span>
+                                </label>
+                            `;
+                            },
+                        },
+                        {
+                            data: "is_active",
+                            orderable: false,
+                            render: function(data, type, row) {
+                                return `
+                                <label class="switch">
+                                    <input type="checkbox"  ${data == 1 ? 'checked' : ''} onclick="statusChange('${row.question_code}',${data})" value="draft" id="statusToggle">
+                                    <span class="slider round"></span>
+                                    <span style="display:none" class="slider round">${data == 1 ? 'published' : 'not active'}</span>
+                                </label>
+                            `;
                             },
                         },
                         {
