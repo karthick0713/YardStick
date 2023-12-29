@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2023 at 08:07 AM
+-- Generation Time: Dec 29, 2023 at 03:07 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -489,7 +489,13 @@ CREATE TABLE `mcq_grouping_questions` (
 --
 
 INSERT INTO `mcq_grouping_questions` (`id`, `question_id`, `question_code`, `questions`, `created_at`, `updated_at`) VALUES
-(2, 1, '658e6ffd369ac', '<p>asdfasdfsdf</p>', '2023-12-29 12:36:46', '2023-12-29 12:36:46');
+(5, 1, '658e6ffd369ac', '<p>asdfasdfsdf</p>', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(6, 1, '658e6ffd369ac', '<p>asdfasdf</p>', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(57, 1, '658e73b552821', '<p>fasdf</p>', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(58, 1, '658e73b552821', '<p>sadfasdf</p>', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(59, 1, '658e73b552821', '<p>sdfsdfsdfsdfsdf</p>', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(60, 1, '658e73b552821', '<p>sdfsdf</p>', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(61, 1, '658e73b552821', '<p>asdfsad</p>', '2023-12-29 13:03:33', '2023-12-29 13:03:33');
 
 -- --------------------------------------------------------
 
@@ -633,7 +639,8 @@ CREATE TABLE `question_banks` (
 
 INSERT INTO `question_banks` (`question_id`, `question_code`, `skills_id`, `difficulties_id`, `topics_id`, `category`, `marks`, `title`, `questions`, `solutions`, `tags`, `output_run_language`, `input_format`, `output_format`, `code_constraints`, `explanation`, `language_for_test`, `saving_status`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
 (1, '658e6f32188f3', 1, '4', 2, 2, 1, NULL, '<p>asdf</p>', NULL, '2', NULL, NULL, NULL, NULL, '<p>asdfasdfsadfsadf</p>', NULL, 1, '1', '1', '2023-12-29 07:03:14', '2023-12-29 07:06:04'),
-(2, '658e6ffd369ac', 1, '4', 4, 3, 1, '<p>asdfasdfsd</p>', NULL, NULL, '2,5', NULL, NULL, NULL, NULL, NULL, NULL, 2, '1', '1', '2023-12-29 07:06:37', '2023-12-29 07:06:46');
+(2, '658e6ffd369ac', 1, '4', 4, 3, 1, '<p>asdfasdfsd</p>', NULL, NULL, '2,5', NULL, NULL, NULL, NULL, NULL, NULL, 1, '1', '1', '2023-12-29 07:06:37', '2023-12-29 07:18:17'),
+(3, '658e73b552821', 4, '4', 1, 3, 1, '<p>asdfasdf</p>', NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, 2, '1', '1', '2023-12-29 07:22:29', '2023-12-29 07:33:33');
 
 -- --------------------------------------------------------
 
@@ -678,10 +685,35 @@ INSERT INTO `question_bank_for_mcq` (`id`, `question_id`, `grouping_question_id`
 (6, 1, NULL, '658e6f32188f3', 'Option B', '<p>asdf</p>', '0', '2023-12-29 12:36:04', '2023-12-29 12:36:04'),
 (7, 1, NULL, '658e6f32188f3', 'Option C', '<p>asdf</p>', '0', '2023-12-29 12:36:04', '2023-12-29 12:36:04'),
 (8, 1, NULL, '658e6f32188f3', 'Option D', '<p>asdf</p>', '1', '2023-12-29 12:36:04', '2023-12-29 12:36:04'),
-(13, 1, 2, '658e6ffd369ac', 'Option A', '<p>asdfasdf</p>', '1', '2023-12-29 12:36:46', '2023-12-29 12:36:46'),
-(14, 1, 2, '658e6ffd369ac', 'Option B', '<p>asdfasd</p>', '0', '2023-12-29 12:36:46', '2023-12-29 12:36:46'),
-(15, 1, 2, '658e6ffd369ac', 'Option C', '<p>sadfasdf</p>', '0', '2023-12-29 12:36:46', '2023-12-29 12:36:46'),
-(16, 1, 2, '658e6ffd369ac', 'Option D', '<p>fsadf</p>', '0', '2023-12-29 12:36:46', '2023-12-29 12:36:46');
+(25, 1, 5, '658e6ffd369ac', 'Option A', '<p>asdfasdf</p>', '1', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(26, 1, 5, '658e6ffd369ac', 'Option B', '<p>asdfasd</p>', '0', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(27, 1, 5, '658e6ffd369ac', 'Option C', '<p>sadfasdf</p>', '0', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(28, 1, 5, '658e6ffd369ac', 'Option D', '<p>fsadf</p>', '0', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(29, 1, 6, '658e6ffd369ac', 'Option A', '<p>asdf</p>', '0', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(30, 1, 6, '658e6ffd369ac', 'Option B', '<p>dfsadf</p>', '0', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(31, 1, 6, '658e6ffd369ac', 'Option C', '<p>fasdfsadf</p>', '0', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(32, 1, 6, '658e6ffd369ac', 'Option D', '<p>asdf</p>', '1', '2023-12-29 12:48:17', '2023-12-29 12:48:17'),
+(208, 1, 57, '658e73b552821', 'Option A', '<p>asdf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(209, 1, 57, '658e73b552821', 'Option B', '<p>adf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(210, 1, 57, '658e73b552821', 'Option C', '<p>asdf</p>', '1', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(211, 1, 57, '658e73b552821', 'Option D', '<p>asdf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(212, 1, 58, '658e73b552821', 'Option A', '<p>asdfasdf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(213, 1, 58, '658e73b552821', 'Option B', '<p>sadfasd</p>', '1', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(214, 1, 58, '658e73b552821', 'Option C', '<p>asdfasdf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(215, 1, 58, '658e73b552821', 'Option D', '<p>asdfsadf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(216, 1, 58, '658e73b552821', 'Option E', NULL, '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(217, 1, 59, '658e73b552821', 'Option A', '<p>dfg</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(218, 1, 59, '658e73b552821', 'Option B', '<p>gsdfg</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(219, 1, 59, '658e73b552821', 'Option C', '<p>sdfgsdfg</p>', '1', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(220, 1, 59, '658e73b552821', 'Option D', '<p>gsdfgsdf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(221, 1, 60, '658e73b552821', 'Option A', '<p>dfsfg</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(222, 1, 60, '658e73b552821', 'Option B', '<p>sfgsdfgdsfg</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(223, 1, 60, '658e73b552821', 'Option C', '<p>sdfgsdfg</p>', '1', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(224, 1, 60, '658e73b552821', 'Option D', '<p>sdfgsdfg</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(225, 1, 61, '658e73b552821', 'Option A', '<p>sadfsadf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(226, 1, 61, '658e73b552821', 'Option B', '<p>sadfsadf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(227, 1, 61, '658e73b552821', 'Option C', '<p>sdfasdfsdf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33'),
+(228, 1, 61, '658e73b552821', 'Option D', '<p>sdfsadf</p>', '0', '2023-12-29 13:03:33', '2023-12-29 13:03:33');
 
 -- --------------------------------------------------------
 
@@ -847,6 +879,7 @@ CREATE TABLE `test_creation` (
   `test_id` bigint(20) UNSIGNED NOT NULL,
   `test_code` varchar(30) NOT NULL,
   `test_type` int(11) NOT NULL,
+  `practice_status` varchar(15) NOT NULL,
   `title` varchar(100) NOT NULL,
   `skills_id` varchar(200) DEFAULT NULL,
   `category` varchar(100) DEFAULT NULL,
@@ -862,11 +895,8 @@ CREATE TABLE `test_creation` (
 -- Dumping data for table `test_creation`
 --
 
-INSERT INTO `test_creation` (`test_id`, `test_code`, `test_type`, `title`, `skills_id`, `category`, `topics`, `test_questions`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
-(8, '6582d518613e9', 1, 'model test', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL),
-(4, '658177aa8ed96', 2, 'Test Package 1', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL),
-(5, '65817807655ec', 2, 'Sample test creation', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL),
-(7, '6581814ba2fcb', 2, 'Demo Creative Bees', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL);
+INSERT INTO `test_creation` (`test_id`, `test_code`, `test_type`, `practice_status`, `title`, `skills_id`, `category`, `topics`, `test_questions`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
+(1, '658eca9076916', 1, 'yes', 'Sample test creation', NULL, NULL, NULL, NULL, '1', '1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -893,17 +923,8 @@ CREATE TABLE `test_section_wise_questions` (
 --
 
 INSERT INTO `test_section_wise_questions` (`id`, `test_code`, `common_test_question`, `section_name`, `duration`, `easy`, `medium`, `hard`, `very_hard`, `created_at`, `updated_at`) VALUES
-(1, '658177aa8ed96', '', 'sec', 10, 'n6V5hk1W0Fq1eHcx4B0Ag,r8o1kxOfp0DRKkusJ7xNc,TzxPuF5hHldLROiOauRtv', 'p8xGGCF4TSPE1CtTTJuHs,4AtnNYqJzioRumK2JctPI,4oRh9ujfJ1GT2ABSwI8U4', 'GV3DOvHnhBceNfboC4S8U,S0Fo5P4cbh2VFCrXBdp44', '', '2023-12-19 16:29:54', '2023-12-19 16:29:54'),
-(2, '658177aa8ed96', '', 'sec 23', 15, 'ojD0BAgLUrYcStEzZ9efp,PBG4J9gMHmZfMN5YkgusA,Lk23POdOGHrQewmzY19fb', 'e8Hpkh9pVjGlJCWJeCtFK,xuKv65S6Xp1Vis1r9D9pG,h6GRL4cDyFjEdL3vridlf', '', '', '2023-12-19 16:29:54', '2023-12-19 16:29:54'),
-(3, '658177aa8ed96', '', 'sec 2233', 20, 'n6V5hk1W0Fq1eHcx4B0Ag,VzPdAHgCU6a9aIueKV57O,4Bp8HaU9itrfLk5OL6LSz,TzxPuF5hHldLROiOauRtv', 'mmcKRP68iUfbrEpdQrtiU,4AtnNYqJzioRumK2JctPI,4oRh9ujfJ1GT2ABSwI8U4,4jirt25EJhVA7JSCN5uY8', 'o2NWHInCK2eOBgxOkY9cZ,C0DC9nYIplwIRT7EEjd63,o4gR1DtqPkC8wJHtmI3wp,RuoETX6Le0HR0YdlM9ZS4', '', '2023-12-19 16:29:54', '2023-12-19 16:29:54'),
-(4, '65817807655ec', '', 'sec', 23, 'TzxPuF5hHldLROiOauRtv,r8o1kxOfp0DRKkusJ7xNc', 'p8xGGCF4TSPE1CtTTJuHs,4AtnNYqJzioRumK2JctPI', 'S0Fo5P4cbh2VFCrXBdp44,GV3DOvHnhBceNfboC4S8U', '', '2023-12-19 16:31:27', '2023-12-19 16:31:27'),
-(5, '65817807655ec', '', 'sec33', 34, '4Bp8HaU9itrfLk5OL6LSz,cFBJVID7whb9xkOxXymF5,akdr0M7EsJn6oLsspyjt3', '4AtnNYqJzioRumK2JctPI,iz6gHTvWYvjeGwmi915P6,4oRh9ujfJ1GT2ABSwI8U4', 'RuoETX6Le0HR0YdlM9ZS4,o2NWHInCK2eOBgxOkY9cZ,S0Fo5P4cbh2VFCrXBdp44', '', '2023-12-19 16:31:27', '2023-12-19 16:31:27'),
-(6, '65817807655ec', '', 'dsfs3', 32, 'iEO05pIF0Pfcsm62PVtFb', 'iz6gHTvWYvjeGwmi915P6,4AtnNYqJzioRumK2JctPI', 'o4gR1DtqPkC8wJHtmI3wp,S0Fo5P4cbh2VFCrXBdp44', '', '2023-12-19 16:31:27', '2023-12-19 16:31:27'),
-(7, '6581814ba2fcb', '', 'sdf', 34, 'akdr0M7EsJn6oLsspyjt3,VzPdAHgCU6a9aIueKV57O', '4jirt25EJhVA7JSCN5uY8,iz6gHTvWYvjeGwmi915P6', 'C0DC9nYIplwIRT7EEjd63,o2NWHInCK2eOBgxOkY9cZ,RuoETX6Le0HR0YdlM9ZS4', '', '2023-12-19 17:10:59', '2023-12-19 17:10:59'),
-(8, '6581814ba2fcb', '', 'asdfsa', 323, 'TzxPuF5hHldLROiOauRtv,akdr0M7EsJn6oLsspyjt3', '9fEJL8BnUaWua7kH3juEX,4AtnNYqJzioRumK2JctPI', 'o4gR1DtqPkC8wJHtmI3wp,S0Fo5P4cbh2VFCrXBdp44', '', '2023-12-19 17:10:59', '2023-12-19 17:10:59'),
-(9, '6581814ba2fcb', '', 'asdfas', 43, 'Lk23POdOGHrQewmzY19fb', 'yIdWLEYetCFB1krSNtfLg', 'GV3DOvHnhBceNfboC4S8U', '', '2023-12-19 17:10:59', '2023-12-19 17:10:59'),
-(10, '6582d518613e9', 'xuKv65S6Xp1Vis1r9D9pG,h6GRL4cDyFjEdL3vridlf', 'test', 20, NULL, NULL, NULL, NULL, '2023-12-20 17:20:48', '2023-12-20 17:20:48'),
-(11, '6582d518613e9', 'cFBJVID7whb9xkOxXymF5,e8Hpkh9pVjGlJCWJeCtFK,v96BTb4YfI8ubdmbYlFvH', 'test 3', 20, NULL, NULL, NULL, NULL, '2023-12-20 17:20:48', '2023-12-20 17:20:48');
+(1, '658eca9076916', '658e6f32188f3', 'test1', 20, NULL, NULL, NULL, NULL, '2023-12-29 19:03:04', '2023-12-29 19:03:04'),
+(2, '658eca9076916', '658e73b552821', 'test2', 30, NULL, NULL, NULL, NULL, '2023-12-29 19:03:04', '2023-12-29 19:03:04');
 
 -- --------------------------------------------------------
 
@@ -1173,7 +1194,7 @@ ALTER TABLE `master_topics`
 -- AUTO_INCREMENT for table `mcq_grouping_questions`
 --
 ALTER TABLE `mcq_grouping_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -1191,7 +1212,7 @@ ALTER TABLE `programming_question_test_case`
 -- AUTO_INCREMENT for table `question_banks`
 --
 ALTER TABLE `question_banks`
-  MODIFY `question_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `question_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `question_bank_entry`
@@ -1203,7 +1224,7 @@ ALTER TABLE `question_bank_entry`
 -- AUTO_INCREMENT for table `question_bank_for_mcq`
 --
 ALTER TABLE `question_bank_for_mcq`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=229;
 
 --
 -- AUTO_INCREMENT for table `student_group`
@@ -1221,13 +1242,13 @@ ALTER TABLE `student_group_entry`
 -- AUTO_INCREMENT for table `test_creation`
 --
 ALTER TABLE `test_creation`
-  MODIFY `test_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `test_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `test_section_wise_questions`
 --
 ALTER TABLE `test_section_wise_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
