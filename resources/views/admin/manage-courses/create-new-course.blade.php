@@ -229,9 +229,9 @@
                             </div>
 
                             <div class="d-flex mt-3 ">
-                                <button type="button" style="background-color:#cd0000"
+                                {{-- <button type="button" style="background-color:#cd0000"
                                     class="btn text-white mx-4">Create
-                                    Course</button>
+                                    Course</button> --}}
                                 <button type="button" style="background-color:#cd0000" data-bs-toggle="modal"
                                     onclick="openTestModal()" data-bs-target="#testModal" class="btn text-white ms-4">Add
                                     Test</button>
@@ -250,6 +250,7 @@
                         <div class="mt-5 d-flex justify-content-end">
                             <button type="submit" class="btn background-secondary text-white">Submit</button>
                         </div>
+
 
                     </div>
 
@@ -282,9 +283,11 @@
                                                                 name="select_test[]" class="select-test"
                                                                 onclick="test_params(this.value)"
                                                                 value="{{ $tt->test_code }},{{ $tt->title }}"
-                                                                id="">
+                                                                id="{{ $tt->test_code }}">
                                                         </td>
-                                                        <td>{{ strtoupper($tt->title) }}</td>
+                                                        <td><label
+                                                                for="{{ $tt->test_code }}">{{ strtoupper($tt->title) }}</label>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -300,65 +303,79 @@
                             </div>
                         </div>
                     </div>
-
-
-                    <script>
-                        function openTestModal() {
-
-                            var existingTable = $('#testsTable').DataTable();
-                            existingTable.destroy();
-
-                            $('#testsTable').DataTable({
-                                pageLength: 6,
-                                orderable: false,
-                                searchable: false
-                            });
-                            $("th").removeClass("sorting");
-                            $(".dataTables_length").parent().remove();
-                        }
-
-
-                        let timerInterval;
-
-                        function showSuccessPopup(message, time_limit, type) {
-                            Swal.fire({
-                                title: message,
-                                timer: time_limit,
-                                icon: type,
-                                timerProgressBar: true,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                    const timer = Swal.getPopup().querySelector("b");
-                                    $(".swal2-loader").css('display', 'none');
-                                },
-                                willClose: () => {
-                                    clearInterval(timerInterval);
-                                }
-                            })
-                        }
-
-                        var selectedTests = [];
-
-                        function test_params(value) {
-                            var index = selectedTests.indexOf(value);
-                            if (index === -1) {
-                                selectedTests.push(value);
-                            } else {
-                                selectedTests.splice(index, 1);
-                            }
-                            add_tests(selectedTests);
-                        }
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 
-                        function add_tests(tests) {
 
-                            var rows = '';
-                            tests.forEach((test, i) => {
-                                var testCode = test.split(',')[0];
-                                var title = test.split(',')[1];
+    <script>
+        $(document).keypress(
+            function(event) {
+                if (event.which == '13') {
+                    event.preventDefault();
+                }
+            });
 
-                                rows += `
+
+        function openTestModal() {
+
+            var existingTable = $('#testsTable').DataTable();
+            existingTable.destroy();
+
+            $('#testsTable').DataTable({
+                pageLength: 6,
+                orderable: false,
+                searchable: false
+            });
+            $("th").removeClass("sorting");
+            $(".dataTables_length").parent().remove();
+        }
+
+
+        let timerInterval;
+
+        function showSuccessPopup(message, time_limit, type) {
+            Swal.fire({
+                title: message,
+                timer: time_limit,
+                icon: type,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    $(".swal2-loader").css('display', 'none');
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            })
+        }
+
+        var selectedTests = [];
+
+        function test_params(value) {
+            var index = selectedTests.indexOf(value);
+            if (index === -1) {
+                selectedTests.push(value);
+            } else {
+                selectedTests.splice(index, 1);
+            }
+            add_tests(selectedTests);
+        }
+
+
+
+        function add_tests(tests) {
+
+            var rows = '';
+            tests.forEach((test, i) => {
+                var testCode = test.split(',')[0];
+                var title = test.split(',')[1];
+
+                rows += `
                                 <div class="row col-12 mb-3">
                                 <div class="col-md-3">
                                     <input type="hidden" name="test_code[]" class="form-control test_code${i}" value="${testCode}" >
@@ -383,6 +400,9 @@
                                 <button type="button" style="background-color:#cd0000" onclick="openNegativeModal(${i})" 
                                     class="btn text-white ms-4">Add -Ve Marks 
                                     </button>
+
+                                    <input type="hidden" name="input_negative_marks[]" class="form-control input_negative_marks${i}" >
+                                <input type="hidden" name="input_question_code[]" class="form-control input_question_code${i}" >
                                 </div>
                               
                                 <br>
@@ -502,8 +522,8 @@
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn  background-secondary text-white"
-                                        data-bs-dismiss="modal" aria-label="Close" id="tests-submit">OK</button>
+                                    <button type="button" onclick="store_negative_marks(${i})" class="btn  background-secondary text-white"
+                                      id="">OK</button>
                                 </div>
 
                             </div>
@@ -512,304 +532,324 @@
 
 
                                 `;
+            });
+            $(".test_append_div").html(rows);
+        }
+
+
+        function store_negative_marks(index) {
+            var question_code_array = [];
+            var negativeMarksArray = [];
+
+            var table = $('#negativeMarkentry' + index).DataTable();
+
+            table.rows().data().each(function(rowData) {
+                var question_code_values = rowData[0];
+                question_code_array.push(question_code_values);
+            });
+            table.column(2).nodes().each(function(cell, i) {
+                var negativeMarksValue = $(cell).find('.negative_marks' + index).val();
+                negativeMarksArray.push(negativeMarksValue);
+            });
+            $(".input_question_code" + index).val(question_code_array);
+            $(".input_negative_marks" + index).val(negativeMarksArray);
+
+            $("#openNegativeMarkModal" + index).modal('hide');
+        }
+
+        function openParamsModal(index) {
+            $("#index").val(index);
+            $("#openParamsModal" + index).modal('show');
+        }
+
+        function param_value_update() {
+            var shuffle_questions;
+            var disable_finish_button;
+            var result_date;
+            var index = $("#index").val();
+            var display_result = $("input[type='radio']:checked").val();
+
+            if ($("input[name='shuffle_questions']:checked").length > 0) {
+                shuffle_questions = $("input[name='shuffle_questions']:checked").val();
+            } else {
+                shuffle_questions = 0;
+            }
+
+            if ($("input[name='disable_finish_button']:checked").length > 0) {
+                disable_finish_button = $("input[name='disable_finish_button']:checked").val();
+            } else {
+                disable_finish_button = 0;
+            }
+
+            if (display_result == 1) {
+                result_date = 0;
+            } else {
+                result_date = $("input[name='result_date']").val();
+            }
+
+            console.log($("input[name='end_date_time']").val());
+
+            $(".shuffle_ques" + index).val(shuffle_questions);
+            $(".dis_fin_btn" + index).val(disable_finish_button);
+            $(".re_att" + index).val($("select[name='re_attempts']").val());
+            $(".start_test_date" + index).val($("input[name='start_date_time']").val());
+            $(".end_test_date" + index).val($("input[name='end_date_time']").val());
+            $(".display_result" + index).val(display_result);
+            $(".display_result_date" + index).val(result_date);
+            $(".icon-info" + index).hide();
+            $(".icon-check" + index).show();
+        }
+
+
+        function openNegativeModal(index) {
+            $(".neg_body" + index).empty();
+            var test_code = $(".test_code" + index).val();
+            $.ajax({
+                url: "{{ route('get-test-questions') }}",
+                type: "GET",
+                data: {
+                    test_code: test_code,
+                    index: index
+                },
+                success: (data) => {
+                    $(".neg_body" + index).append(data);
+                    $("#openNegativeMarkModal" + index).modal('show');
+                    var existingTable = $('#negativeMarkentry' + index).DataTable();
+                    existingTable.destroy();
+                    $("#negativeMarkentry" + index).DataTable({
+                        pageLength: 6,
+                        orderable: false,
+                        searchable: false,
+                    });
+                    $("th").removeClass("sorting");
+                    $(`#negativeMarkentry${index}_length`).parent().parent().remove();
+                },
+                error: (xhr) => {
+                    alert('Something went wrong!');
+                }
+            })
+        }
+
+        $(document).ready(function() {
+
+            $.ajax({
+                url: "{{ route('ajax-get-colleges') }}",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    var html =
+                        '<option value="" selected disabled>SELECT</option>';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value="' + data[i].college_id +
+                            '">' +
+                            data[i].college_name +
+                            '</option>';
+                    }
+
+                    $('.colleges').map(function() {
+                        if (!$(this).val()) {
+                            $(this).html(html);
+                        }
+                    });
+
+                },
+                error: function(data) {
+                    console.log('Error:', data);
+                }
+            })
+
+            $.ajax({
+                url: "{{ route('ajax-get-departments') }}",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    var html =
+                        '<option value="" selected disabled>SELECT</option>';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value="' + data[i].department_id +
+                            '">' + data[i].department_name +
+                            '</option>';
+                    }
+                    $('.departments').map(function() {
+                        if (!$(this).val()) {
+                            $(this).html(html);
+                        }
+                    });
+                },
+                error: function(data) {
+                    console.log('Error:', data);
+                }
+            })
+        });
+
+
+
+        function showSuccessPopup(message, color) {
+            var successPopup = document.getElementById('successPopup');
+            successPopup.style.display = 'block';
+            successPopup.style.backgroundColor = color;
+            $("#succ_mess").text(message);
+            setTimeout(function() {
+                successPopup.style.display = 'none';
+            }, 3000);
+        }
+
+
+        function date_val(value) {
+            $("#end-date").prop('min', value);
+            $("#end-date").val("");
+        }
+
+        var groups = @json($groups);
+
+        $(document).ready(function() {
+            $('.container').on('change', '.colleges , .departments , .year', function() {
+                var nameAttribute = $(this).attr('name');
+                var match = nameAttribute.match(/\[([0-9]+)\]/);
+                var newRow = $(this).parent().parent().parent().parent();
+                var collegesDropdown = newRow.find('.colleges');
+                var departmentsDropdown = newRow.find('.departments');
+                var yearDropdown = newRow.find('.year');
+                var groupsDropdown = newRow.find('.group-select');
+                var selectedCollege = collegesDropdown.val();
+                var selectedDepartment = departmentsDropdown.val();
+                var selectedYear = yearDropdown.val();
+                if (selectedCollege !== null && selectedDepartment !== null &&
+                    selectedYear !==
+                    null) {
+                    var filteredGroups = groups.filter(function(group) {
+                        return group.college_id == selectedCollege &&
+                            group.department_id == selectedDepartment &&
+                            group.year == selectedYear;
+                    });
+                    groupsDropdown.empty();
+                    groupsDropdown.append('<option value="all">All</option>');
+                    $.each(filteredGroups, function(index, value) {
+                        groupsDropdown.append(
+                            '<option value="' + value.group_id + '">' + value
+                            .group_name +
+                            '</option>');
+                    });
+                }
+            });
+
+        });
+
+
+        $(document).ready(function() {
+
+            $(".add-btn,#visibility").on('click change', () => {
+                setTimeout(() => {
+                    $.ajax({
+                        url: "{{ route('ajax-get-colleges') }}",
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            var html =
+                                '<option value="" selected disabled>SELECT</option>';
+                            var i;
+                            for (i = 0; i < data.length; i++) {
+                                html += '<option value="' + data[i].college_id +
+                                    '">' +
+                                    data[i].college_name +
+                                    '</option>';
+                            }
+
+                            $('.colleges').map(function() {
+                                if (!$(this).val()) {
+                                    $(this).html(html);
+                                }
                             });
-                            $(".test_append_div").html(rows);
+
+                        },
+                        error: function(data) {
+                            console.log('Error:', data);
                         }
+                    })
 
-
-
-                        function openParamsModal(index) {
-                            $("#index").val(index);
-                            $("#openParamsModal" + index).modal('show');
-                        }
-
-                        function param_value_update() {
-                            var shuffle_questions;
-                            var disable_finish_button;
-                            var result_date;
-                            var index = $("#index").val();
-                            var display_result = $("input[type='radio']:checked").val();
-
-                            if ($("input[name='shuffle_questions']:checked").length > 0) {
-                                shuffle_questions = $("input[name='shuffle_questions']:checked").val();
-                            } else {
-                                shuffle_questions = 0;
+                    $.ajax({
+                        url: "{{ route('ajax-get-departments') }}",
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            var html =
+                                '<option value="" selected disabled>SELECT</option>';
+                            var i;
+                            for (i = 0; i < data.length; i++) {
+                                html += '<option value="' + data[i].department_id +
+                                    '">' + data[i].department_name +
+                                    '</option>';
                             }
-
-                            if ($("input[name='disable_finish_button']:checked").length > 0) {
-                                disable_finish_button = $("input[name='disable_finish_button']:checked").val();
-                            } else {
-                                disable_finish_button = 0;
-                            }
-
-                            if (display_result == 1) {
-                                result_date = 0;
-                            } else {
-                                result_date = $("input[name='result_date']").val();
-                            }
-
-                            console.log($("input[name='end_date_time']").val());
-
-                            $(".shuffle_ques" + index).val(shuffle_questions);
-                            $(".dis_fin_btn" + index).val(disable_finish_button);
-                            $(".re_att" + index).val($("select[name='re_attempts']").val());
-                            $(".start_test_date" + index).val($("input[name='start_date_time']").val());
-                            $(".end_test_date" + index).val($("input[name='end_date_time']").val());
-                            $(".display_result" + index).val(display_result);
-                            $(".display_result_date" + index).val(result_date);
-                            $(".icon-info" + index).hide();
-                            $(".icon-check" + index).show();
+                            $('.departments').map(function() {
+                                if (!$(this).val()) {
+                                    $(this).html(html);
+                                }
+                            });
+                        },
+                        error: function(data) {
+                            console.log('Error:', data);
                         }
+                    })
+                }, 200);
+
+            });
 
 
-                        function openNegativeModal(index) {
-                            $(".neg_body" + index).empty();
-                            var test_code = $(".test_code" + index).val();
-                            $.ajax({
-                                url: "{{ route('get-test-questions') }}",
-                                type: "GET",
-                                data: {
-                                    test_code: test_code,
-                                },
-                                success: (data) => {
-                                    $(".neg_body" + index).append(data);
-                                    $("#openNegativeMarkModal" + index).modal('show');
-                                    var existingTable = $('#negativeMarkentry' + index).DataTable();
-                                    existingTable.destroy();
-                                    $("#negativeMarkentry" + index).DataTable({
-                                        pageLength: 6,
-                                        orderable: false,
-                                        searchable: false,
-                                    });
-                                    $("th").removeClass("sorting");
-                                    $(`#negativeMarkentry${index}_length`).parent().parent().remove();
-                                },
-                                error: (xhr) => {
-                                    alert('Something went wrong!');
-                                }
-                            })
-                        }
-
-                        $(document).ready(function() {
-
-                            $.ajax({
-                                url: "{{ route('ajax-get-colleges') }}",
-                                type: "GET",
-                                dataType: "json",
-                                success: function(data) {
-                                    var html =
-                                        '<option value="" selected disabled>SELECT</option>';
-                                    var i;
-                                    for (i = 0; i < data.length; i++) {
-                                        html += '<option value="' + data[i].college_id +
-                                            '">' +
-                                            data[i].college_name +
-                                            '</option>';
-                                    }
-
-                                    $('.colleges').map(function() {
-                                        if (!$(this).val()) {
-                                            $(this).html(html);
-                                        }
-                                    });
-
-                                },
-                                error: function(data) {
-                                    console.log('Error:', data);
-                                }
-                            })
-
-                            $.ajax({
-                                url: "{{ route('ajax-get-departments') }}",
-                                type: "GET",
-                                dataType: "json",
-                                success: function(data) {
-                                    var html =
-                                        '<option value="" selected disabled>SELECT</option>';
-                                    var i;
-                                    for (i = 0; i < data.length; i++) {
-                                        html += '<option value="' + data[i].department_id +
-                                            '">' + data[i].department_name +
-                                            '</option>';
-                                    }
-                                    $('.departments').map(function() {
-                                        if (!$(this).val()) {
-                                            $(this).html(html);
-                                        }
-                                    });
-                                },
-                                error: function(data) {
-                                    console.log('Error:', data);
-                                }
-                            })
+            setTimeout(() => {
+                var selects = $("select.select-id-change");
+                selects.each(function(i, select) {
+                    $(select).select2({
+                        placeholder: "SELECT GROUPS",
+                        allowClear: true
+                    });
+                });
+            }, 200);
+            $('#changeIdButton').on('click', () => {
+                setTimeout(() => {
+                    var selects = $("select.select-id-change");
+                    selects.each(function(i, select) {
+                        $(select).select2({
+                            placeholder: "SELECT GROUPS",
+                            allowClear: true
                         });
+                    });
+                }, 1);
+            });
+
+        });
+
+        function visible_change(value) {
+            if (value == 1) {
+                $('.visibility-view').show();
+            } else {
+                $('.visibility-view').hide();
+            }
+        }
 
 
-
-                        function showSuccessPopup(message, color) {
-                            var successPopup = document.getElementById('successPopup');
-                            successPopup.style.display = 'block';
-                            successPopup.style.backgroundColor = color;
-                            $("#succ_mess").text(message);
-                            setTimeout(function() {
-                                successPopup.style.display = 'none';
-                            }, 3000);
-                        }
-
-
-                        function date_val(value) {
-                            $("#end-date").prop('min', value);
-                            $("#end-date").val("");
-                        }
-
-                        var groups = @json($groups);
-
-                        $(document).ready(function() {
-                            $('.container').on('change', '.colleges , .departments , .year', function() {
-                                var nameAttribute = $(this).attr('name');
-                                var match = nameAttribute.match(/\[([0-9]+)\]/);
-                                var newRow = $(this).parent().parent().parent().parent();
-                                var collegesDropdown = newRow.find('.colleges');
-                                var departmentsDropdown = newRow.find('.departments');
-                                var yearDropdown = newRow.find('.year');
-                                var groupsDropdown = newRow.find('.group-select');
-                                var selectedCollege = collegesDropdown.val();
-                                var selectedDepartment = departmentsDropdown.val();
-                                var selectedYear = yearDropdown.val();
-                                if (selectedCollege !== null && selectedDepartment !== null &&
-                                    selectedYear !==
-                                    null) {
-                                    var filteredGroups = groups.filter(function(group) {
-                                        return group.college_id == selectedCollege &&
-                                            group.department_id == selectedDepartment &&
-                                            group.year == selectedYear;
-                                    });
-                                    groupsDropdown.empty();
-                                    groupsDropdown.append('<option value="all">All</option>');
-                                    $.each(filteredGroups, function(index, value) {
-                                        groupsDropdown.append(
-                                            '<option value="' + value.group_id + '">' + value
-                                            .group_name +
-                                            '</option>');
-                                    });
-                                }
-                            });
-
-                        });
+        function questiontype(value) {
+            if (value == 1) {
+                $(".question-select-module").show();
+                $(".random-question-module").hide();
+            } else {
+                $(".random-question-module").show();
+                $(".question-select-module").hide();
+            }
+        }
 
 
-                        $(document).ready(function() {
-
-                            $(".add-btn,#visibility").on('click change', () => {
-                                setTimeout(() => {
-                                    $.ajax({
-                                        url: "{{ route('ajax-get-colleges') }}",
-                                        type: "GET",
-                                        dataType: "json",
-                                        success: function(data) {
-                                            var html =
-                                                '<option value="" selected disabled>SELECT</option>';
-                                            var i;
-                                            for (i = 0; i < data.length; i++) {
-                                                html += '<option value="' + data[i].college_id +
-                                                    '">' +
-                                                    data[i].college_name +
-                                                    '</option>';
-                                            }
-
-                                            $('.colleges').map(function() {
-                                                if (!$(this).val()) {
-                                                    $(this).html(html);
-                                                }
-                                            });
-
-                                        },
-                                        error: function(data) {
-                                            console.log('Error:', data);
-                                        }
-                                    })
-
-                                    $.ajax({
-                                        url: "{{ route('ajax-get-departments') }}",
-                                        type: "GET",
-                                        dataType: "json",
-                                        success: function(data) {
-                                            var html =
-                                                '<option value="" selected disabled>SELECT</option>';
-                                            var i;
-                                            for (i = 0; i < data.length; i++) {
-                                                html += '<option value="' + data[i].department_id +
-                                                    '">' + data[i].department_name +
-                                                    '</option>';
-                                            }
-                                            $('.departments').map(function() {
-                                                if (!$(this).val()) {
-                                                    $(this).html(html);
-                                                }
-                                            });
-                                        },
-                                        error: function(data) {
-                                            console.log('Error:', data);
-                                        }
-                                    })
-                                }, 200);
-
-                            });
+        function solution_show(val) {
+            if (val.value == 3 && val.checked) {
+                $("#solution_show_date").show();
+                $("#solution-date").prop('required', true)
+            } else {
+                $("#solution_show_date").hide();
+                $("#solution-date").prop('required', false)
+            }
+        }
+    </script>
 
 
-                            setTimeout(() => {
-                                var selects = $("select.select-id-change");
-                                selects.each(function(i, select) {
-                                    $(select).select2({
-                                        placeholder: "SELECT GROUPS",
-                                        allowClear: true
-                                    });
-                                });
-                            }, 200);
-                            $('#changeIdButton').on('click', () => {
-                                setTimeout(() => {
-                                    var selects = $("select.select-id-change");
-                                    selects.each(function(i, select) {
-                                        $(select).select2({
-                                            placeholder: "SELECT GROUPS",
-                                            allowClear: true
-                                        });
-                                    });
-                                }, 1);
-                            });
-
-                        });
-
-                        function visible_change(value) {
-                            if (value == 1) {
-                                $('.visibility-view').show();
-                            } else {
-                                $('.visibility-view').hide();
-                            }
-                        }
-
-
-                        function questiontype(value) {
-                            if (value == 1) {
-                                $(".question-select-module").show();
-                                $(".random-question-module").hide();
-                            } else {
-                                $(".random-question-module").show();
-                                $(".question-select-module").hide();
-                            }
-                        }
-
-
-                        function solution_show(val) {
-                            if (val.value == 3 && val.checked) {
-                                $("#solution_show_date").show();
-                                $("#solution-date").prop('required', true)
-                            } else {
-                                $("#solution_show_date").hide();
-                                $("#solution-date").prop('required', false)
-                            }
-                        }
-                    </script>
-
-
-                @endsection
+@endsection

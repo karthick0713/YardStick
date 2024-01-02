@@ -56,135 +56,6 @@ class ManageTestController extends Controller
     }
 
 
-    // public function save_common_test(Request $request)
-    // {
-
-    //     $validator = Validator::make($request->all(), [
-    //         'test_title' => 'required',
-    //         'skills' => 'required',
-    //         'category' => 'required',
-    //         'visibility' => 'required',
-    //         'duration' => 'required',
-    //         'marks' => 'required',
-    //         'pass_percentage' => 'required',
-    //         'shuffle_questions' => 'required',
-    //         'restrict_attempts' => 'required',
-    //         'disable_finish_button' => 'required',
-    //         'enable_question_list' => 'required',
-    //         'hide_solutions' => 'required',
-    //         'show_leaderboard' => 'required',
-    //         'schedule_type' => 'required',
-    //         'test_assigned_to' => 'required',
-    //         'start_date' => 'required|date',
-    //         'end_date' => 'required|date',
-    //         'start_time' => 'required',
-    //         'end_time' => 'required',
-    //         'difficulty_questions' => 'required|array'
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         Session::flash('error', $validator->errors());
-    //         return redirect()->route('manage-test');
-    //     }
-
-    //     $test_code = $this->generate_random_code();
-
-    //     $data = [
-    //         'test_code' => $test_code,
-    //         'title' => $request->input('test_title'),
-    //         'test_type' => 1,
-    //         'skills_id' => $request->input('skills'),
-    //         'category' => $request->input('category'),
-    //         'visibility' => $request->input('visibility'),
-    //         'duration' => $request->input('duration'),
-    //         'marks' => $request->input('marks'),
-    //         'pass_percentage' => $request->input('pass_percentage'),
-    //         'shuffle_questions' => $request->input('shuffle_questions'),
-    //         'restrict_attempts' => $request->input('restrict_attempts'),
-    //         'disable_finish_button' => $request->input('disable_finish_button'),
-    //         'enable_question_list_view' => $request->input('enable_question_list'),
-    //         'hide_solutions' => $request->input('hide_solutions'),
-    //         'show_leaderboard' => $request->input('show_leaderboard'),
-    //         'schedule_type' => $request->input('schedule_type'),
-    //         'test_assigned_to' => $request->input('test_assigned_to'),
-    //         'start_date' => $request->input('start_date'),
-    //         'end_date' => $request->input('end_date'),
-    //         'start_time' => $request->input('start_time'),
-    //         'end_time' => $request->input('end_time'),
-    //         'created_at' => now(),
-    //         'updated_at' => now()
-    //     ];
-
-    //     $val = DB::table('test_creation')->insert($data);
-
-    //     $question_code = DB::table('question_banks')
-    //         ->select('question_code', 'difficulties_id')
-    //         ->where('skills_id', $request->input('skills'))
-    //         ->where('category', $request->input('category'))
-    //         ->where('is_active', 1)
-    //         ->where('trash_key', 1)
-    //         ->get()
-    //         ->toArray();
-    //     $array_data = [];
-    //     foreach ($request->input('difficulty_id') as $key => $diff) {
-    //         foreach ($question_code as $qc) {
-    //             if ($qc->difficulties_id == $diff) {
-    //                 $array_data[$diff][] = $qc;
-    //             }
-    //         }
-    //     }
-
-    //     foreach ($request->input('difficulty_id') as $key => $dif) {
-
-    //         if (isset($array_data[$dif])) {
-    //             $questions = $array_data[$dif];
-    //             shuffle($questions);
-
-    //             $selected_questions = array_slice($questions, 0, $request->input('difficulty_questions')[$key]);
-
-    //             $selected_question_codes = array_map(function ($question) {
-    //                 return $question->question_code;
-    //             }, $selected_questions);
-
-    //             $diff_data[] = [
-    //                 'test_code' => $test_code,
-    //                 'difficulty_id' => $dif,
-    //                 'question_count' => $request->input('difficulty_questions')[$key],
-    //                 'test_questions' => implode(',', $selected_question_codes),
-    //                 'created_at' => now(),
-    //                 'updated_at' => now()
-    //             ];
-    //         }
-    //     }
-
-    //     $in = DB::table('test_creation_difficulty_wise_count')->insert($diff_data);
-
-    //     if ($request->input('visibility') == 1) {
-    //         $group_a = $request->input('group-a');
-    //         if (isset($group_a)) {
-    //             foreach ($group_a as $group) {
-    //                 $ins_data[] = [
-    //                     'test_code' => $test_code,
-    //                     'college_id' => $group['colleges'],
-    //                     'department_id' => $group['departments'],
-    //                     'year' => $group['year'],
-    //                     'groups_id' => implode(',', $group['groups']),
-    //                     'created_at' => now(),
-    //                     'updated_at' => now(),
-    //                 ];
-    //             }
-    //         }
-    //     }
-
-    //     $grp = DB::table('test_create_for_groups')->insert($ins_data);
-
-    //     if ($in) {
-    //         Session::flash('success', 'Test Created Successfully!');
-    //         return redirect()->route('manage-test');
-    //     }
-    // }
-
-
     public function get_test_details()
     {
         $tests = DB::table('test_creation')
@@ -365,11 +236,17 @@ class ManageTestController extends Controller
         foreach ($question_code as $key => $qc) {
             $questions = DB::table('question_banks')->where('question_code', $qc)->get();
             foreach ($questions as  $que) {
+
+                if ($que->category == 3) {
+                    $questions_word = $que->title;
+                } else {
+                    $questions_word = $que->questions;
+                }
                 echo '
                 <tr>
                 <td>' . ($key + 1) . '.</td>
                 <td>' . $que->question_code . '</td>
-                <td>' . $que->questions . '</td>
+                <td>' . $questions_word . '</td>
                 </tr>
                 ';
             }
@@ -397,6 +274,8 @@ class ManageTestController extends Controller
                 'title' => $request->input('test_title'),
                 'test_type' => $request->input('question_type'),
                 'practice_status' => $request->input('practice_status'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
 
             $value = DB::table('test_creation')->insert($data);
@@ -427,6 +306,7 @@ class ManageTestController extends Controller
                 'test_code' => $test_code,
                 'title' => $request->input('test_title'),
                 'test_type' => $request->input('question_type'),
+                'practice_status' => $request->input('practice_status'),
             ];
 
             $values = DB::table('test_creation')->insert($test_data);
@@ -434,6 +314,8 @@ class ManageTestController extends Controller
             $section_name = $request->input('rand_section_name');
 
             $data = [];
+
+            $remove_quest = [];
             $sec_duration = explode(',', $request->input('category_duration'));
             foreach ($section_name as $key => $s_name) {
                 $category = $request->input('category')[$key];
@@ -464,13 +346,14 @@ class ManageTestController extends Controller
                         ->whereIn('skills_id', $skills)
                         ->whereIn('topics_id', $topics)
                         ->where('difficulties_id', $value)
+                        ->whereNotIn('question_banks.question_code', $remove_quest)
                         ->inRandomOrder()
                         ->take($count)
                         ->get();
 
                     $question_code = $questions->pluck('question_code')->toArray();
                     $imp_questions = implode(',', $question_code);
-
+                    $remove_quest[] = $imp_questions;
                     $section_data['questions'][$diff] = $imp_questions;
                 }
                 $data[] = array_merge($section_data['datas'], $section_data['questions']);

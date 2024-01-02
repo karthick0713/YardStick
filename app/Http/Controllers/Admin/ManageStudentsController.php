@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Str;
 
 class ManageStudentsController extends Controller
 {
@@ -49,6 +50,7 @@ class ManageStudentsController extends Controller
 
     public function add_students(Request $request)
     {
+
         $validator =  Validator::make($request->all(), [
             'college' =>  'required|integer',
             'department' =>  'required|integer',
@@ -67,7 +69,7 @@ class ManageStudentsController extends Controller
 
         $skills_id = implode(',', $request->input('skills'));
 
-        $values = DB::table('master_students')->insert([
+        $data = [
             'student_name' => $request->input('student_name'),
             'register_no' => $request->input('register_no'),
             'department_id' => $request->input('department'),
@@ -77,9 +79,25 @@ class ManageStudentsController extends Controller
             'skills_id' => $skills_id,
             'year' => $request->input('year'),
             'email_id' => $request->input('email_id'),
+            'error_key' => 0,
             'created_at' => now(),
             'updated_at' => now()
-        ]);
+        ];
+
+
+        $values = DB::table('master_students')->insert($data);
+
+        // $user_data = DB::table('users')->insert([
+        //     'name' => $request->input('student_name'),
+        //     'email' => $request->input('email_id'),
+        //     'password' => bcrypt($request->input('register_no')),
+        //     'remember_token' => Str::random(60),
+        //     'role' => 3,
+        //     'created_at' => now(),
+        //     'updated_at' => now()
+        // ]);
+
+
 
         if ($values) {
             Session::flash('success', 'Student Added Successfully !');
@@ -634,6 +652,7 @@ class ManageStudentsController extends Controller
             'semester' => $request->input('semester'),
             'created_at' => now(),
             'updated_at' => now(),
+            'error_key' => 0
         ];
         $groupId = DB::table('student_group')->insertGetId($data);
 

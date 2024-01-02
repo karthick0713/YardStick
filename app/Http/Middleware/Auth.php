@@ -10,7 +10,7 @@ class Auth
 
     public function handle(Request $request, Closure $next)
     {
-        if (session('userToken') != null) {
+        if (session('userId') != null) {
             return $next($request);
         } else {
             return redirect()->route('login');

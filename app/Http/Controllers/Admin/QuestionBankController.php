@@ -1057,8 +1057,9 @@ class QuestionBankController extends Controller
                         'master_categories.category_name',
                         'master_difficulties.difficulty_name'
                     )->where('question_banks.trash_key', 1)
-                    ->whereNotIn('question_banks.question_code', explode(',', $imp_var));
-                // ->orWhereNull('question_banks.question_code');
+                    ->whereNotIn('question_banks.question_code', explode(',', $imp_var))
+                    ->where('question_banks.saving_status', 1)
+                    ->where('question_banks.is_active', 1);
 
                 $questionsField = ($category == 3) ? 'question_banks.title as questions' : 'question_banks.questions as questions';
                 $query->addSelect(DB::raw($questionsField));
@@ -1101,7 +1102,10 @@ class QuestionBankController extends Controller
                         'master_skills.skill_name',
                         'master_categories.category_name',
                         'master_difficulties.difficulty_name'
-                    )->where('question_banks.trash_key', 1);
+                    )->where('question_banks.trash_key', 1)
+                    ->where('question_banks.saving_status', 1)
+                    ->where('question_banks.is_active', 1);
+
 
                 $questionsField = ($category == 3) ? 'question_banks.title as questions' : 'question_banks.questions as questions';
                 $query->addSelect(DB::raw($questionsField));

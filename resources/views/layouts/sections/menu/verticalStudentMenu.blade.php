@@ -17,6 +17,10 @@
     </div>
     <br>
 
+    <div>
+        <h5 class="admin-check">STUDENT</h5>
+    </div>
+
     {{-- <div class="menu-inner-shadow"></div> --}}
 
     <ul class="menu-inner py-1">

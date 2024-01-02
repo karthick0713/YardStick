@@ -89,24 +89,32 @@
                             <label for="select-year">SELECT YEAR:</label>
                             <select name="" class="form-control" id="select-year" disabled>
                                 <option value="">SELECT</option>
-                                <option value="1">1st Year</option>
-                                <option value="2">2nd Year</option>
-                                <option value="3">3rd Year</option>
-                                <option value="4">4th Year</option>
+                                <option value="1" {{ $group_data->year == 1 ? 'selected' : '' }}>1st Year</option>
+                                <option value="2" {{ $group_data->year == 2 ? 'selected' : '' }}>2nd Year</option>
+                                <option value="3" {{ $group_data->year == 3 ? 'selected' : '' }}>3rd Year</option>
+                                <option value="4" {{ $group_data->year == 4 ? 'selected' : '' }}>4th Year</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="select-semester">SELECT SEMESTER:</label>
                             <select name="" class="form-control" id="select-semester" disabled>
                                 <option value="">SELECT</option>
-                                <option value="1">1st Semester</option>
-                                <option value="2">2nd Semester</option>
-                                <option value="3">3rd Semester</option>
-                                <option value="4">4th Semester</option>
-                                <option value="5">5th Semester</option>
-                                <option value="6">6th Semester</option>
-                                <option value="7">7th Semester</option>
-                                <option value="8">8th Semester</option>
+                                <option value="1" {{ $group_data->semester == 1 ? 'selected' : '' }}>1st Semester
+                                </option>
+                                <option value="2" {{ $group_data->semester == 2 ? 'selected' : '' }}>2nd Semester
+                                </option>
+                                <option value="3" {{ $group_data->semester == 3 ? 'selected' : '' }}>3rd Semester
+                                </option>
+                                <option value="4" {{ $group_data->semester == 4 ? 'selected' : '' }}>4th Semester
+                                </option>
+                                <option value="5" {{ $group_data->semester == 5 ? 'selected' : '' }}>5th Semester
+                                </option>
+                                <option value="6" {{ $group_data->semester == 6 ? 'selected' : '' }}>6th Semester
+                                </option>
+                                <option value="7" {{ $group_data->semester == 7 ? 'selected' : '' }}>7th Semester
+                                </option>
+                                <option value="8" {{ $group_data->semester == 8 ? 'selected' : '' }}>8th Semester
+                                </option>
                             </select>
                         </div>
                     </div>

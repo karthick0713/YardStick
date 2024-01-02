@@ -362,7 +362,7 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <table id="" class="table table-stripped table-responsive">
+                        <table id="" class="table  table-striped table-bordered">
                             <tbody class="select-body">
                             </tbody>
                         </table>

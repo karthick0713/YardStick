@@ -985,14 +985,15 @@
                     filename: `index${foundLanguage.extension}`,
                 },
                 success: function(data) {
-                    if (data.stdout != null) {
+                    if (data.stderr == null) {
                         $("#code-output").removeClass('fw-bold text-danger');
                         $("#code-output").val("");
                         $("#code-output").val(data.stdout);
                     } else {
                         $("#code-output").addClass('fw-bold text-danger');
                         $("#code-output").val("");
-                        $("#code-output").val(data.stdout);
+                        $("#code-output").val(data.stderr);
+                        console.log(data.stderr);
                     }
                 },
                 error: function(data) {

@@ -56,65 +56,7 @@
         </li>
 
         <!-- User -->
-        <li class="nav-item navbar-dropdown dropdown-user dropdown">
-            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                <div class="avatar avatar-online">
-                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
-                </div>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar avatar-online">
-                                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt
-                                        class="w-px-40 h-auto rounded-circle">
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <span class="fw-semibold d-block">John Doe</span>
-                                <small class="text-muted">Admin</small>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <div class="dropdown-divider"></div>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <i class="bx bx-user me-2"></i>
-                        <span class="align-middle">My Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <i class='bx bx-cog me-2'></i>
-                        <span class="align-middle">Settings</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <span class="d-flex align-items-center align-middle">
-                            <i class="flex-shrink-0 bx bx-credit-card me-2 pe-1"></i>
-                            <span class="flex-grow-1 align-middle">Billing</span>
-                            <span
-                                class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <div class="dropdown-divider"></div>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <i class='bx bx-power-off me-2'></i>
-                        <span class="align-middle">Log Out</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
+       
         <!--/ User -->
     </ul>
 </div>
@@ -125,7 +67,7 @@
 {{-- </nav> --}}
 
 <style>
-    .contents{
+    .contents {
         justify-content: space-evenly;
     }
 </style>
@@ -135,44 +77,102 @@
 
             <div class="d-flex contents">
                 @if (!isset($navbarHideToggle))
-                <div
-                class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0{{ isset($menuHorizontal) ? ' d-xl-none ' : '' }} {{ isset($contentNavbar) ? ' d-xl-none ' : '' }}">
-                <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-                    <i class="bx bx-menu bx-sm"></i>
-                </a>
-                </div>
-            @endif
+                    <div
+                        class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0{{ isset($menuHorizontal) ? ' d-xl-none ' : '' }} {{ isset($contentNavbar) ? ' d-xl-none ' : '' }}">
+                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                            <i class="bx bx-menu bx-sm"></i>
+                        </a>
+                    </div>
+                @endif
 
-            <div class="col-md-6">
-                <span>
-                    @php
-                        if ($sub_heading) {
-                            $values = ' | ' . $sub_heading;
-                        } else {
-                            $values = '';
-                        }
-                    @endphp
-                    <h4 class="navbar-title fw-bold">
+                <div class="col-md-6 mt-3">
+                    <span>
+                        @php
+                            if ($sub_heading) {
+                                $values = ' | ' . $sub_heading;
+                            } else {
+                                $values = '';
+                            }
+                        @endphp
+                        <h4 class="navbar-title fw-bold">
 
-                        {{-- header title --}}
-                        
-                            @if($heading != "Dashboard")  
-                                <i class='bx bx-left-arrow-alt' onclick="back()"></i>
+                            {{-- header title --}}
+
+                            @if ($heading != 'Dashboard')
+                                <i class='bx bx-left-arrow-alt' onclick="window.history.back()"></i>
                             @endif
                             {{ $heading . $values }}
-                    </h4>
-                </span>
-            </div>
-           
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <i class="bx-notifi-menu bx bx-bell me-2 mx-3"></i>
-                <div class="avatar avatar-online mx-3">
-                    <img height="35" width="35" src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                        </h4>
+                    </span>
                 </div>
-                
+
+                <div class="col-md-6 d-flex justify-content-end align-items-center">
+                    <i class="bx-notifi-menu bx bx-bell me-2 mx-3"></i>
+                    <div class="nav-item navbar-dropdown dropdown-user dropdown">
+                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
+                            data-bs-toggle="dropdown">
+                            <div class="avatar avatar-online">
+                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt
+                                    class="w-px-40 h-auto rounded-circle">
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="javascript:void(0);">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar avatar-online">
+                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt
+                                                    class="w-px-40 h-auto rounded-circle">
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <span class="fw-semibold d-block">{{ Session::get('userName') }}</span>
+                                            <small class="text-muted">
+                                                @php
+                                                    if (Session::get('role') == 1) {
+                                                        echo 'Admin';
+                                                    } elseif (Session::get('role') == 3) {
+                                                        echo 'Student';
+                                                    }
+                                                @endphp
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            @php
+                                if (Session::get('role') == 1) {
+                                    $url = 'admin/profile';
+                                } elseif (Session::get('role') == 3) {
+                                    $url = 'student/profile';
+                                }
+                            @endphp
+                            <li>
+                                <a class="dropdown-item" href="{{ url($url) }}">
+                                    <i class="bx bx-user me-2"></i>
+                                    <span class="align-middle">My Profile</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('logout') }}">
+                                    <i class='bx bx-power-off me-2'></i>
+                                    <span class="align-middle">Log Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
 </header>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

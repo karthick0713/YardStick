@@ -46,6 +46,7 @@ class ManageCourseController extends Controller
     public function get_test_questions(Request $request)
     {
         $test_code = $request->input('test_code');
+        $index = $request->input('index');
         $tests = DB::table('test_creation')->where('test_code', $test_code)->first();
         if ($tests->test_type == 1) {
             $questions = DB::table('test_section_wise_questions')->where('test_code', $test_code)->get();
@@ -57,7 +58,11 @@ class ManageCourseController extends Controller
             $val_ques = explode(',', $imp_questions);
             foreach ($val_ques as $vq) {
                 $que = DB::table('question_banks')->where('question_code', $vq)->first();
-                $words = str_word_count($que->questions, 1);
+                if ($que->category == 3) {
+                    $words = str_word_count(strip_tags($que->title), 1);
+                } else {
+                    $words = str_word_count(strip_tags($que->questions), 1);
+                }
                 $truncated_questions = implode(' ', array_slice($words, 0, 50));
 
                 if (count($words) > 50) {
@@ -68,13 +73,14 @@ class ManageCourseController extends Controller
                 <td style="width: 20% !important">' . $que->question_code . '</td>
                 <td style="width: 60% !important">' . $truncated_questions  . '</td>
                 <td style="width: 20% !important">
-                <input type="number" name="negative_marks[]" class="form-control" value="0">
-                <input type="hidden" name="question_code[]" class="form-control" value="' . $que->question_code . '">
+                <input type="number" name="negative_marks[]"  class="form-control negative_marks' . $index . '" >
                 </td>
                 </tr>
                 ';
             }
         } else {
+
+
             $questions = DB::table('test_section_wise_questions')->where('test_code', $test_code)->get();
             $easy_questions = null;
             $medium_questions = null;
@@ -90,10 +96,14 @@ class ManageCourseController extends Controller
             $all_questions = rtrim($easy_questions . $medium_questions . $hard_questions . $very_hard_questions, ',');
             $imploded_all_questions = implode(',', explode(',', $all_questions));
             $val_ques = explode(',', $imploded_all_questions);
-            foreach ($val_ques as $vq) {
+            foreach ($val_ques as $v => $vq) {
 
                 $que = DB::table('question_banks')->where('question_code', $vq)->first();
-                $words = str_word_count($que->questions, 1);
+                if ($que->category == 3) {
+                    $words = str_word_count(strip_tags($que->title), 1);
+                } else {
+                    $words = str_word_count(strip_tags($que->questions), 1);
+                }
                 $truncated_questions = implode(' ', array_slice($words, 0, 50));
 
                 if (count($words) > 50) {
@@ -102,19 +112,20 @@ class ManageCourseController extends Controller
                 echo '
                 <tr>
                 <td style="width: 20% !important">' . $que->question_code . '</td>
-                <td style="width: 60% !important">' . $truncated_questions  . '</td>
+                <td style="width: 60% !important">' . ($truncated_questions)  . '</td>
                 <td style="width: 20% !important">
-                <input type="number" name="negative_marks[]" class="form-control" value="0">
-                <input type="hidden" name="question_code[]" class="form-control" value="' . $que->question_code . '">
-                </td>
+    <input type="number" name="negative_marks[]"  class="form-control negative_marks' . $index . '" value="0" >
+    </td>
                 </tr>
                 ';
             }
         }
     }
 
+
     public function save_course(Request $request)
     {
+
         $data = [
             'course_title' => $request->input('course_name'),
             'validity_from' => $request->input('validity_from'),
@@ -144,6 +155,7 @@ class ManageCourseController extends Controller
         }
 
         $test_code =  $request->input('test_code');
+        $negative_marks = $request->input('input_negative_marks');
 
         if (isset($test_code)) {
             foreach ($test_code as $key => $tc) {
@@ -163,7 +175,25 @@ class ManageCourseController extends Controller
             }
 
             DB::table('course_test_parameters')->insert($up_data);
+
+
+            if (isset($negative_marks)) {
+                foreach ($negative_marks as $k => $neg) {
+                    $neg_data[] = [
+                        'test_code' => $tc,
+                        'course_id' => $course_id,
+                        'question_codes' => $request->input('input_question_code')[$k],
+                        'negative_marks' => $neg,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+
+                DB::table('course_negative_marks')->insert($neg_data);
+            }
         }
+
+
 
         Session::flash('success', 'Courses Added Successfully..!');
         return redirect()->route('manage-courses');
@@ -171,8 +201,6 @@ class ManageCourseController extends Controller
 
     public function get_course_details(Request $request)
     {
-
-
 
         $courses = DB::table('course_creation')
             ->where('is_active', 1)

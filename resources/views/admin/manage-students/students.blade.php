@@ -516,11 +516,11 @@
                         },
                         success: function(response) {
                             console.log(response);
-                            location.reload();
+                            // location.reload();
                         },
                         error: function(xhr) {
                             console.error(xhr.responseText);
-                            location.reload();
+                            // location.reload();
                         }
                     });
                 });

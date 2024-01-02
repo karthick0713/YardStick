@@ -18,9 +18,14 @@ $controller_path = 'App\Http\Controllers';
 // Main Page Route
 
 // login and register
+
+
 Route::get('', function () {
     return view('login-view');
 })->name('login');
+
+
+
 Route::post('/login-submit', $controller_path . '\Login_controller@login')->name('login-submit');
 Route::get('/logout', $controller_path . '\Login_controller@logout')->name('logout');
 
@@ -199,6 +204,10 @@ Route::group(['middleware' => 'auth'], function () {
     // Student Profile
     Route::get('/student/profile', $controller_path . '\Students\StudentProfileController@index')->name('student-profile');
     Route::get('/student/edit-profile', $controller_path . '\Students\StudentProfileController@editProfile')->name('student-profile');
+
+
+    Route::get('/student/test-overview/{id}', $controller_path . '\Students\StudentTestController@test_overview')->name('test-overview');
+
 
 
     // Student Report
