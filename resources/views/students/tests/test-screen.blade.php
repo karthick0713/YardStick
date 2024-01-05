@@ -266,10 +266,7 @@
                         <div class="container-fluid">
                             <!-- header bar -->
                             <div class="header-bar d-flex">
-                                <h6 class="m-0 mx-2 py-2">SECTION</h6>
-                                <button type="button" class="btn btn-success ms-3 py-1 px-5">
-                                    Test
-                                </button>
+
                             </div>
                             <!-- end of header bar -->
                             <div class="question-wrapper bg-white py-3 px-4 border-bottom">
@@ -350,20 +347,29 @@
                 });
             });
 
-            // localStorage.clear();
-
             var questionsData;
             var currentQuestionIndex = 0;
             var total_duration;
+            var totalSeconds = localStorage.getItem("remainingSeconds");
+            var timer;
 
             $(document).ready(function() {
+
+                $(".clear-response").on('click', function() {
+                    $("input[type='radio']").prop('checked', false);
+                });
+
+                if (localStorage.getItem('section') === null) {
+                    localStorage.setItem('section', 0)
+                }
+
+
                 $("#layout-menu").toggleClass("toggled");
 
                 document.getElementsByClassName('fullscreen-btn')[0].addEventListener('click', function() {
                     toggleFullScreen();
                 });
 
-                // $(".fullscreen-btn").trigger('click');
 
                 function toggleFullScreen() {
                     const element = document.getElementById('content-to-fullscreen');
@@ -377,10 +383,13 @@
                     }
                 }
 
-                if (localStorage.getItem("currentQuestionIndex")) {
-                    currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex"));
+                if (localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
+                        'section'))) {
+                    currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
+                        'section')));
                     setTimeout(() => {
-                        $(".question" + localStorage.getItem("currentQuestionIndex")).addClass('active');
+                        $(".question" + localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
+                            'section'))).addClass('active');
                     }, 200);
                 }
 
@@ -450,25 +459,21 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        success: function(data) {
-                            console.log(data);
-                        }
+                        success: function(data) {}
                     })
 
                     $(".question" + currentQuestionIndex).removeClass('active');
                     currentQuestionIndex++;
                     $(".question" + currentQuestionIndex).addClass('active');
 
-                    localStorage.setItem("currentQuestionIndex", currentQuestionIndex);
+                    localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                        currentQuestionIndex);
 
                     if (currentQuestionIndex < questionsData.length) {
                         showQuestion(currentQuestionIndex);
-                    } else {
-                        console.log("End of the test");
-                    }
+                    } else {}
                 }
 
-                var totalSeconds = localStorage.getItem("remainingSeconds");
 
                 if (totalSeconds) {
                     startTimer(parseInt(totalSeconds));
@@ -487,7 +492,6 @@
                         }
                     });
                 }
-                var timer;
 
                 function startTimer(initialSeconds) {
                     timer = setInterval(function() {
@@ -510,6 +514,8 @@
                     }, 1000);
                 }
 
+
+
                 $.ajax({
                     url: "{{ route('fetch-test-questions') }}",
                     type: "GET",
@@ -518,16 +524,22 @@
                         course_id: {{ base64_decode(request()->segment(2)) }},
                     },
                     success: function(data) {
-                        // console.log(data[0].test_questions[0]);
-                        questionsData = data[1];
+                        $(".sec_name").text(data[0].sections[localStorage.getItem("section")]);
+                        $(data[0].sections).each(function(i, e) {
+                            $(".header-bar").append(
+                                `<button type="button" value="${i}" onclick="save_session(this.value)" class="btn section-button btn-success ms-3 py-1 px-5">${e}</button>`
+                            );
+                        })
+                        questionsData = data[1][localStorage.getItem("section")];
+                        var len_question = questionsData;
                         var html = "";
-                        for (var i = 1; i <= questionsData.length; i++) {
+                        for (var i = 1; i <= len_question.length; i++) {
                             html += `<li><span class="question${i-1}">${i}</span></li>`;
                         }
 
                         $('.quiz_number').append(html);
 
-                        $(".sec_name").text(data[0].sections);
+
                         showQuestion(currentQuestionIndex);
                         $(".save-next").click(function() {
                             saveAndNext();
@@ -540,24 +552,31 @@
                             $("#student_test_entry_id").val(get_id);
                         }
                     }
+
+
                 });
 
 
-                $(".clear-response").on('click', function() {
-                    $("input[type='radio']").prop('checked', false);
-                });
+
 
                 $(".submit-test").on('click', function() {
-                    if (confirm('Are you sure you want to submit?')) {
-                        localStorage.clear();
-                        clearInterval(timer);
-                        localStorage.removeItem("remainingSeconds");
-                        totalSeconds = 00;
-                        $("#hours").text("00");
-                        $("#minutes").text("00");
-                        $("#seconds").text("00");
-                        window.location.href = "{{ route('student-dashboard') }}";
+
+                    var userResponse = window.prompt("Type Your Register No Submit the Test");
+                    if (userResponse !== null) {
+                        var lowerCaseResponse = userResponse;
+                        if (lowerCaseResponse == "{{ session('userId') }}") {
+                            localStorage.clear();
+                            clearInterval(timer);
+                            localStorage.removeItem("remainingSeconds");
+                            totalSeconds = 00;
+                            $("#hours").text("00");
+                            $("#minutes").text("00");
+                            $("#seconds").text("00");
+                            window.location.href = "{{ route('student-dashboard') }}";
+                        }
                     }
+
+
                 })
 
             });
@@ -582,6 +601,11 @@
                         $("#student_test_entry_id").val(get_id);
                     }
                 });
+            }
+
+            function save_session(value) {
+                localStorage.setItem('section', value);
+                location.reload();
             }
         </script>
 

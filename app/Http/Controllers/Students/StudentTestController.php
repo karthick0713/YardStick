@@ -52,17 +52,19 @@ class StudentTestController extends Controller
 
             $sectionQuestions = DB::table('test_section_wise_questions')->where('test_code', $questions->test_code)->get();
 
-            foreach ($sectionQuestions as $key => $sectionQuestion) {
+            foreach ($sectionQuestions as $sectionQuestion) {
                 $sections[] = $sectionQuestion->section_name;
                 $testQuestions[] = explode(',', $sectionQuestion->common_test_question);
             }
 
-            foreach ($testQuestions as $t) {
+            // dd($testQuestions);
+
+            foreach ($testQuestions as $key => $t) {
                 foreach ($t as $questionCode) {
                     $ques = DB::table('question_banks')->where('question_code', $questionCode)->first();
                     if ($ques && $ques->category == 2) {
                         $mcq = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->get()->toArray();
-                        $questionsData[] = [
+                        $questionsData[$key][] = [
                             'question_for_test' => $ques->questions,
                             'question_marks' => $ques->marks,
                             'mcq_options' => $mcq,
@@ -70,6 +72,8 @@ class StudentTestController extends Controller
                     }
                 }
             }
+
+
             $data = [
                 'sections' => $sections,
                 'test_questions' => $testQuestions,
@@ -91,12 +95,12 @@ class StudentTestController extends Controller
                     }
                 }
             }
-            foreach ($testQuestions as $questionCode) {
+            foreach ($testQuestions as $key => $questionCode) {
                 $ques = DB::table('question_banks')->where('question_code', $questionCode)->first();
 
                 if ($ques && $ques->category == 2) {
                     $mcq = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->get()->toArray();
-                    $questionsData[] = [
+                    $questionsData[$key][] = [
                         'question_for_test' => $ques->questions,
                         'question_marks' => $ques->marks,
                         'mcq_options' => $mcq,
