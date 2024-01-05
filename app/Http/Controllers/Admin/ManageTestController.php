@@ -79,7 +79,7 @@ class ManageTestController extends Controller
                 $mediumCount += $record->medium ? count(explode(',', $record->medium)) : 0;
                 $hardCount += $record->hard ? count(explode(',', $record->hard)) : 0;
                 $veryHardCount += $record->very_hard ? count(explode(',', $record->very_hard)) : 0;
-                $common_test_questionCount += count(explode(',', $record->common_test_question));
+                $common_test_questionCount   += count(explode(',', $record->common_test_question));
                 $total_duration += $record->duration;
                 $total_sections .= $record->section_name . ',';
                 $section_count = count(explode(',', $total_sections)) - 1;

@@ -30,8 +30,10 @@ class StudentController extends Controller
                 ->get();
             foreach ($course_id as $c_id) {
                 $courses[] = DB::table('course_creation')->where('course_id', $c_id->course_id)->first();
+                $course_params[] = DB::table('course_test_parameters')->where('course_id', $c_id->course_id)->count();
             }
         }
-        return view('students.student-dashboard', compact('heading', 'sub_heading', 'courses'));
+
+        return view('students.student-dashboard', compact('heading', 'sub_heading', 'courses', 'course_params'));
     }
 }

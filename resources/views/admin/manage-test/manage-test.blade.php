@@ -67,12 +67,7 @@
                 </table>
             </div>
         </div>
-        {{-- pagenations --}}
-        <div class="pagination-flex-container justify-content-end mt-5" id="pagination">
-            <button class="page-link btn-sm" id="previous" disabled>Previous</button>
-            <div id="page-numbers" class="pagination-flex-container"></div>
-            <button class="page-link btn-sm" id="next">Next</button>
-        </div>
+
     </div>
 
     {{-- View test details --}}

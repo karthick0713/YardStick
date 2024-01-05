@@ -811,13 +811,40 @@
         function select_questions() {
             var index = $("#index").val();
             var checkedValues = [];
-            $(`.select_question${index}:checked`).each(function() {
-                checkedValues.push($(this).val());
+
+            var table = $("#example" + index).DataTable();
+
+            console.log(table);
+
+            table.rows().nodes().each(function(row, i) {
+                var isChecked = $(row).find('td:eq(0) input[type="checkbox"]:checked').length > 0;
+                if (isChecked) {
+                    var checkboxValue = $(row).find('td:eq(0) input[type="checkbox"]').val();
+                    checkedValues.push(checkboxValue);
+                }
             });
+
             $(`#selected_questions_value${index}`).val(checkedValues);
             var localstore = localStorage.setItem(`selected_questions_value${index}`, checkedValues);
             $("#select_questions_modal" + index).modal('hide');
             showSuccessPopup("Questions Selected..!", 1500, 'success');
+        }
+
+        function store_negative_marks(index) {
+            var question_code_array = [];
+            var negativeMarksArray = [];
+
+            var table = $('#negativeMarkentry' + index).DataTable();
+
+            table.rows().data().each(function(rowData) {
+                var question_code_values = rowData[0];
+                question_code_array.push(question_code_values);
+            });
+
+            $(".input_question_code" + index).val(question_code_array);
+            $(".input_negative_marks" + index).val(negativeMarksArray);
+
+            $("#openNegativeMarkModal" + index).modal('hide');
         }
 
         var topics = @json($topics);

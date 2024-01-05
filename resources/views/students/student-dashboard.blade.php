@@ -26,8 +26,8 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
             gap: 10px;
 
             @media (max-width: 600px) {
@@ -185,40 +185,76 @@
             <div class="container mt-5">
                 <div class="grid-container">
 
-                    @foreach ($courses as $course)
+                    @foreach ($courses as $key => $course)
                         <div class="grid-item">
-                            <a href="{{ url('student/test-overview/' . $course->course_id) }}">
+                            <a href="{{ url('student/test-overview/' . base64_encode($course->course_id)) }}">
                                 <div class="card h-100">
                                     <div class="background-light card-body">
                                         <div class="text-center">
-                                            <img src="{{ url('assets/img/lang-icons/python.png') }} " width="50"
+                                            <img src="{{ asset('assets/img/lang-icons/python.png') }} " width="50"
                                                 height="50" alt="Python">
                                         </div>
                                         <div class="text-center fw-bold">
                                             {{ strtoupper($course->course_title) }}
                                         </div>
-                                        {{-- <div class="d-flex mt-3 justify-content-center">
-                                            <label class="fw-bold ms-3 mx-4 pt-2" for="">Completed</label>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                                viewBox="0 0 32 32" fill="none">
-                                                <g clip-path="url(#clip0_56_186)">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                                        d="M30.7892 9.88305C28.3868 4.08136 22.67 0 16 0C15.8777 0 15.7556 0.00137847 15.6339 0.00399755C15.5603 0.491699 15.5221 0.991118 15.5221 1.49922C15.5221 2.32313 15.6223 3.12347 15.8114 3.88907C15.8743 3.88797 15.937 3.88755 16 3.88755C21.0182 3.88755 25.3237 6.93934 27.1617 11.2881C27.7739 12.7365 28.1124 14.3287 28.1124 16C28.1124 22.6894 22.6894 28.1124 16 28.1124C13.8954 28.1124 11.916 27.5757 10.1916 26.6314C6.43496 24.5748 3.88755 20.5848 3.88755 16C3.88755 15.6609 3.90147 15.325 3.92891 14.993C2.86721 14.606 1.72088 14.3948 0.525196 14.3948C0.375494 14.3948 0.22662 14.3981 0.0785726 14.4046C0.0266044 14.9293 0 15.4614 0 16C0 22.1515 3.47153 27.4923 8.56248 30.1698C10.7844 31.3386 13.3149 32 16 32C24.8365 32 32 24.8365 32 16C32 13.8333 31.5694 11.7674 30.7892 9.88305Z"
-                                                        fill="#215D81" />
-                                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                                        d="M3.92895 14.993C4.43567 8.83625 9.54689 3.9846 15.8115 3.88907C15.6223 3.12347 15.5221 2.32313 15.5221 1.49922C15.5221 0.991118 15.5603 0.491699 15.6339 0.0039978C7.50193 0.186782 0.867372 6.43634 0.0786133 14.4046C0.226661 14.3981 0.375535 14.3948 0.525237 14.3948C1.72092 14.3948 2.86725 14.606 3.92895 14.993Z"
-                                                        fill="#215D81" />
-                                                    <path
-                                                        d="M21.8592 10.5234L14.1372 18.2634L11.1672 15.2934C11.0058 15.105 10.8072 14.952 10.5839 14.8439C10.3606 14.7359 10.1174 14.6752 9.86947 14.6656C9.62158 14.656 9.37438 14.6978 9.1434 14.7883C8.91241 14.8788 8.70263 15.016 8.52721 15.1915C8.35179 15.3669 8.21453 15.5767 8.12403 15.8076C8.03354 16.0386 7.99177 16.2858 8.00134 16.5337C8.01092 16.7816 8.07163 17.0249 8.17967 17.2482C8.28771 17.4715 8.44075 17.6701 8.62918 17.8314L12.8592 22.0794C13.0274 22.2463 13.2268 22.3782 13.4461 22.4678C13.6655 22.5574 13.9003 22.6028 14.1372 22.6014C14.6094 22.5994 15.0619 22.412 15.3972 22.0794L24.3972 13.0794C24.5659 12.9121 24.6998 12.713 24.7912 12.4937C24.8826 12.2743 24.9296 12.039 24.9296 11.8014C24.9296 11.5638 24.8826 11.3285 24.7912 11.1092C24.6998 10.8898 24.5659 10.6908 24.3972 10.5234C24.0599 10.1882 23.6037 10 23.1282 10C22.6526 10 22.1964 10.1882 21.8592 10.5234Z"
-                                                        fill="#FF8B8B" />
-                                                </g>
-                                                <defs>
-                                                    <clipPath id="clip0_56_186">
-                                                        <rect width="32" height="32" fill="white" />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-                                        </div> --}}
+                                        <div class="row mt-4 col-12">
+                                            <div class="col-6 ">
+                                                <i class="bx text-info bx-archive"></i><label class="">Total
+                                                    Tests</label>
+                                                <br>
+                                                <span class="ms-4 fw-bold">{{ $course_params[$key] }} Tests</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <i class="bx text-info bx-archive"></i><label class="">Total
+                                                    Durations</label>
+                                                <br>
+                                                <span class="ms-4 fw-bold">
+                                                    @php
+                                                        $data = DB::table('course_test_parameters')
+                                                            ->where('course_id', $course->course_id)
+                                                            ->get();
+
+                                                        $total_duration = 0;
+
+                                                        foreach ($data as $i => $d) {
+                                                            $section_durations = DB::table('test_section_wise_questions')
+                                                                ->select(DB::raw('SUM(duration) as duration'))
+                                                                ->where('test_code', $d->test_code)
+                                                                ->first();
+
+                                                            $total_duration += $section_durations->duration;
+                                                        }
+
+                                                        if ($total_duration < 60) {
+                                                            echo $total_duration . ' Mins';
+                                                        } else {
+                                                            $converted_time = date('H:i', mktime(0, $total_duration));
+                                                            echo $converted_time . ' Hours';
+                                                        }
+
+                                                    @endphp
+
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4 col-12">
+                                            <div class="col-6 ">
+                                                <i class="bx text-info bx-calendar"></i><label class="">Validity
+                                                    From
+                                                </label>
+                                                <br>
+                                                <span
+                                                    class="ms-4 fw-bold">{{ date('d-m-Y', strtotime($course->validity_from)) }}</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <i class="bx text-info bx-calendar"></i><label class="">Validity
+                                                    To</label>
+                                                <br>
+                                                <span
+                                                    class="ms-4 fw-bold">{{ date('d-m-Y', strtotime($course->validity_to)) }}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </a>

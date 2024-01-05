@@ -248,7 +248,8 @@
 
 
                         <div class="mt-5 d-flex justify-content-end">
-                            <button type="submit" class="btn background-secondary text-white">Submit</button>
+                            <button type="submit" onclick="$('form').submit()"
+                                class="btn background-secondary text-white">Submit</button>
                         </div>
 
 
