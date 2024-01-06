@@ -16,6 +16,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs/loader.js"></script>
     <style>
         * {
             --side-bar-width: 420px;
@@ -184,7 +186,7 @@
 
         @media (max-width: 480px) {
             .footer-btn .btn {
-                float: unset !important;
+                /* float: unset !important; */
                 width: 100%;
                 margin: 5px 0;
             }
@@ -196,6 +198,20 @@
             .side-bar-hide #side-bar {
                 transform: translateX(min(100% - 0px));
             }
+        }
+
+        .programming_screen {
+            background-color: #f2f2f2;
+        }
+
+        #code-editor {
+            height: 40vw;
+        }
+
+
+        #content-to-fullscreen,
+        .programming_screen {
+            display: none;
         }
     </style>
     </head>
@@ -316,7 +332,7 @@
                 </section>
                 <!-- footer -->
                 <footer>
-                    <div class="footer-btn">
+                    <div class="footer-btn ">
                         {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
                         <button type="button" class="btn btn-theme clear-response">Clear Response</button>
                         <button type="button" class="btn btn-info float-right save-next">Save & Next</button>
@@ -326,10 +342,112 @@
             </main>
         </div>
 
+        <div class="programming_screen">
+            <nav class="navbar navbar-light bg-white">
+                <div class="container">
+                    <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
+                        <h6 class="m-0 test-title"> </h6>
+                        <div class="timer">
+                            <b>Time Left</b>
+                            <span id="hours" class="badge bg-secondary">00</span> :
+                            <span id="minutes" class="badge bg-secondary">00</span> :
+                            <span id="seconds" class="badge bg-secondary">00</span>
+                        </div>
+                        <div class="mt-2 mt-md-0">
+                            <button type="button" class="btn fullscreen-btn btn-outline-info">
+                                Switch Full Screen
+                            </button>
+                            <button type="button" class="btn btn-outline-info">Pause</button>
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
+            <div>
+                <div class="header-bar d-flex">
+                    <select name="" style="width:200px;margin-left:500px" class="form-control"
+                        id="languageSelect">
+                        <option value="Select">Select</option>
+                        <option value="c">C</option>
+                        <option value="cpp">C++</option>
+                        <option value="csharp">C#</option>
+                        <option value="java">Java</option>
+                        <option value="python">Python</option>
+                    </select>
+                    <button type="button" class="btn btn-outline-info ms-3 programming_run_button">&#x23F8;
+                        Run</button>
+                    <div class="dropdown float-end ms-4">
+
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="themeDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            🎨 Theme
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+                            <li><a class="dropdown-item" href="#">Dark Theme</a></li>
+                            <li><a class="dropdown-item" href="#">Light Theme</a></li>
+                            <!-- Add more theme options as needed -->
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="">
+                    <div class="row col-12">
+                        <div class="col-4" style="height:100%">
+
+                            <div class="programming-questions">
+
+                            </div>
+
+                            <label for="" class="mt-4 fw-bold">INPUT FORMAT</label>
+                            <div class="mt-2 input-format">
+
+                            </div>
+
+                            <label for="" class="mt-4 fw-bold">OUTPUT FORMAT</label>
+                            <div class="mt-2 output-format">
+                            </div>
+
+                            <label for="" class="fw-bold mt-4"> CODE CONSTRAINTS</label>
+                            <div class="mt-2 code-constraints">
+
+                            </div>
+
+
+                        </div>
+                        <div class="col-5">
+
+                            <div id="code-editor"></div>
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <div class="col-12 footer-btn d-flex justify-content-center">
+                        {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
+                        <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
+                        <button type="button" class="btn btn-theme mx-4 verify-button">Verify</button>
+                        <button type="button" class="btn btn-info mx-4 save-next">&raquo;</button>
+
+                        <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
+                    </div>
+                </footer>
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
         </script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
@@ -337,9 +455,8 @@
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
             integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
-        </script>
+        </script> --}}
 
-        {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> --}}
         <script>
             $(function() {
                 $("#side-bar .icon").click(function() {
@@ -352,149 +469,567 @@
             var total_duration;
             var totalSeconds = localStorage.getItem("remainingSeconds");
             var timer;
+            var run_question_inputs = [];
+            var run_question_outputs = [];
+            var verify_question_inputs = [];
+            var verify_question_outputs = [];
 
             $(document).ready(function() {
 
-                $(".clear-response").on('click', function() {
-                    $("input[type='radio']").prop('checked', false);
-                });
-
-                if (localStorage.getItem('section') === null) {
-                    localStorage.setItem('section', 0)
-                }
-
-
-                $("#layout-menu").toggleClass("toggled");
-
-                document.getElementsByClassName('fullscreen-btn')[0].addEventListener('click', function() {
-                    toggleFullScreen();
-                });
-
-
-                function toggleFullScreen() {
-                    const element = document.getElementById('content-to-fullscreen');
-
-                    if (!document.fullscreenElement) {
-                        element.requestFullscreen();
-                    } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        }
-                    }
-                }
-
-                if (localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
-                        'section'))) {
-                    currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
-                        'section')));
-                    setTimeout(() => {
-                        $(".question" + localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
-                            'section'))).addClass('active');
-                    }, 200);
-                }
-
                 function showQuestion(index) {
-                    var question = questionsData[index].question_for_test;
-                    var mcqOptions = questionsData[index].mcq_options;
-                    $(".question_count").text("Question No. " + (index + 1));
-                    $(".org-marks").html(questionsData[index].question_marks)
-                    $(".question-p").html(question.replaceAll('<p><br></p>', ""));
-                    $(".Answer-options").empty();
-                    var optionsContainer = $("<div>", {
-                        class: "options-container"
-                    });
 
-                    for (var i = 0; i < mcqOptions.length; i++) {
-                        var optionIndex = i + 1;
-                        var correctOptId = mcqOptions[i].id;
-                        var optionValue = mcqOptions[i].correct_answer;
-                        var optionText = mcqOptions[i].option_answer;
-                        var optquesCode = mcqOptions[i].question_code;
+                    if (localStorage.getItem("question_category") == 2) {
 
-                        var radioElement = $("<input>", {
-                            class: "form-check-input",
-                            type: "radio",
-                            name: "option",
-                            id: "option" + optionIndex,
-                            value: btoa(correctOptId)
+
+                        var question = questionsData[index].question_for_test;
+
+
+                        var mcqOptions = questionsData[index].mcq_options;
+                        $(".question_count").text("Question No. " + (index + 1));
+                        $(".org-marks").html(questionsData[index].question_marks)
+                        $(".question-p").html(question.replaceAll('<p><br></p>', ""));
+                        $(".Answer-options").empty();
+
+                        var optionsContainer = $("<div>", {
+                            class: "options-container"
                         });
 
-                        radioElement.attr('data-quest', btoa(optquesCode));
 
-                        var labelElement = $("<label>", {
-                            class: "form-check-label",
-                            for: "option" + optionIndex
-                        });
+                        for (var i = 0; i < mcqOptions.length; i++) {
 
-                        labelElement.html(optionText.replaceAll('<p><br></p>', ""));
 
-                        optionsContainer.append($("<div>", {
-                            class: "form-check"
-                        }).append(radioElement, labelElement));
+                            var optionIndex = i + 1;
+                            var correctOptId = mcqOptions[i].id;
+                            var optionValue = mcqOptions[i].correct_answer;
+                            var optionText = mcqOptions[i].option_answer;
+                            var optquesCode = mcqOptions[i].question_code;
+
+                            var radioElement = $("<input>", {
+                                class: "form-check-input",
+                                type: "radio",
+                                name: "option",
+                                id: "option" + optionIndex,
+                                value: btoa(correctOptId)
+                            });
+
+                            radioElement.attr('data-quest', btoa(optquesCode));
+
+                            var labelElement = $("<label>", {
+                                class: "form-check-label",
+                                for: "option" + optionIndex
+                            });
+
+                            labelElement.html(optionText.replaceAll('<p><br></p>', ""));
+
+
+                            optionsContainer.append($("<div>", {
+                                class: "form-check"
+                            }).append(radioElement, labelElement));
+
+                        }
+
+                        $(".Answer-options").append(optionsContainer);
+
+
+                    } else if (localStorage.getItem("question_category") == 1) {
+
+
+                        var question = questionsData[0][index].question_for_test.questions;
+
+                        $(questionsData[0][index].test_cases).map((i, e) => {
+                            if (e.sample == 1) {
+                                run_question_inputs.push(e.input)
+                                run_question_outputs.push(e.output)
+                            }
+
+                            verify_question_inputs.push(e.input);
+                            verify_question_outputs.push(e.output);
+                        })
+
+
+                        var input_format = questionsData[0][index].question_for_test.input_format
+                        var output_format = questionsData[0][index].question_for_test.output_format
+                        var code_constraints = questionsData[0][index].question_for_test.code_constraints
+
+
+                        $(".programming-questions").html(question)
+                        $(".input-format").html(input_format)
+                        $(".output-format").html(output_format)
+                        $(".code-constraints").html(code_constraints)
+
+
                     }
 
-                    $(".Answer-options").append(optionsContainer);
+
                 }
+
+
+
 
                 function saveAndNext() {
 
-                    var selectedAnswer = $("input[name='option']:checked");
 
-                    if (selectedAnswer.length < 1) {
-                        alert("Select Any one of the Option..!");
-                        return false;
-                    }
-                    var remaiming_time = localStorage.getItem("remainingSeconds");
-                    $.ajax({
-                        url: "{{ route('save-questions-answers') }}",
-                        type: "POST",
-                        data: {
-                            test_entry_id: $("#student_test_entry_id").val(),
-                            course_id: {{ base64_decode(request()->segment(2)) }},
-                            test_code: "{{ base64_decode(request()->segment(3)) }}",
-                            question_code: atob($(selectedAnswer).attr("data-quest")),
-                            option_id: atob($(selectedAnswer).val()),
-                            user_id: "{{ session('userId') }}",
-                        },
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(data) {}
-                    })
-
-                    $(".question" + currentQuestionIndex).removeClass('active');
-                    currentQuestionIndex++;
-                    $(".question" + currentQuestionIndex).addClass('active');
-
-                    localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
-                        currentQuestionIndex);
-
-                    if (currentQuestionIndex < questionsData.length) {
-                        showQuestion(currentQuestionIndex);
-                    } else {}
-                }
+                    if (localStorage.getItem("question_category") == 2) {
 
 
-                if (totalSeconds) {
-                    startTimer(parseInt(totalSeconds));
-                    total_duration = totalSeconds / 60;
-                } else {
-                    $.ajax({
-                        url: "{{ route('get-total-duration') }}",
-                        type: "GET",
-                        data: {
-                            test_code: '{{ base64_decode(request()->segment(3)) }}'
-                        },
-                        success: function(totalDurationInMinutes) {
-                            total_duration = totalDurationInMinutes;
-                            totalSeconds = totalDurationInMinutes * 60;
-                            startTimer(totalSeconds);
+                        var selectedAnswer = $("input[name='option']:checked");
+
+
+                        if (selectedAnswer.length < 1) {
+                            alert("Select Any one of the Option..!");
+                            return false;
                         }
-                    });
+
+
+                        var remaiming_time = localStorage.getItem("remainingSeconds");
+
+                        $.ajax({
+
+
+                            url: "{{ route('save-questions-answers') }}",
+                            type: "POST",
+                            data: {
+                                test_entry_id: $("#student_test_entry_id").val(),
+                                course_id: {{ base64_decode(request()->segment(2)) }},
+                                test_code: "{{ base64_decode(request()->segment(3)) }}",
+                                question_code: atob($(selectedAnswer).attr("data-quest")),
+                                option_id: atob($(selectedAnswer).val()),
+                                user_id: "{{ session('userId') }}",
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(data) {}
+
+
+                        })
+
+                        $(".question" + currentQuestionIndex).removeClass('active');
+                        currentQuestionIndex++;
+                        $(".question" + currentQuestionIndex).addClass('active');
+
+                        localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                            currentQuestionIndex);
+
+                        if (currentQuestionIndex < questionsData.length) {
+
+                            showQuestion(currentQuestionIndex);
+
+
+                        } else {
+
+
+                        }
+
+
+
+                    } else if (localStorage.getItem("question_category") == 1) {
+
+                        currentQuestionIndex++;
+
+
+                        localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                            currentQuestionIndex);
+
+
+                        if (currentQuestionIndex < questionsData[0].length) {
+
+                            showQuestion(currentQuestionIndex);
+
+
+                        } else {
+
+
+                        }
+
+                    }
+
+
+
                 }
+
+
+
+
+
+
+
+
+                $.ajax({
+
+
+                    url: "{{ route('fetch-test-questions') }}",
+                    type: "GET",
+                    data: {
+                        test_code: "{{ base64_decode(request()->segment(3)) }}",
+                        course_id: {{ base64_decode(request()->segment(2)) }},
+                    },
+                    success: function(data) {
+
+                        localStorage.setItem('question_category', data[2][0][0]);
+
+                        $(".sec_name").text(data[0].sections[localStorage.getItem("section")]);
+
+
+                        $(data[0].sections).each(function(i, e) {
+
+                            $("#languageSelect").before(
+                                `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn section-button btn-success ms-3 py-1 px-5">${e}</button>`
+                            );
+
+                        });
+
+
+
+
+                        if (localStorage.getItem('question_category') == 1) {
+
+
+                            questionsData = data[1];
+
+                            showQuestion(currentQuestionIndex);
+
+                            $(".save-next").click(function() {
+
+                                saveAndNext();
+
+                            });
+
+
+                            $(".previous-button").click(function() {
+
+                                saveAndNext();
+
+                            });
+
+
+
+                            $(".test-title").html("<b>Programming Examination</b>");
+
+                            $(".programming_screen").show();
+
+                            $("#content-to-fullscreen").hide();
+
+
+
+                            const languages = {
+                                java: {
+                                    id: 'java',
+                                    name: 'Java',
+                                    extension: '.java'
+                                },
+                                python: {
+                                    id: 'python',
+                                    name: 'Python',
+                                    extension: '.py'
+                                },
+                                c: {
+                                    id: 'c',
+                                    name: 'C',
+                                    extension: '.c'
+                                },
+                                cpp: {
+                                    id: 'cpp',
+                                    name: 'C++',
+                                    extension: '.cpp'
+                                },
+                                csharp: {
+                                    id: 'csharp',
+                                    name: 'C#',
+                                    extension: '.cs'
+                                },
+                            }
+
+                            var codes;
+                            var editor;
+                            setTimeout(() => {
+
+
+                                require.config({
+                                    paths: {
+                                        vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs",
+                                    },
+                                });
+                                require(["vs/editor/editor.main"], function() {
+
+
+                                    var languageSelector = document.getElementById(
+                                        "languageSelect");
+                                    var codeEditor = document.getElementById("code-editor");
+                                    var initialLoad = true;
+                                    editor = monaco.editor.create(
+                                        codeEditor, {
+                                            value: `/* Type Your Code */`,
+                                            language: languageSelector.value,
+                                            theme: "vs-light",
+                                        }
+                                    );
+
+                                    codes = editor.getValue();
+
+                                    languageSelector.addEventListener("change", function() {
+                                        var selectedLanguage = this.value;
+                                        if (!initialLoad) {
+                                            var currentCode = editor.getValue();
+                                            codes = currentCode;
+                                        }
+                                        editor.getModel().dispose();
+
+                                        editor.setModel(monaco.editor.createModel(
+                                            initialLoad ? "" : currentCode,
+                                            selectedLanguage));
+
+                                        initialLoad = false;
+                                    });
+                                });
+
+
+                            }, 1000);
+
+
+                            function findLanguageById(id) {
+                                return Object.values(languages).find(lang => lang.id === id);
+                            }
+
+
+
+
+                            $(".programming_run_button").click(function() {
+
+
+                                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                                var lang = $("#languageSelect option:selected").val()
+                                    .toLowerCase();
+                                const languageIdToFind = lang;
+                                const foundLanguage = findLanguageById(languageIdToFind);
+                                var editorContent = editor.getValue();
+
+                                $.ajax({
+                                    url: "{{ route('run-code') }}",
+                                    type: "POST",
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken
+                                    },
+                                    data: {
+                                        content: editorContent,
+                                        language: foundLanguage.id,
+                                        stdin: run_question_inputs,
+                                        filename: `index${foundLanguage.extension}`,
+                                    },
+                                    success: function(data) {
+
+                                        $(data).each(function(i, elem) {
+
+                                            if (elem.stdout ==
+                                                run_question_outputs[i].output)
+                                                console.log(1);
+                                        });
+
+                                    },
+                                    error: function(data) {
+                                        alert('Something went wrong');
+                                    }
+                                })
+                            });
+
+
+
+                            $(".verify-button").click(function() {
+
+
+                                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                                var lang = $("#languageSelect option:selected").val()
+                                    .toLowerCase();
+                                const languageIdToFind = lang;
+                                const foundLanguage = findLanguageById(languageIdToFind);
+                                var editorContent = editor.getValue();
+                                $.ajax({
+                                    url: "{{ route('run-code') }}",
+                                    type: "POST",
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken
+                                    },
+                                    data: {
+                                        content: editorContent,
+                                        language: foundLanguage.id,
+                                        stdin: verify_question_inputs,
+                                        filename: `index${foundLanguage.extension}`,
+                                    },
+                                    success: function(data) {
+
+                                        $(data.stdout).each(function(i, elem) {
+
+
+
+                                        });
+
+                                    },
+                                    error: function(data) {
+                                        alert('Something went wrong');
+                                    }
+                                })
+                            });
+
+
+
+                        } else if (localStorage.getItem('question_category') == 2) {
+
+
+
+                            $("#content-to-fullscreen").show();
+
+                            questionsData = data[1][localStorage.getItem("section")];
+                            var len_question = questionsData;
+                            var html = "";
+                            for (var i = 1; i <= len_question.length; i++) {
+                                html += `<li><span class="question${i-1}">${i}</span></li>`;
+                            }
+                            $('.quiz_number').append(html);
+
+
+                            showQuestion(currentQuestionIndex);
+
+                            $(".save-next").click(function() {
+                                saveAndNext();
+                            });
+
+
+
+                        }
+
+
+
+                        if (localStorage.getItem('get_id') == null) {
+
+                            saveStudentTestEntry();
+
+                        } else {
+
+                            var get_id = localStorage.getItem('get_id');
+
+                            $("#student_test_entry_id").val(get_id);
+
+                        }
+                    }
+
+
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if (localStorage.getItem('question_category') == 2) {
+
+                    $(".test-title").text("MCQ Examination");
+
+                    $(".clear-response").on('click', function() {
+                        $("input[type='radio']").prop('checked', false);
+                    });
+
+                    if (localStorage.getItem('section') === null) {
+                        localStorage.setItem('section', 0)
+                    }
+
+
+                    $("#layout-menu").toggleClass("toggled");
+
+                    document.getElementsByClassName('fullscreen-btn')[0].addEventListener('click', function() {
+                        toggleFullScreen();
+                    });
+
+
+                    function toggleFullScreen() {
+
+
+                        const element = document.getElementById('content-to-fullscreen');
+
+                        if (!document.fullscreenElement) {
+                            element.requestFullscreen();
+                        } else {
+                            if (document.exitFullscreen) {
+                                document.exitFullscreen();
+                            }
+                        }
+                    }
+                }
+
+
+                if (localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
+                        'section'))) {
+
+
+                    currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex" + localStorage
+                        .getItem(
+                            'section')));
+
+                    setTimeout(() => {
+
+
+
+                        $(".question" + localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
+                            'section'))).addClass('active');
+
+
+
+                    }, 200);
+
+
+
+
+
+
+
+
+                    if (totalSeconds) {
+
+                        startTimer(parseInt(totalSeconds));
+
+                        total_duration = totalSeconds / 60;
+
+
+                    } else {
+
+
+                        $.ajax({
+
+
+                            url: "{{ route('get-total-duration') }}",
+                            type: "GET",
+                            data: {
+                                test_code: '{{ base64_decode(request()->segment(3)) }}'
+                            },
+                            success: function(totalDurationInMinutes) {
+                                total_duration = totalDurationInMinutes;
+                                totalSeconds = totalDurationInMinutes * 60;
+                                startTimer(totalSeconds);
+                            }
+
+
+                        });
+
+
+                    }
+
+
+
+
+                }
+
 
                 function startTimer(initialSeconds) {
+
+
                     timer = setInterval(function() {
+
                         totalSeconds--;
 
                         var hours = Math.floor(totalSeconds / 3600);
@@ -511,56 +1046,19 @@
                         } else {
                             localStorage.setItem("remainingSeconds", totalSeconds);
                         }
+
+
                     }, 1000);
+
+
                 }
 
-
-
-                $.ajax({
-                    url: "{{ route('fetch-test-questions') }}",
-                    type: "GET",
-                    data: {
-                        test_code: "{{ base64_decode(request()->segment(3)) }}",
-                        course_id: {{ base64_decode(request()->segment(2)) }},
-                    },
-                    success: function(data) {
-                        $(".sec_name").text(data[0].sections[localStorage.getItem("section")]);
-                        $(data[0].sections).each(function(i, e) {
-                            $(".header-bar").append(
-                                `<button type="button" value="${i}" onclick="save_session(this.value)" class="btn section-button btn-success ms-3 py-1 px-5">${e}</button>`
-                            );
-                        })
-                        questionsData = data[1][localStorage.getItem("section")];
-                        var len_question = questionsData;
-                        var html = "";
-                        for (var i = 1; i <= len_question.length; i++) {
-                            html += `<li><span class="question${i-1}">${i}</span></li>`;
-                        }
-
-                        $('.quiz_number').append(html);
-
-
-                        showQuestion(currentQuestionIndex);
-                        $(".save-next").click(function() {
-                            saveAndNext();
-                        });
-
-                        if (localStorage.getItem('get_id') == null) {
-                            saveStudentTestEntry();
-                        } else {
-                            var get_id = localStorage.getItem('get_id');
-                            $("#student_test_entry_id").val(get_id);
-                        }
-                    }
-
-
-                });
 
 
 
 
                 $(".submit-test").on('click', function() {
-
+                    alert();
                     var userResponse = window.prompt("Type Your Register No Submit the Test");
                     if (userResponse !== null) {
                         var lowerCaseResponse = userResponse;
@@ -579,9 +1077,21 @@
 
                 })
 
+
+
             });
 
+
+
+
+
+
+
+
+
             function saveStudentTestEntry() {
+
+
                 $.ajax({
                     url: "{{ route('save-student-test-entry') }}",
                     type: "POST",
@@ -596,16 +1106,28 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(data) {
+
                         localStorage.setItem('get_id', data);
+
                         var get_id = localStorage.getItem('get_id');
+
                         $("#student_test_entry_id").val(get_id);
+
                     }
                 });
+
+
             }
 
+
+
             function save_session(value) {
+
+
                 localStorage.setItem('section', value);
                 location.reload();
+
+
             }
         </script>
 
