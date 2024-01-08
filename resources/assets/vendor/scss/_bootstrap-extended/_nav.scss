@@ -76,10 +76,20 @@
 // *******************************************************************************
 
 .nav-sm {
-  @include template-nav-size($nav-link-padding-y-sm, $nav-link-padding-x-sm, $font-size-sm, $nav-link-line-height-sm);
+  @include template-nav-size(
+    $nav-link-padding-y-sm,
+    $nav-link-padding-x-sm,
+    $font-size-sm,
+    $nav-link-line-height-sm
+  );
 }
 .nav-lg {
-  @include template-nav-size($nav-link-padding-y-lg, $nav-link-padding-x-lg, $font-size-lg, $nav-link-line-height-lg);
+  @include template-nav-size(
+    $nav-link-padding-y-lg,
+    $nav-link-padding-x-lg,
+    $font-size-lg,
+    $nav-link-line-height-lg
+  );
 }
 
 // Top, Right, Bottom & Left Tabbed panels
@@ -106,12 +116,12 @@
     }
   }
 
-  .row-bordered > [class^='col-'],
-  .row-bordered > [class*=' col-'],
-  .row-bordered > [class^='col '],
-  .row-bordered > [class*=' col '],
-  .row-bordered > [class$=' col'],
-  .row-bordered > [class='col'] {
+  .row-bordered > [class^="col-"],
+  .row-bordered > [class*=" col-"],
+  .row-bordered > [class^="col "],
+  .row-bordered > [class*=" col "],
+  .row-bordered > [class$=" col"],
+  .row-bordered > [class="col"] {
     &::before,
     &::after {
       border-color: $card-inner-border-color;

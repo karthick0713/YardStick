@@ -15,6 +15,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs/loader.js"></script>
@@ -213,6 +214,30 @@
         .programming_screen {
             display: none;
         }
+
+        .nav-tabs {
+            border-bottom: unset !important;
+        }
+
+        .nav-link.active {
+            border-bottom: 1.5px solid #000 !important;
+        }
+
+
+        body::-webkit-scrollbar {
+            width: 0px !important;
+            background-color: #000;
+            height: 1.4em !important;
+        }
+
+        #home,
+        #profile {
+            max-height: 600px !important;
+        }
+
+        .hidden-testcase-tab {
+            display: none;
+        }
     </style>
     </head>
 
@@ -367,7 +392,6 @@
                 <div class="header-bar d-flex">
                     <select name="" style="width:200px;margin-left:500px" class="form-control"
                         id="languageSelect">
-                        <option value="Select">Select</option>
                         <option value="c">C</option>
                         <option value="cpp">C++</option>
                         <option value="csharp">C#</option>
@@ -418,8 +442,85 @@
 
                             <div id="code-editor"></div>
                         </div>
-                        <div class="col-3">
+
+
+
+
+
+
+                        <div class="col-3 ">
+
+                            <div class="row col-12 w-100">
+
+                                <div class="">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                                data-bs-target="#home" type="button" role="tab"
+                                                aria-controls="home" aria-selected="true">Sample Test Case</button>
+                                        </li>
+                                        <li class="ms-4 nav-item" role="presentation">
+                                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                                data-bs-target="#profile" type="button" role="tab"
+                                                aria-controls="profile" aria-selected="false">Hidden Test Case</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="home" role="tabpanel"
+                                            aria-labelledby="home-tab">
+
+                                            <div id="sample_correct_testcase" class="mt-4">
+
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="profile" role="tabpanel"
+                                            aria-labelledby="profile-tab">
+                                            <div class="verify-error mt-4 fw-bold text-danger"></div>
+                                            <div class="hidden-testcase-tab">
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h6 class="fw-bold d-inline-block">Total Test Case: </h6>
+                                                        <span class="test-case-count fw-bold text-success d-inline-block">
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card mt-2">
+                                                    <div class="card-body">
+                                                        <h6 class="fw-bold d-inline-block">Passed Test Case: </h6>
+                                                        <span
+                                                            class="passed-case-count fw-bold text-success d-inline-block"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card mt-2">
+                                                    <div class="card-body">
+                                                        <h6 class="fw-bold d-inline-block">Rejected Test Case: </h6>
+                                                        <span
+                                                            class="rejected-case-count text-danger fw-bold d-inline-block"></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
                         </div>
+
+
+
+
+
+
+
+
                     </div>
                 </div>
                 <footer>
@@ -427,7 +528,7 @@
                         {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
                         <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
                         <button type="button" class="btn btn-theme mx-4 verify-button">Verify</button>
-                        <button type="button" class="btn btn-info mx-4 save-next">&raquo;</button>
+                        <button type="button" class="btn btn-info mx-4 save-next next-button">&raquo;</button>
 
                         <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
                     </div>
@@ -442,20 +543,10 @@
 
 
 
-
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
-        </script> --}}
+
 
         <script>
             $(function() {
@@ -475,6 +566,9 @@
             var verify_question_outputs = [];
 
             $(document).ready(function() {
+
+
+
 
                 function showQuestion(index) {
 
@@ -557,13 +651,12 @@
                         $(".output-format").html(output_format)
                         $(".code-constraints").html(code_constraints)
 
-
                     }
 
 
                 }
 
-
+                var isReloaded = false;
 
 
                 function saveAndNext() {
@@ -636,8 +729,13 @@
 
                             showQuestion(currentQuestionIndex);
 
+                            isReloaded = true;
+
+                            location.reload();
 
                         } else {
+
+
 
 
                         }
@@ -650,7 +748,23 @@
 
 
 
+                function previous() {
 
+                    currentQuestionIndex--;
+
+
+                    localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                        currentQuestionIndex);
+
+
+                    if (currentQuestionIndex < questionsData[0].length) {
+
+                        showQuestion(currentQuestionIndex);
+
+                        location.reload();
+                    }
+
+                }
 
 
 
@@ -674,7 +788,7 @@
                         $(data[0].sections).each(function(i, e) {
 
                             $("#languageSelect").before(
-                                `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn section-button btn-success ms-3 py-1 px-5">${e}</button>`
+                                `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
                             );
 
                         });
@@ -697,9 +811,7 @@
 
 
                             $(".previous-button").click(function() {
-
-                                saveAndNext();
-
+                                previous();
                             });
 
 
@@ -742,6 +854,8 @@
 
                             var codes;
                             var editor;
+
+
                             setTimeout(() => {
 
 
@@ -755,8 +869,11 @@
 
                                     var languageSelector = document.getElementById(
                                         "languageSelect");
+
                                     var codeEditor = document.getElementById("code-editor");
+
                                     var initialLoad = true;
+
                                     editor = monaco.editor.create(
                                         codeEditor, {
                                             value: `/* Type Your Code */`,
@@ -765,26 +882,56 @@
                                         }
                                     );
 
+                                    if (localStorage.getItem(
+                                            "typed_coding")) {
+                                        editor.setValue(localStorage
+                                            .getItem(
+                                                "typed_coding" + localStorage
+                                                .getItem('section') +
+                                                currentQuestionIndex))
+                                    }
+
+                                    editor.setValue(localStorage
+                                        .getItem(
+                                            `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
+                                        ));
+
                                     codes = editor.getValue();
 
                                     languageSelector.addEventListener("change", function() {
                                         var selectedLanguage = this.value;
+
                                         if (!initialLoad) {
                                             var currentCode = editor.getValue();
                                             codes = currentCode;
                                         }
+
                                         editor.getModel().dispose();
 
                                         editor.setModel(monaco.editor.createModel(
-                                            initialLoad ? "" : currentCode,
+                                            initialLoad ? "" : codes,
                                             selectedLanguage));
 
                                         initialLoad = false;
+                                        setTimeout(() => {
+                                            $(".slider").remove();
+                                            var savedCode = localStorage
+                                                .getItem(
+                                                    `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
+                                                ) || '';
+
+                                            if (savedCode) {
+                                                editor.setValue(savedCode);
+                                            }
+                                        }, 100);
                                     });
+
+
+                                    $(".slider").remove();
                                 });
 
 
-                            }, 1000);
+                            }, 500);
 
 
                             function findLanguageById(id) {
@@ -792,6 +939,16 @@
                             }
 
 
+                            $("#code-editor").on("keyup", function() {
+                                setTimeout(() => {
+                                    console.log(editor.getValue());
+                                    // When saving the code
+                                    localStorage.setItem(
+                                        `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`,
+                                        editor.getValue());
+
+                                }, 100);
+                            });
 
 
                             $(".programming_run_button").click(function() {
@@ -817,13 +974,122 @@
                                         filename: `index${foundLanguage.extension}`,
                                     },
                                     success: function(data) {
+                                        $("#sample_correct_testcase").empty();
 
-                                        $(data).each(function(i, elem) {
+                                        if (data[0].stderr != null) {
+                                            $("#sample_correct_testcase").text(data[0]
+                                                .stderr).addClass(
+                                                "text-danger fw-bold");
+                                            return false;
+                                        } else {
 
-                                            if (elem.stdout ==
-                                                run_question_outputs[i].output)
-                                                console.log(1);
-                                        });
+
+                                            var test_case_correct;
+                                            $(data).each(function(i, elem) {
+                                                var cleanStdout = elem.stdout
+                                                    .trim()
+                                                    .split('\n').join('').split(
+                                                        '\r').join('');
+                                                var cleanExpectedOutput =
+                                                    run_question_outputs[i]
+                                                    .trim().split('\n').join('')
+                                                    .split('\r').join('');
+
+
+                                                if (arraysEqual(cleanStdout,
+                                                        cleanExpectedOutput)) {
+
+                                                    test_case_correct = `
+                                                <div class="accordion accordion-flush" id="sampleCrctExample${i}">
+                                                            <div class="accordion-item rounded-3 border-0 shadow mb-2">
+                                                                <h2 class="accordion-header">
+                                                                    <button
+                                                                        class="accordion-button text-success border-bottom collapsed fw-semibold"
+                                                                        type="button" data-bs-toggle="collapse"
+                                                                        data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
+                                                                        aria-controls="flush-collapseOne-${i}">
+                                                                        Test Case Sample : ${i + 1}
+                                                                    </button>
+                                                                </h2>
+                                                                <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
+                                                                    data-bs-parent="#sampleCrctExample${i}">
+                                                                    <div class="accordion-body mt-3">
+                                                                        <div class="executed-output">
+                                                                            <h6 class="fw-bold">Executed Output: </h6>
+                                                                            <p>${elem.stdout}</p>
+                                                                        </div>
+                                                                        <div class="expected-output">
+                                                                            <h6 class="fw-bold">Expected Output: </h6>
+                                                                            <p>${run_question_outputs[i]}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                       `;
+
+                                                    $("#sample_correct_testcase")
+                                                        .append(
+                                                            test_case_correct);
+
+                                                } else {
+
+                                                    test_case_correct = `
+                                                <div class="accordion accordion-flush" id="sampleCrctExample${i}">
+                                                            <div class="accordion-item rounded-3 border-0 shadow mb-2">
+                                                                <h2 class="accordion-header">
+                                                                    <button
+                                                                        class="accordion-button text-danger border-bottom collapsed fw-semibold"
+                                                                        type="button" data-bs-toggle="collapse"
+                                                                        data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
+                                                                        aria-controls="flush-collapseOne-${i}">
+                                                                        Test Case Sample : ${i + 1}
+                                                                    </button>
+                                                                </h2>
+                                                                <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
+                                                                    data-bs-parent="#sampleCrctExample${i}">
+                                                                    <div class="accordion-body mt-3">
+                                                                        <div class="executed-output">
+                                                                            <h6 class="fw-bold">Executed Output: </h6>
+                                                                            <p>${elem.stdout}</p>
+                                                                        </div>
+                                                                        <div class="expected-output">
+                                                                            <h6 class="fw-bold">Expected Output: </h6>
+                                                                            <p>${run_question_outputs[i]}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                       `;
+
+                                                    $("#sample_correct_testcase")
+                                                        .append(
+                                                            test_case_correct);
+
+                                                }
+                                            });
+
+                                            function arraysEqual(arr1, arr2) {
+                                                if (arr1.length !== arr2.length)
+                                                    return false;
+                                                for (var i = 0; i < arr1.length; i++) {
+                                                    if (arr1[i] !== arr2[i])
+                                                        return false;
+                                                }
+                                                return true;
+                                            }
+
+
+
+
+
+                                        }
+
+
+
 
                                     },
                                     error: function(data) {
@@ -857,11 +1123,61 @@
                                     },
                                     success: function(data) {
 
-                                        $(data.stdout).each(function(i, elem) {
+                                        if (data[0].stderr != null) {
+                                            $(".verify-error").html(data[0]
+                                                .stderr);
+                                            return false;
+                                        } else {
+
+                                            $(".verify-error").empty();
+                                            var tot = data.length;
+
+                                            var passed_case = 0;
+
+                                            var rejected_case = 0;
+
+                                            $(data).each(function(i, elem) {
+                                                var cleanStdout = elem.stdout
+                                                    .trim()
+                                                    .split('\n').join('').split(
+                                                        '\r').join('');
+                                                var cleanExpectedOutput =
+                                                    verify_question_outputs[i]
+                                                    .trim().split('\n').join('')
+                                                    .split('\r').join('');
+
+                                                if (arraysEqual(cleanStdout,
+                                                        cleanExpectedOutput)) {
+                                                    passed_case++;
+                                                } else {
+
+                                                    rejected_case++;
+                                                }
+                                            });
+
+                                            $(".test-case-count").text(tot);
+                                            $(".passed-case-count").text(passed_case);
+                                            $(".rejected-case-count").text(
+                                                rejected_case);
+
+
+                                            function arraysEqual(arr1, arr2) {
+                                                if (arr1.length !== arr2.length)
+                                                    return false;
+                                                for (var i = 0; i < arr1.length; i++) {
+                                                    if (arr1[i] !== arr2[i])
+                                                        return false;
+                                                }
+                                                return true;
+                                            }
+
+                                            $(".hidden-testcase-tab").show();
+
+
+                                        }
 
 
 
-                                        });
 
                                     },
                                     error: function(data) {
@@ -975,8 +1291,9 @@
 
 
 
-                        $(".question" + localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
-                            'section'))).addClass('active');
+                        $(".question" + localStorage.getItem("currentQuestionIndex" + localStorage
+                            .getItem(
+                                'section'))).addClass('active');
 
 
 
@@ -1058,21 +1375,20 @@
 
 
                 $(".submit-test").on('click', function() {
-                    alert();
                     var userResponse = window.prompt("Type Your Register No Submit the Test");
-                    if (userResponse !== null) {
-                        var lowerCaseResponse = userResponse;
-                        if (lowerCaseResponse == "{{ session('userId') }}") {
-                            localStorage.clear();
-                            clearInterval(timer);
-                            localStorage.removeItem("remainingSeconds");
-                            totalSeconds = 00;
-                            $("#hours").text("00");
-                            $("#minutes").text("00");
-                            $("#seconds").text("00");
-                            window.location.href = "{{ route('student-dashboard') }}";
-                        }
-                    }
+                    // if (userResponse !== null) {
+                    //     var lowerCaseResponse = userResponse;
+                    //     if (lowerCaseResponse == "{{ session('userId') }}") {
+                    localStorage.clear();
+                    clearInterval(timer);
+                    localStorage.removeItem("remainingSeconds");
+                    totalSeconds = 00;
+                    $("#hours").text("00");
+                    $("#minutes").text("00");
+                    $("#seconds").text("00");
+                    window.location.href = "{{ route('student-dashboard') }}";
+                    //     }
+                    // }
 
 
                 })
