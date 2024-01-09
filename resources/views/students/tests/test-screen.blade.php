@@ -250,9 +250,9 @@
                         <h6 class="m-0">MCQ Test</h6>
                         <div class="timer">
                             <b>Time Left</b>
-                            <span id="hours" class="badge bg-secondary">00</span> :
-                            <span id="minutes" class="badge bg-secondary">00</span> :
-                            <span id="seconds" class="badge bg-secondary">00</span>
+                            <span id="hours" class="badge hours bg-secondary">00</span> :
+                            <span id="minutes" class="badge minutes bg-secondary">00</span> :
+                            <span id="seconds" class="badge seconds bg-secondary">00</span>
                         </div>
                         <div class="mt-2 mt-md-0">
                             <button type="button" class="btn fullscreen-btn btn-outline-info">
@@ -370,19 +370,20 @@
             </main>
         </div>
 
-        <div class="programming_screen">
+        <div id="programming_screen" class="programming_screen">
             <nav class="navbar navbar-light bg-white">
                 <div class="container">
                     <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
                         <h6 class="m-0 test-title"> </h6>
                         <div class="timer">
                             <b>Time Left</b>
-                            <span id="hours" class="badge bg-secondary">00</span> :
-                            <span id="minutes" class="badge bg-secondary">00</span> :
-                            <span id="seconds" class="badge bg-secondary">00</span>
+                            <span id="hours" class="badge hours bg-secondary">00</span> :
+                            <span id="minutes" class="badge minutes bg-secondary">00</span> :
+                            <span id="seconds" class="badge seconds bg-secondary">00</span>
                         </div>
                         <div class="mt-2 mt-md-0">
-                            <button type="button" class="btn fullscreen-btn btn-outline-info">
+                            <button type="button" id="pro-fullscreen-btn"
+                                class="btn  pro-fullscreen-btn btn-outline-info">
                                 Switch Full Screen
                             </button>
                             <button type="button" class="btn btn-outline-info">Pause</button>
@@ -1291,6 +1292,29 @@
                             }
                         }
                     }
+                } else if (localStorage.getItem('question_category') == 1) {
+
+
+                    document.getElementById('pro-fullscreen-btn').addEventListener('click', function() {
+                        toggleFullScreen();
+                    });
+
+
+                    function toggleFullScreen() {
+
+
+                        const element = document.getElementById('programming_screen');
+
+                        if (!document.fullscreenElement) {
+                            element.requestFullscreen();
+                        } else {
+                            if (document.exitFullscreen) {
+                                document.exitFullscreen();
+                            }
+                        }
+                    }
+
+
                 }
 
 
@@ -1316,45 +1340,38 @@
 
 
 
+                }
 
 
+                if (totalSeconds) {
+
+                    startTimer(parseInt(totalSeconds));
+
+                    total_duration = totalSeconds / 60;
 
 
-
-                    if (totalSeconds) {
-
-                        startTimer(parseInt(totalSeconds));
-
-                        total_duration = totalSeconds / 60;
+                } else {
 
 
-                    } else {
+                    $.ajax({
 
 
-                        $.ajax({
+                        url: "{{ route('get-total-duration') }}",
+                        type: "GET",
+                        data: {
+                            test_code: '{{ base64_decode(request()->segment(3)) }}'
+                        },
+                        success: function(totalDurationInMinutes) {
+
+                            total_duration = totalDurationInMinutes;
+
+                            totalSeconds = totalDurationInMinutes * 60;
+
+                            startTimer(totalSeconds);
+                        }
 
 
-                            url: "{{ route('get-total-duration') }}",
-                            type: "GET",
-                            data: {
-                                test_code: '{{ base64_decode(request()->segment(3)) }}'
-                            },
-                            success: function(totalDurationInMinutes) {
-
-                                total_duration = totalDurationInMinutes;
-
-                                totalSeconds = totalDurationInMinutes * 60;
-
-                                startTimer(totalSeconds);
-                            }
-
-
-                        });
-
-
-                    }
-
-
+                    });
 
 
                 }
@@ -1371,9 +1388,9 @@
                         var minutes = Math.floor((totalSeconds % 3600) / 60);
                         var seconds = totalSeconds % 60;
 
-                        $("#hours").text(("0" + hours).slice(-2));
-                        $("#minutes").text(("0" + minutes).slice(-2));
-                        $("#seconds").text(("0" + seconds).slice(-2));
+                        $(".hours").text(("0" + hours).slice(-2));
+                        $(".minutes").text(("0" + minutes).slice(-2));
+                        $(".seconds").text(("0" + seconds).slice(-2));
 
                         if (totalSeconds < 1) {
                             clearInterval(timer);
@@ -1393,17 +1410,24 @@
 
 
                 $(".submit-test").on('click', function() {
-                    var userResponse = window.prompt("Type Your Register No Submit the Test");
+
+
+                    // var userResponse = window.prompt("Type Your Register No Submit the Test");
                     // if (userResponse !== null) {
                     //     var lowerCaseResponse = userResponse;
                     //     if (lowerCaseResponse == "{{ session('userId') }}") {
                     localStorage.clear();
+
                     clearInterval(timer);
+
                     localStorage.removeItem("remainingSeconds");
+
                     totalSeconds = 00;
-                    $("#hours").text("00");
-                    $("#minutes").text("00");
-                    $("#seconds").text("00");
+
+                    $(".hours").text("00");
+                    $(".minutes").text("00");
+                    $(".seconds").text("00");
+
                     window.location.href = "{{ route('student-dashboard') }}";
                     //     }
                     // }

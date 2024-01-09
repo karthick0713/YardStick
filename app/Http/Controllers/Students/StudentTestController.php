@@ -44,7 +44,8 @@ class StudentTestController extends Controller
     public function fetch_test_questions(Request $request)
     {
         $questions = DB::table('test_creation')->where('test_code', $request->input('test_code'))->first();
-
+        $negative_marks = DB::table('course_negative_marks')->where('test_code', $request->input('test_code'))->first();
+        $neg_marks  = explode(',', $negative_marks->question_codes);
         if ($questions && $questions->test_type == 1) {
             $sections = [];
             $testQuestions = [];
@@ -58,19 +59,34 @@ class StudentTestController extends Controller
             }
 
             foreach ($testQuestions as $key => $t) {
-                foreach ($t as $questionCode) {
+                foreach ($t as $k => $questionCode) {
                     $ques = DB::table('question_banks')->where('question_code', $questionCode)->first();
                     if ($ques && $ques->category == 2) {
                         $mcq = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->get()->toArray();
+                        if ($questionCode == $neg_marks[$k]) {
+                            $ng_m =  explode(',', $negative_marks->negative_marks)[$k];
+                        } else {
+                            $ng_m = "";
+                        }
+
+
                         $questionsData[$key][] = [
+                            'ng_m' => $ng_m,
                             'category' => $ques->category,
                             'question_for_test' => $ques->questions,
                             'question_marks' => $ques->marks,
                             'mcq_options' => $mcq,
+
                         ];
                     } else if ($ques && $ques->category == 1) {
+                        if ($questionCode == $neg_marks[$k]) {
+                            $ng_m =  explode(',', $negative_marks->negative_marks)[$k];
+                        } else {
+                            $ng_m = "";
+                        }
                         $test_cases = DB::table('programming_question_test_case')->where('question_code', $questionCode)->get();
                         $questionsData[$key][] = [
+                            'ng_m' => $ng_m,
                             'question_for_test'  => $ques,
                             'test_cases' => $test_cases
                         ];
@@ -78,6 +94,8 @@ class StudentTestController extends Controller
                 }
                 $question_category[$key][] = $ques->category;
             }
+
+
             $data = [
                 'sections' => $sections,
                 'test_questions' => $testQuestions,
