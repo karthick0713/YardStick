@@ -304,6 +304,9 @@
             <main>
                 <section>
                     <div id="content" class="bg-light">
+
+                        <div id="section-buttons"></div>
+
                         <div class="container-fluid">
                             <!-- header bar -->
                             <div class="header-bar d-flex">
@@ -556,6 +559,7 @@
             });
 
             var questionsData;
+            var fetch_questions;
             var currentQuestionIndex = 0;
             var total_duration;
             var totalSeconds = localStorage.getItem("remainingSeconds");
@@ -780,23 +784,29 @@
                     },
                     success: function(data) {
 
-                        localStorage.setItem('question_category', data[2][0][0]);
+                        fetch_questions = data;
+
+                        if (localStorage.getItem("question_category") == null) {
+
+                            localStorage.setItem('question_category', data[2][0][0]);
+
+                        }
+
 
                         $(".sec_name").text(data[0].sections[localStorage.getItem("section")]);
-
-
-                        $(data[0].sections).each(function(i, e) {
-
-                            $("#languageSelect").before(
-                                `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
-                            );
-
-                        });
 
 
 
 
                         if (localStorage.getItem('question_category') == 1) {
+
+                            $(data[0].sections).each(function(i, e) {
+
+                                $("#languageSelect").before(
+                                    `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
+                                );
+
+                            });
 
 
                             questionsData = data[1];
@@ -881,6 +891,8 @@
                                             theme: "vs-light",
                                         }
                                     );
+
+
 
                                     if (localStorage.getItem(
                                             "typed_coding")) {
@@ -1190,6 +1202,14 @@
 
                         } else if (localStorage.getItem('question_category') == 2) {
 
+                            $(data[0].sections).each(function(i, e) {
+
+                                $("#section-buttons").before(
+                                    `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
+                                );
+
+                            });
+
 
 
                             $("#content-to-fullscreen").show();
@@ -1230,11 +1250,6 @@
 
 
                 });
-
-
-
-
-
 
 
 
@@ -1325,8 +1340,11 @@
                                 test_code: '{{ base64_decode(request()->segment(3)) }}'
                             },
                             success: function(totalDurationInMinutes) {
+
                                 total_duration = totalDurationInMinutes;
+
                                 totalSeconds = totalDurationInMinutes * 60;
+
                                 startTimer(totalSeconds);
                             }
 
@@ -1439,8 +1457,14 @@
 
             function save_session(value) {
 
+                var values = fetch_questions[2][value];
+
+                // console.log(values);
+
+                localStorage.setItem('question_category', values);
 
                 localStorage.setItem('section', value);
+
                 location.reload();
 
 

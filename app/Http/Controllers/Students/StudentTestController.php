@@ -105,18 +105,19 @@ class StudentTestController extends Controller
                 if ($ques && $ques->category == 2) {
                     $mcq = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->get()->toArray();
                     $questionsData[$key][] = [
+                        'category' => $ques->category,
                         'question_for_test' => $ques->questions,
                         'question_marks' => $ques->marks,
                         'mcq_options' => $mcq,
                     ];
                 }
             }
-
+            $question_category[$key][] = $ques->category;
             $data = [
                 'sections' => $sections,
                 'test_questions' => $testQuestions,
             ];
-            return [$data, $questionsData];
+            return [$data, $questionsData, $question_category];
         }
     }
 

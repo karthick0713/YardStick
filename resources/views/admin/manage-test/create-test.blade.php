@@ -147,7 +147,7 @@
 
 
                             <div class="col-md-4  mt-2">
-                                <h5 class="fw-bold">Practice Test ?</h5>
+                                <h5 class="fw-bold">Practice Test ?<span class="text-danger"> *</span></h5>
 
                                 <div class="form-check form-check-inline">
                                     <input style="height:30px;width:30px;" class="form-check-input ms-3" type="checkbox"
