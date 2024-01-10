@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use PDO;
 use Yajra\DataTables\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -184,6 +185,7 @@ class StudentTestController extends Controller
             'test_entry_id' => $request->input('test_entry_id'),
             'test_code' => $request->input('test_code'),
             'course_id' => $request->input('course_id'),
+            'category_id' => $question->category,
             'question_code' => $question_code,
             'mark_taken_for_this_question' => $ans,
             'mark_for_each_question' => $question->marks,
@@ -191,6 +193,84 @@ class StudentTestController extends Controller
             'correct_answer' => $correct_option->id,
             'created_at' => now(),
             'updated_at' => now(),
+        ];
+
+        DB::table('students_test_questions_answers_entry')->insert($data);
+    }
+
+
+
+
+    public function verify_testcase_update(Request $request)
+    {
+
+        $where = [
+            'question_code' => $request->input('question_code'),
+            'test_entry_id' => $request->input('test_entry_id'),
+            'student_reg_no' => $request->input('student_reg_no'),
+            'test_code' => $request->input('test_code'),
+            'course_id' => $request->input('course_id'),
+        ];
+
+        DB::table('students_test_questions_answers_entry')->where($where)->delete();
+
+        DB::table('student_test_programming_test_cases')->where('test_entry_id', $request->input('test_entry_id'))->where('question_code', $request->input('question_code'))->delete();
+
+        $question = DB::table('question_banks')->where('question_code', $request->input('question_code'))->first();
+
+
+
+        $test_cases = $request->input('datas');
+
+        $default_test_case = DB::table('programming_question_test_case')->where('question_code', $request->input('question_code'))->get();
+
+        $weightage = 0;
+
+        foreach ($test_cases as $key => $tc) {
+
+
+            $tc_data  = [
+                'question_code' => $request->input('question_code'),
+                'test_entry_id' => $request->input('test_entry_id'),
+                'input' => $default_test_case[$key]->input,
+                'expected_output' => $default_test_case[$key]->output,
+                'executed_output' =>  $tc['stdout'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            $trimmedExpectedOutput = implode('', explode("\n", str_replace("\r", '', trim($default_test_case[$key]->output))));
+            $trimmedExecutedOutput = implode('', explode("\n", str_replace("\r", '', trim($test_cases[$key]['stdout']))));
+
+            if ($trimmedExpectedOutput == $trimmedExecutedOutput) {
+                $tc_data['matched_status'] = 1;
+                $weightage += $default_test_case[$key]->weightage;
+            } else {
+                $tc_data['matched_status'] = 0;
+            }
+
+            DB::table('student_test_programming_test_cases')->insert($tc_data);
+        }
+
+
+        $marks  = $question->marks;
+
+        $total_marks = $marks * ($weightage / 100);
+
+        $data = [
+
+            'question_code' => $request->input('question_code'),
+            'student_code' => $request->input('code'),
+            'test_entry_id' => $request->input('test_entry_id'),
+            'student_reg_no' => $request->input('student_reg_no'),
+            'mark_for_each_question' => $question->marks,
+            'category_id' => $question->category,
+            'test_code' => $request->input('test_code'),
+            'course_id' => $request->input('course_id'),
+            'mark_taken_for_this_question' => $total_marks,
+            'created_at' => now(),
+            'updated_at' => now(),
+
         ];
 
         DB::table('students_test_questions_answers_entry')->insert($data);

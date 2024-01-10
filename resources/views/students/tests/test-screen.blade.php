@@ -238,6 +238,36 @@
         .hidden-testcase-tab {
             display: none;
         }
+
+
+        #clockdiv {
+            font-family: sans-serif;
+            color: #fff;
+            display: inline-block;
+            font-weight: 100;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #clockdiv>div {
+            padding: 5px;
+            border-radius: 3px;
+            background: #00bf96;
+            display: inline-block;
+        }
+
+        #clockdiv div>span {
+            padding: 5px;
+            border-radius: 3px;
+            background: #00816a;
+            display: inline-block;
+        }
+
+        /* Style for visible text */
+        .smalltext {
+            padding-top: 5px;
+            font-size: 16px;
+        }
     </style>
     </head>
 
@@ -248,11 +278,25 @@
                 <div class="container">
                     <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
                         <h6 class="m-0">MCQ Test</h6>
-                        <div class="timer">
+                        {{-- <div class="timer">
                             <b>Time Left</b>
                             <span id="hours" class="badge hours bg-secondary">00</span> :
                             <span id="minutes" class="badge minutes bg-secondary">00</span> :
                             <span id="seconds" class="badge seconds bg-secondary">00</span>
+                        </div> --}}
+                        <div id="clockdiv">
+                            <span class="fw-bold">TIME LEFT : &nbsp;&nbsp;</span>
+                            <div>
+
+                                <span class="hours" id="hour"></span>
+                            </div>
+                            <div>
+
+                                <span class="minutes" id="minute"></span>
+                            </div>
+                            <div>
+                                <span class="seconds" id="second"></span>
+                            </div>
                         </div>
                         <div class="mt-2 mt-md-0">
                             <button type="button" class="btn fullscreen-btn btn-outline-info">
@@ -375,11 +419,19 @@
                 <div class="container">
                     <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
                         <h6 class="m-0 test-title"> </h6>
-                        <div class="timer">
-                            <b>Time Left</b>
-                            <span id="hours" class="badge hours bg-secondary">00</span> :
-                            <span id="minutes" class="badge minutes bg-secondary">00</span> :
-                            <span id="seconds" class="badge seconds bg-secondary">00</span>
+                        <div id="clockdiv">
+                            <span class="fw-bold">TIME LEFT : &nbsp;&nbsp;</span>
+                            <div>
+
+                                <span class="hours" id="hour"></span>
+                            </div>
+                            <div>
+
+                                <span class="minutes" id="minute"></span>
+                            </div>
+                            <div>
+                                <span class="seconds" id="second"></span>
+                            </div>
                         </div>
                         <div class="mt-2 mt-md-0">
                             <button type="button" id="pro-fullscreen-btn"
@@ -411,8 +463,13 @@
                             🎨 Theme
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="themeDropdown">
-                            <li><a class="dropdown-item" href="#">Dark Theme</a></li>
-                            <li><a class="dropdown-item" href="#">Light Theme</a></li>
+                            <li><a class="dropdown-item theme-button" data-value="vs-dark" href="#">Dark Theme</a>
+                            </li>
+                            <li><a class="dropdown-item theme-button" data-value="vs-light" href="#">Light
+                                    Theme</a>
+                            </li>
+                            <li><a class="dropdown-item theme-button" data-value="hc-black" href="#">High-Contrast
+                                    Theme</a></li>
                             <!-- Add more theme options as needed -->
                         </ul>
                     </div>
@@ -532,7 +589,7 @@
                         {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
                         <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
                         <button type="button" class="btn btn-theme mx-4 verify-button">Verify</button>
-                        <button type="button" class="btn btn-info mx-4 save-next next-button">&raquo;</button>
+                        <button type="button" class="btn btn-theme mx-4 save-next next-button">&raquo;</button>
 
                         <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
                     </div>
@@ -560,6 +617,7 @@
             });
 
             var questionsData;
+            var question_code_for_save;
             var fetch_questions;
             var currentQuestionIndex = 0;
             var total_duration;
@@ -573,6 +631,11 @@
             $(document).ready(function() {
 
 
+                if (localStorage.getItem('theme') == null) {
+                    localStorage.setItem('theme', 'vs-light')
+                }
+
+                $(".submit-test").prop("disabled", true);
 
 
                 function showQuestion(index) {
@@ -581,6 +644,7 @@
 
 
                         var question = questionsData[index].question_for_test;
+
 
 
                         var mcqOptions = questionsData[index].mcq_options;
@@ -634,7 +698,7 @@
 
 
                         var question = questionsData[0][index].question_for_test.questions;
-
+                        question_code_for_save = questionsData[0][index].question_for_test.question_code;
                         $(questionsData[0][index].test_cases).map((i, e) => {
                             if (e.sample == 1) {
                                 run_question_inputs.push(e.input)
@@ -665,6 +729,7 @@
 
 
                 function saveAndNext() {
+
 
 
                     if (localStorage.getItem("question_category") == 2) {
@@ -751,6 +816,13 @@
 
                 }
 
+                $(".theme-button").click(function() {
+
+                    localStorage.setItem("theme", $(this).attr("data-value"));
+
+                    location.reload();
+
+                });
 
 
                 function previous() {
@@ -815,6 +887,8 @@
                             showQuestion(currentQuestionIndex);
 
                             $(".save-next").click(function() {
+
+                                $(".question-box").slideUp();
 
                                 saveAndNext();
 
@@ -889,7 +963,7 @@
                                         codeEditor, {
                                             value: `/* Type Your Code */`,
                                             language: languageSelector.value,
-                                            theme: "vs-light",
+                                            theme: localStorage.getItem('theme'),
                                         }
                                     );
 
@@ -954,8 +1028,6 @@
 
                             $("#code-editor").on("keyup", function() {
                                 setTimeout(() => {
-                                    console.log(editor.getValue());
-                                    // When saving the code
                                     localStorage.setItem(
                                         `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`,
                                         editor.getValue());
@@ -993,6 +1065,15 @@
                                             $("#sample_correct_testcase").text(data[0]
                                                 .stderr).addClass(
                                                 "text-danger fw-bold");
+
+                                            $("#home-tab").addClass("active");
+
+                                            $("#home ").addClass("active show");
+
+                                            $("#profile-tab").removeClass("active");
+
+                                            $("#profile").removeClass("active show");
+
                                             return false;
                                         } else {
 
@@ -1096,6 +1177,15 @@
                                             }
 
 
+                                            $("#home-tab").addClass("active");
+
+                                            $("#home ").addClass("active show");
+
+                                            $("#profile-tab").removeClass("active");
+
+                                            $("#profile").removeClass("active show");
+
+
 
 
 
@@ -1139,7 +1229,17 @@
                                         if (data[0].stderr != null) {
                                             $(".verify-error").html(data[0]
                                                 .stderr);
+
+
+                                            $("#home-tab").removeClass("active");
+
+                                            $("#home ").removeClass("active show");
+
+                                            $("#profile-tab").addClass("active");
+
+                                            $("#profile").addClass("active show");
                                             return false;
+
                                         } else {
 
                                             $(".verify-error").empty();
@@ -1184,11 +1284,46 @@
                                                 return true;
                                             }
 
-                                            $(".hidden-testcase-tab").show();
+                                            $("#home-tab").removeClass("active");
+
+                                            $("#home ").removeClass("active show");
+
+                                            $("#profile-tab").addClass("active");
+
+                                            $("#profile").addClass("active show");
+
+
+
+                                            $(".hidden-testcase-tab")
+                                                .show();
+
 
 
                                         }
 
+                                        $.ajax({
+
+                                            url: "{{ route('test-testcase-update') }}",
+                                            type: 'POST',
+                                            data: {
+                                                question_code: question_code_for_save,
+                                                code: editor.getValue(),
+                                                datas: data,
+                                                test_entry_id: localStorage
+                                                    .getItem('get_id'),
+                                                student_reg_no: "{{ session('userId') }}",
+                                                test_code: "  {{ base64_decode(request()->segment(3)) }}",
+                                                course_id: "  {{ base64_decode(request()->segment(2)) }}",
+                                                total_seconds: totalSeconds,
+                                                passed_case: passed_case,
+                                                rejected_case: rejected_case
+                                            },
+                                            headers: {
+                                                'X-CSRF-TOKEN': csrfToken
+                                            },
+                                            success: function(data) {}
+
+                                        });
 
 
 
@@ -1219,9 +1354,13 @@
                             var len_question = questionsData;
                             var html = "";
                             for (var i = 1; i <= len_question.length; i++) {
-                                html += `<li><span class="question${i-1}">${i}</span></li>`;
+                                html +=
+                                    `<li class="span-ques"  style="cursor:pointer"><span  class=" question${i-1}">${i}</span></li>`;
                             }
                             $('.quiz_number').append(html);
+
+
+
 
 
                             showQuestion(currentQuestionIndex);
@@ -1391,10 +1530,12 @@
                         $(".hours").text(("0" + hours).slice(-2));
                         $(".minutes").text(("0" + minutes).slice(-2));
                         $(".seconds").text(("0" + seconds).slice(-2));
-
                         if (totalSeconds < 1) {
-                            clearInterval(timer);
+
+                            $(".submit-test").prop("disabled", false);
+
                             $("form").submit();
+                            clearInterval(timer);
                         } else {
                             localStorage.setItem("remainingSeconds", totalSeconds);
                         }
@@ -1435,14 +1576,21 @@
 
                 })
 
+                setTimeout(() => {
+
+                    $(".span-ques").on('click', function() {
+
+                        var sp = $(this).children().attr("class");
+
+                        var index = $(this).index();
+
+                        showQuestion(index);
+
+                    });
+                }, 1000);
 
 
             });
-
-
-
-
-
 
 
 
@@ -1483,13 +1631,13 @@
 
                 var values = fetch_questions[2][value];
 
-                // console.log(values);
-
                 localStorage.setItem('question_category', values);
 
                 localStorage.setItem('section', value);
 
                 location.reload();
+
+
 
 
             }
