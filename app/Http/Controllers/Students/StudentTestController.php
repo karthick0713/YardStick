@@ -64,15 +64,8 @@ class StudentTestController extends Controller
                     $ques = DB::table('question_banks')->where('question_code', $questionCode)->first();
                     if ($ques && $ques->category == 2) {
                         $mcq = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->get()->toArray();
-                        if ($questionCode == $neg_marks[$k]) {
-                            $ng_m =  explode(',', $negative_marks->negative_marks)[$k];
-                        } else {
-                            $ng_m = "";
-                        }
-
 
                         $questionsData[$key][] = [
-                            'ng_m' => $ng_m,
                             'category' => $ques->category,
                             'question_for_test' => $ques->questions,
                             'question_marks' => $ques->marks,
@@ -80,20 +73,14 @@ class StudentTestController extends Controller
 
                         ];
                     } else if ($ques && $ques->category == 1) {
-                        if ($questionCode == $neg_marks[$k]) {
-                            $ng_m =  explode(',', $negative_marks->negative_marks)[$k];
-                        } else {
-                            $ng_m = "";
-                        }
                         $test_cases = DB::table('programming_question_test_case')->where('question_code', $questionCode)->get();
                         $questionsData[$key][] = [
-                            'ng_m' => $ng_m,
                             'question_for_test'  => $ques,
                             'test_cases' => $test_cases
                         ];
                     }
                 }
-                $question_category[$key][] = $ques->category;
+                $question_category[$key]   = $ques->category;
             }
 
 
@@ -152,9 +139,9 @@ class StudentTestController extends Controller
 
     public function save_student_test_entry(Request $request)
     {
+
         $data = [
             'student_reg_no' => $request->input('user_id'),
-            'total_questions' => $request->input('total_questions'),
             'total_duration' => $request->input('total_duration'),
             'course_id' => $request->input('course_id'),
             'test_code' => $request->input('test_code'),

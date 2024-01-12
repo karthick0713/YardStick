@@ -139,17 +139,25 @@ class ManageCourseController extends Controller
         $group_a = $request->input('group-a');
 
         if (isset($group_a)) {
+            $ins_data = [];
+
             foreach ($group_a as $group) {
-                $ins_data[] = [
+                $data = [
                     'course_id' => $course_id,
                     'college_id' => $group['colleges'],
                     'department_id' => $group['departments'],
                     'year' => $group['year'],
-                    'groups_id' => implode(',', $group['groups']),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+
+                if (isset($group['groups'])) {
+                    $data['groups_id'] = implode(',', $group['groups']);
+                }
+
+                $ins_data[] = $data;
             }
+
 
             DB::table('course_allocate_to_students')->insert($ins_data);
         }

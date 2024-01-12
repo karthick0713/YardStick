@@ -114,4 +114,11 @@ class AjaxController extends Controller
 
         return Datatables::of($questions)->toJson();
     }
+
+
+    public function get_sections(Request $request)
+    {
+        $section_name = DB::table('test_section_wise_questions')->where('test_code', $request->input('test_code'))->get();
+        return $section_name;
+    }
 }

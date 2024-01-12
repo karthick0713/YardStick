@@ -33,6 +33,11 @@ class StudentController extends Controller
                 $course_params[] = DB::table('course_test_parameters')->where('course_id', $c_id->course_id)->count();
             }
         }
+        if (isset($course_params)) {
+            $course_params = $course_params;
+        } else {
+            $course_params = "";
+        }
 
         return view('students.student-dashboard', compact('heading', 'sub_heading', 'courses', 'course_params'));
     }

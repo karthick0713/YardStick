@@ -191,8 +191,8 @@
                                 <div class="card h-100">
                                     <div class="background-light card-body">
                                         <div class="text-center">
-                                            <img src="{{ asset('assets/img/lang-icons/python.png') }} " width="50"
-                                                height="50" alt="Python">
+                                            {{-- <img src="{{ asset('assets/img/lang-icons/python.png') }} " width="50"
+                                                height="50" alt="Python"> --}}
                                         </div>
                                         <div class="text-center fw-bold">
                                             {{ strtoupper($course->course_title) }}
@@ -204,8 +204,8 @@
                                                 <br>
                                                 <span class="ms-4 fw-bold">{{ $course_params[$key] }} Tests</span>
                                             </div>
-                                            <div class="col-6">
-                                                <i class="bx text-info bx-archive"></i><label class="">Total
+
+                                            {{-- <i class="bx text-info bx-archive"></i><label class="">Total
                                                     Durations</label>
                                                 <br>
                                                 <span class="ms-4 fw-bold">
@@ -234,10 +234,7 @@
 
                                                     @endphp
 
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-4 col-12">
+                                                </span> --}}
                                             <div class="col-6 ">
                                                 <i class="bx text-info bx-calendar"></i><label class="">Validity
                                                     From
@@ -246,6 +243,10 @@
                                                 <span
                                                     class="ms-4 fw-bold">{{ date('d-m-Y', strtotime($course->validity_from)) }}</span>
                                             </div>
+
+                                        </div>
+                                        <div class="row mt-4 col-12">
+
                                             <div class="col-6">
                                                 <i class="bx text-info bx-calendar"></i><label class="">Validity
                                                     To</label>

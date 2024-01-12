@@ -206,7 +206,7 @@
         }
 
         #code-editor {
-            height: 40vw;
+            height: 45vw;
         }
 
 
@@ -220,7 +220,9 @@
         }
 
         .nav-link.active {
-            border-bottom: 1.5px solid #000 !important;
+            border-bottom: 3px solid #EE7676 !important;
+            background-color: #215D81 !important;
+            color: white !important;
         }
 
 
@@ -268,10 +270,39 @@
             padding-top: 5px;
             font-size: 16px;
         }
+
+        .card {
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            /* Firefox */
+            scrollbar-color: transparent transparent;
+            /* Firefox */
+        }
+
+        .card::-webkit-scrollbar {
+            width: 6px;
+            /* Adjust as needed */
+        }
+
+        .card::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            /* Hide scrollbar thumb */
+        }
+
+        .card {
+            transition: margin-left 0.5s;
+        }
+
+        .hidden-card {
+            margin-left: -100%;
+            /* Adjust the value based on your layout */
+        }
     </style>
     </head>
 
     <body>
+
         <div id="content-to-fullscreen">
             <!-- nav -->
             <nav class="navbar navbar-light bg-white">
@@ -302,7 +333,7 @@
                             <button type="button" class="btn fullscreen-btn btn-outline-info">
                                 Switch Full Screen
                             </button>
-                            <button type="button" class="btn btn-outline-info">Pause</button>
+                            {{-- <button type="button" class="btn btn-outline-info">Pause</button> --}}
                         </div>
                     </div>
                 </div>
@@ -438,67 +469,81 @@
                                 class="btn  pro-fullscreen-btn btn-outline-info">
                                 Switch Full Screen
                             </button>
-                            <button type="button" class="btn btn-outline-info">Pause</button>
+                            {{-- <button type="button" class="btn btn-outline-info">Pause</button> --}}
                         </div>
                     </div>
                 </div>
 
             </nav>
             <div>
-                <div class="header-bar d-flex">
-                    <select name="" style="width:200px;margin-left:500px" class="form-control"
-                        id="languageSelect">
-                        <option value="c">C</option>
-                        <option value="cpp">C++</option>
-                        <option value="csharp">C#</option>
-                        <option value="java">Java</option>
-                        <option value="python">Python</option>
-                    </select>
-                    <button type="button" class="btn btn-outline-info ms-3 programming_run_button">&#x23F8;
-                        Run</button>
-                    <div class="dropdown float-end ms-4">
+                <div class="header-bar">
+                    <div class="row col-12">
 
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="themeDropdown"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            🎨 Theme
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="themeDropdown">
-                            <li><a class="dropdown-item theme-button" data-value="vs-dark" href="#">Dark Theme</a>
-                            </li>
-                            <li><a class="dropdown-item theme-button" data-value="vs-light" href="#">Light
-                                    Theme</a>
-                            </li>
-                            <li><a class="dropdown-item theme-button" data-value="hc-black" href="#">High-Contrast
-                                    Theme</a></li>
-                            <!-- Add more theme options as needed -->
-                        </ul>
+                        <div class="col-5 section-name-div"></div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select name="" style="" class="form-control" id="languageSelect">
+                                        <option value="c">C</option>
+                                        <option value="cpp">C++</option>
+                                        <option value="csharp">C#</option>
+                                        <option value="java">Java</option>
+                                        <option value="python">Python</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="d-flex">
+                                        <button type="button"
+                                            class="btn btn-outline-info programming_run_button">&#x23F8;
+                                            Compile & Run</button>
+                                        <button type="button" class="btn btn-theme mx-4 verify-button">Verify</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="dropdown float-end">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            🎨
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+                                            <li><a class="dropdown-item theme-button" data-value="vs-dark"
+                                                    href="#">Dark Theme</a></li>
+                                            <li><a class="dropdown-item theme-button" data-value="vs-light"
+                                                    href="#">Light Theme</a></li>
+                                            <li><a class="dropdown-item theme-button" data-value="hc-black"
+                                                    href="#">High-Contrast Theme</a>
+                                            </li>
+                                            <!-- Add more theme options as needed -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-
                 </div>
                 <div class="">
                     <div class="row col-12">
-                        <div class="col-4" style="height:100%">
+                        <div class="col-4" style="max-height: 80vh;">
+                            <div class="card" style="height: 100%; overflow-y: auto;">
+                                <div class="ms-1 card-body">
+                                    <div class="programming-questions"></div>
 
-                            <div class="programming-questions">
+                                    <label class="mt-4 fw-bold">INPUT FORMAT</label>
+                                    <div class="mt-2 ms-2 input-format"></div>
 
+                                    <label class="mt-4 fw-bold">OUTPUT FORMAT</label>
+                                    <div class="mt-2 ms-2 output-format"></div>
+
+                                    <label class="fw-bold mt-4"> CODE CONSTRAINTS</label>
+                                    <div class="mt-2 ms-2 code-constraints"></div>
+
+                                    <div class="mt-4  test-case-div"></div>
+
+                                </div>
                             </div>
-
-                            <label for="" class="mt-4 fw-bold">INPUT FORMAT</label>
-                            <div class="mt-2 input-format">
-
-                            </div>
-
-                            <label for="" class="mt-4 fw-bold">OUTPUT FORMAT</label>
-                            <div class="mt-2 output-format">
-                            </div>
-
-                            <label for="" class="fw-bold mt-4"> CODE CONSTRAINTS</label>
-                            <div class="mt-2 code-constraints">
-
-                            </div>
-
-
                         </div>
+
                         <div class="col-5">
 
                             <div id="code-editor"></div>
@@ -509,66 +554,75 @@
 
 
 
-                        <div class="col-3 ">
+                        <div class="col-3" style="max-height: 80vh;">
+                            <div class="card" style="height: 100%; overflow-y: auto;">
 
-                            <div class="row col-12 w-100">
+                                <div class="card-body">
+                                    <div class="row col-12 ">
 
-                                <div class="">
-                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-                                                data-bs-target="#home" type="button" role="tab"
-                                                aria-controls="home" aria-selected="true">Sample Test Case</button>
-                                        </li>
-                                        <li class="ms-4 nav-item" role="presentation">
-                                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                                data-bs-target="#profile" type="button" role="tab"
-                                                aria-controls="profile" aria-selected="false">Hidden Test Case</button>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-pane fade show active" id="home" role="tabpanel"
-                                            aria-labelledby="home-tab">
+                                        <div class="">
+                                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#home" type="button" role="tab"
+                                                        aria-controls="home" aria-selected="true">Sample Test
+                                                        Case</button>
+                                                </li>
+                                                <li class="ms-2 nav-item" role="presentation">
+                                                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#profile" type="button" role="tab"
+                                                        aria-controls="profile" aria-selected="false">Hidden Test
+                                                        Case</button>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade show active" id="home" role="tabpanel"
+                                                    aria-labelledby="home-tab">
 
-                                            <div id="sample_correct_testcase" class="mt-4">
+                                                    <div id="sample_correct_testcase" class="mt-4">
 
 
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="profile" role="tabpanel"
+                                                    aria-labelledby="profile-tab">
+                                                    <div class="verify-error mt-4 fw-bold text-danger"></div>
+                                                    <div class="hidden-testcase-tab">
+                                                        <div class="card mt-4">
+                                                            <div class="card-body">
+                                                                <h6 class="fw-bold d-inline-block">Total Test Case: </h6>
+                                                                <span
+                                                                    class="test-case-count fw-bold text-success d-inline-block">
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="card mt-2">
+                                                            <div class="card-body">
+                                                                <h6 class="fw-bold d-inline-block">Passed Test Case: </h6>
+                                                                <span
+                                                                    class="passed-case-count fw-bold text-success d-inline-block"></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="card mt-2">
+                                                            <div class="card-body">
+                                                                <h6 class="fw-bold d-inline-block">Rejected Test Case:
+                                                                </h6>
+                                                                <span
+                                                                    class="rejected-case-count text-danger fw-bold d-inline-block"></span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="profile" role="tabpanel"
-                                            aria-labelledby="profile-tab">
-                                            <div class="verify-error mt-4 fw-bold text-danger"></div>
-                                            <div class="hidden-testcase-tab">
-                                                <div class="card mt-4">
-                                                    <div class="card-body">
-                                                        <h6 class="fw-bold d-inline-block">Total Test Case: </h6>
-                                                        <span class="test-case-count fw-bold text-success d-inline-block">
-                                                        </span>
-                                                    </div>
-                                                </div>
 
-                                                <div class="card mt-2">
-                                                    <div class="card-body">
-                                                        <h6 class="fw-bold d-inline-block">Passed Test Case: </h6>
-                                                        <span
-                                                            class="passed-case-count fw-bold text-success d-inline-block"></span>
-                                                    </div>
-                                                </div>
 
-                                                <div class="card mt-2">
-                                                    <div class="card-body">
-                                                        <h6 class="fw-bold d-inline-block">Rejected Test Case: </h6>
-                                                        <span
-                                                            class="rejected-case-count text-danger fw-bold d-inline-block"></span>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
                                     </div>
                                 </div>
-
 
                             </div>
 
@@ -588,7 +642,6 @@
                     <div class="col-12 footer-btn d-flex justify-content-center">
                         {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
                         <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
-                        <button type="button" class="btn btn-theme mx-4 verify-button">Verify</button>
                         <button type="button" class="btn btn-theme mx-4 save-next next-button">&raquo;</button>
 
                         <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
@@ -627,6 +680,7 @@
             var run_question_outputs = [];
             var verify_question_inputs = [];
             var verify_question_outputs = [];
+            var question_category_value = [];
 
             $(document).ready(function() {
 
@@ -644,8 +698,6 @@
 
 
                         var question = questionsData[index].question_for_test;
-
-
 
                         var mcqOptions = questionsData[index].mcq_options;
                         $(".question_count").text("Question No. " + (index + 1));
@@ -697,22 +749,40 @@
                     } else if (localStorage.getItem("question_category") == 1) {
 
 
-                        var question = questionsData[0][index].question_for_test.questions;
-                        question_code_for_save = questionsData[0][index].question_for_test.question_code;
-                        $(questionsData[0][index].test_cases).map((i, e) => {
-                            if (e.sample == 1) {
-                                run_question_inputs.push(e.input)
-                                run_question_outputs.push(e.output)
-                            }
+                        var question = questionsData[localStorage.getItem("section")][index].question_for_test
+                            .questions;
 
+                        question_code_for_save = questionsData[localStorage.getItem("section")][index].question_for_test
+                            .question_code;
+                        var testcasediv = "";
+                        var coun = 1;
+                        $(questionsData[localStorage.getItem("section")][index].test_cases).map((i, e) => {
+
+                            testcasediv += `
+                                    <h6 class="fw-bold">SAMPLE TEST CASE: ${coun ++}</h6>
+                                    <div class="ms-2">
+                                    <label class="fw-bold text-primary text-decoration-underline">Input</label>
+                                    <p >${e.input}</p>
+                                    <label class="fw-bold text-info text-decoration-underline ">Output</label>
+                                    <p>${e.output}</p>
+                                </div>
+                                `;
+                            run_question_inputs.push(e.input)
+                            run_question_outputs.push(e.output)
+                            // }
+                            // 
                             verify_question_inputs.push(e.input);
                             verify_question_outputs.push(e.output);
                         })
 
+                        $(".test-case-div").append(testcasediv);
 
-                        var input_format = questionsData[0][index].question_for_test.input_format
-                        var output_format = questionsData[0][index].question_for_test.output_format
-                        var code_constraints = questionsData[0][index].question_for_test.code_constraints
+                        var input_format = questionsData[localStorage.getItem("section")][index].question_for_test
+                            .input_format
+                        var output_format = questionsData[localStorage.getItem("section")][index].question_for_test
+                            .output_format
+                        var code_constraints = questionsData[localStorage.getItem("section")][index].question_for_test
+                            .code_constraints
 
 
                         $(".programming-questions").html(question)
@@ -790,7 +860,6 @@
 
                         currentQuestionIndex++;
 
-
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
 
@@ -857,6 +926,8 @@
                     },
                     success: function(data) {
 
+                        console.log(data);
+
                         fetch_questions = data;
 
                         if (localStorage.getItem("question_category") == null) {
@@ -873,9 +944,11 @@
 
                         if (localStorage.getItem('question_category') == 1) {
 
+                            question_category_value = data[2];
+
                             $(data[0].sections).each(function(i, e) {
 
-                                $("#languageSelect").before(
+                                $(".section-name-div").append(
                                     `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
                                 );
 
@@ -887,8 +960,6 @@
                             showQuestion(currentQuestionIndex);
 
                             $(".save-next").click(function() {
-
-                                $(".question-box").slideUp();
 
                                 saveAndNext();
 
@@ -1062,9 +1133,13 @@
                                         $("#sample_correct_testcase").empty();
 
                                         if (data[0].stderr != null) {
-                                            $("#sample_correct_testcase").text(data[0]
-                                                .stderr).addClass(
+                                            var formattedStderr = data[0].stderr
+                                                .replace(/\n/g, '<br>');
+
+                                            $("#sample_correct_testcase").html(
+                                                formattedStderr).addClass(
                                                 "text-danger fw-bold");
+
 
                                             $("#home-tab").addClass("active");
 
@@ -1077,6 +1152,8 @@
                                             return false;
                                         } else {
 
+                                            $("#sample_correct_testcase").removeClass(
+                                                "text-danger fw-bold");
 
                                             var test_case_correct;
                                             $(data).each(function(i, elem) {
@@ -1227,8 +1304,11 @@
                                     success: function(data) {
 
                                         if (data[0].stderr != null) {
-                                            $(".verify-error").html(data[0]
-                                                .stderr);
+
+                                            var formattedStderr = data[0].stderr
+                                                .replace(/\n/g, '<br>');
+
+                                            $(".verify-error").html(formattedStderr);
 
 
                                             $("#home-tab").removeClass("active");
@@ -1530,9 +1610,12 @@
                         $(".hours").text(("0" + hours).slice(-2));
                         $(".minutes").text(("0" + minutes).slice(-2));
                         $(".seconds").text(("0" + seconds).slice(-2));
-                        if (totalSeconds < 1) {
+
+                        if (totalSeconds < 1220) {
 
                             $(".submit-test").prop("disabled", false);
+
+                            $(".submit-test").trigger('click');
 
                             $("form").submit();
                             clearInterval(timer);

@@ -208,7 +208,7 @@ Route::group(['middleware' =>  "auth"], function () {
     Route::get('/student/test-overview/{id}', $controller_path . '\Students\StudentTestController@test_overview')->name('test-overview');
 
     // Student Report
-    Route::get('/student/report', $controller_path . '\Students\ReportController@index')->name('student-report');
+    Route::get('/student/report/{course_id}/{test_code}', $controller_path . '\Students\ReportController@index')->name('student-report');
 
     //student Test screen
     Route::get('/Test/{course_id}/{test_code}', $controller_path . '\Students\StudentTestController@test_taking_screen')->name('student-test-screen');
@@ -219,6 +219,8 @@ Route::group(['middleware' =>  "auth"], function () {
     Route::post('/Test/save-question-response', $controller_path . '\Students\StudentTestController@student_test_questions_answers_update')->name('save-question-response');
     Route::post('/Test/save-questions-answers', $controller_path . '\Students\StudentTestController@student_test_questions_answers_update')->name('save-questions-answers');
     Route::post('/Test/test-testcase-update', $controller_path . '\Students\StudentTestController@verify_testcase_update')->name('test-testcase-update');
+
+    Route::post('/Test/fetch-student-questions', $controller_path . '\Students\StudentTestController@fetch_student_questions')->name('fetch-student-questions');
 });
 
 //Ajax Controller's Route:
@@ -232,6 +234,7 @@ Route::get('/ajax/ajax-get-colleges', $controller_path . '\AjaxController@get_co
 Route::get('/ajax/ajax-get-questions', $controller_path . '\AjaxController@get_questions')->name('ajax-get-questions');
 Route::get('/ajax/ajax-get-categories', $controller_path . '\AjaxController@get_categories')->name('ajax-get-categories');
 Route::get('/ajax/ajax-get-tags', $controller_path . '\AjaxController@get_tags')->name('ajax-get-tags');
+Route::get('/ajax/ajax-get-sections', $controller_path . '\AjaxController@get_sections')->name('ajax-get-sections');
 
 
 

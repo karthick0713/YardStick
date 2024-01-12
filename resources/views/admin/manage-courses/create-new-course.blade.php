@@ -190,7 +190,7 @@
                                                         <label class="form-label" for="form-repeater-1-1"><b></b></label>
                                                         <div class="d-flex align-items-center">
                                                             <select name="year" class="form-control year">
-                                                                <option value="" selected disabled>SELECT
+                                                                <option value=" " selected>SELECT
                                                                 </option>
                                                                 <option value="1">1st Year</option>
                                                                 <option value="2">2nd Year</option>
@@ -639,7 +639,7 @@
                 dataType: "json",
                 success: function(data) {
                     var html =
-                        '<option value="" selected disabled>SELECT</option>';
+                        '<option value="" selected  >SELECT</option>';
                     var i;
                     for (i = 0; i < data.length; i++) {
                         html += '<option value="' + data[i].college_id +
@@ -666,7 +666,7 @@
                 dataType: "json",
                 success: function(data) {
                     var html =
-                        '<option value="" selected disabled>SELECT</option>';
+                        '<option value="" selected  >SELECT</option>';
                     var i;
                     for (i = 0; i < data.length; i++) {
                         html += '<option value="' + data[i].department_id +
@@ -749,7 +749,7 @@
                         dataType: "json",
                         success: function(data) {
                             var html =
-                                '<option value="" selected disabled>SELECT</option>';
+                                '<option value=" " selected disabled>SELECT</option>';
                             var i;
                             for (i = 0; i < data.length; i++) {
                                 html += '<option value="' + data[i].college_id +
@@ -776,7 +776,7 @@
                         dataType: "json",
                         success: function(data) {
                             var html =
-                                '<option value="" selected disabled>SELECT</option>';
+                                '<option value=" " selected disabled>SELECT</option>';
                             var i;
                             for (i = 0; i < data.length; i++) {
                                 html += '<option value="' + data[i].department_id +
