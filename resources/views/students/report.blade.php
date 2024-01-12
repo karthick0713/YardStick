@@ -244,7 +244,11 @@
         var test_student_question_details = @json($test_question_details);
         var question_details = @json($data['question_details']);
         var mcqOptions = @json($data['mcq_options']);
+        var programmingTestCase = @json($data['programming_test_case']);
 
+        var programmingQuestions = question_details.filter(function(question) {
+            return question.category == 1;
+        });
 
         var mcqQuestions = question_details.filter(function(question) {
             return question.category == 2;
@@ -287,8 +291,29 @@
 
                 var matchingCategory = categories.find(category => category.opt_id == value);
 
+
+
                 if (matchingCategory.cat == 1) {
 
+                    programmingQuestions.forEach(function(programmingQuestion, index) {
+                        var questionDiv = document.createElement('div');
+                        questionDiv.classList.add('question-container', 'mb-4');
+
+                        var questionText = document.createElement('p');
+                        questionText.innerHTML = `Question ${index + 1}: ` + programmingQuestion.questions;
+
+                        var questionDetails = test_student_question_details.find(function(detail) {
+                            return detail.question_code === programmingQuestion.question_code;
+                        });
+
+                        questionDiv.appendChild(questionText);
+
+                        highlightOptions(mcqOptions[index], questionDetails, questionDiv);
+
+                        resultDiv.appendChild(questionDiv);
+
+                        resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
+                    });
 
 
 
