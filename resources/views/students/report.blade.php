@@ -14,6 +14,10 @@
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 @endsection
 @section('content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+
     <style>
         .fs-20 {
             font-size: 20px;
@@ -63,11 +67,14 @@
             display: flex;
             align-items: center;
             margin: 5px;
-            padding: 10px;
             border-radius: 5px;
             cursor: pointer;
             width: 75%;
 
+        }
+
+        label>p {
+            padding-top: 18px !important;
         }
 
         .card-body {
@@ -78,13 +85,13 @@
         }
 
         .correct-answer {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #155724;
+            color: #fff;
         }
 
         .selected-answer {
-            background-color: #f8d7da;
-            color: #721c24;
+            background-color: #bb2533;
+            color: #fff;
         }
 
         .normal-answer {
@@ -118,8 +125,62 @@
             margin-right: 5px;
         }
 
-        #resultDiv {
-            display: none;
+        .background {
+            background-color: #e1e7eb !important;
+        }
+
+        /* label.card-body {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                line-height: 0.1cm !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            } */
+
+        .custom-align-center {
+            display: flex;
+            align-items: center !important;
+        }
+
+
+        /* Primary Button with Outline */
+        .btn-outline-primary {
+            color: #e4ecf5;
+            background-color: transparent;
+            background-image: none;
+            border-color: #e1e7eb;
+        }
+
+        .btn-outline-primary:hover {
+            color: #fff;
+            background-color: #e1e7eb;
+            border-color: #e1e7eb;
+        }
+
+        .btn-outline-primary:focus,
+        .btn-outline-primary.focus {
+            box-shadow: 0 0 0 0.2rem rgba(150, 186, 224, 0.5);
+        }
+
+        .btn-outline-primary.disabled,
+        .btn-outline-primary:disabled {
+            color: #e1e7eb;
+            background-color: transparent;
+            border-color: #e1e7eb;
+        }
+
+        .btn-outline-primary:not(:disabled):not(.disabled):active,
+        .btn-outline-primary:not(:disabled):not(.disabled).active,
+        .show>.btn-outline-primary.dropdown-toggle {
+            color: #fff;
+            background-color: #e1e7eb;
+            border-color: #e1e7eb;
+        }
+
+        .btn-outline-primary:not(:disabled):not(.disabled):active:focus,
+        .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
+        .show>.btn-outline-primary.dropdown-toggle:focus {
+            box-shadow: 0 0 0 0.2rem #ee7676;
+        }
+
+        .test-case-button {
+            background-color: #e9ebec !important;
         }
     </style>
 
@@ -136,8 +197,6 @@
         </div>
 
         <div class="col-12 ">
-
-
 
             <div class="row">
                 <div class="col-md-2">
@@ -179,7 +238,7 @@
                         </div>
                         <div class="card radius-none background-secondary">
                             <div class=" mt-3 mb-3 text-center fw-bold fs-30 text-white">
-                                {{ $test_details->total_questions - count($test_question_details) > 0 ? $test_details->total_questions - count($test_question_details) : '-' }}
+                                {{ $data['total_questions'] - count($test_question_details) > 0 ? $data['total_questions'] - count($test_question_details) : '-' }}
                             </div>
                         </div>
                     </div>
@@ -231,13 +290,9 @@
         </div>
     </div>
 
-
-    <br><br>
     <div class="container mt-4">
-        <h5 class="fw-bold mt-5 ms-4">DETAILED REPORT:</h5>
-        <div class="card">
-            <div id="resultDiv"></div>
-        </div>
+        <h5 style="display:none" class="report-title fw-bold mt-5 ms-4">DETAILED REPORT:</h5>
+        <div id="resultDiv"></div>
     </div>
 
     <script>
@@ -287,115 +342,295 @@
 
         function fetch_questions_answers(value) {
 
-            if (categories.some(category => category.opt_id == value)) {
+            $(".report-title").show();
 
+            if (categories.some(category => category.opt_id == value)) {
                 var matchingCategory = categories.find(category => category.opt_id == value);
 
-
-
                 if (matchingCategory.cat == 1) {
+                    $("#resultDiv").empty();
 
-                    programmingQuestions.forEach(function(programmingQuestion, index) {
-                        var questionDiv = document.createElement('div');
-                        questionDiv.classList.add('question-container', 'mb-4');
+                    $.each(programmingQuestions, function(index, programmingQuestion) {
+                        var cardContainer = $('<div>').addClass('card mb-4');
+                        var cardBody = $('<div>').addClass('card-body');
 
-                        var questionText = document.createElement('p');
-                        questionText.innerHTML = `Question ${index + 1}: ` + programmingQuestion.questions;
+                        var accordionContainer = $('<div>').addClass('accordion container');
+                        var accordionItem = $('<div>').addClass('accordion-item row');
 
-                        var questionDetails = test_student_question_details.find(function(detail) {
+                        var accordionHeader = $('<h2>').addClass('accordion-header ').attr('id', 'question-' +
+                            index + '-header');
+                        var questionButton = $('<button>').addClass(
+                                'accordion-button w-100  btn btn-outline-primary fw-bold')
+                            .attr({
+                                'type': 'button',
+                                'data-bs-toggle': 'collapse',
+                                'data-bs-target': '#question-' + index + '-content',
+                                'aria-expanded': 'false',
+                                'aria-controls': 'question-' + index + '-content',
+                                'data-bs-parent': '#accordion-parent'
+                            });
+
+                        questionButton.html(`Question ${index + 1}`);
+                        accordionHeader.append(questionButton);
+
+                        var accordionBody = $('<div>').addClass('accordion-collapse collapse col-12')
+                            .attr({
+                                'id': 'question-' + index + '-content',
+                                'aria-labelledby': 'question-' + index + '-header'
+                            });
+                        var questionDiv = $('<div>').addClass('accordion-body col-12');
+                        var newContainer = $('<div>').addClass('row');
+
+                        var additionalInfoDiv = $('<div>').addClass('row col-12 mt-3');
+                        var inputFormatDiv = $('<div>').addClass('col-4');
+                        var inputFormatTitle = $('<h5>').addClass('fw-bold').html('Input Format:');
+                        var inputFormatPre = $('<p>').html(programmingQuestion.input_format.replaceAll('\n',
+                            '<br/>'));
+                        inputFormatDiv.append(inputFormatTitle, inputFormatPre);
+
+                        var outputFormatDiv = $('<div>').addClass('col-4');
+                        var outputFormatTitle = $('<h5>').addClass('fw-bold').html('Output Format:');
+                        var outputFormatPre = $('<p>').html(programmingQuestion.output_format.replaceAll('\n',
+                            '<br/>'));
+                        outputFormatDiv.append(outputFormatTitle, outputFormatPre);
+
+                        var codeConstraintsDiv = $('<div>').addClass('col-4');
+                        var codeConstraintsTitle = $('<h5>').addClass('fw-bold').html('Code Constraints:');
+                        var codeConstraintsPre = $('<p>').html(programmingQuestion.code_constraints.replaceAll('\n',
+                            '<br/>'));
+                        codeConstraintsDiv.append(codeConstraintsTitle, codeConstraintsPre);
+
+                        additionalInfoDiv.append(inputFormatDiv, outputFormatDiv, codeConstraintsDiv);
+
+                        var questionSolutionDiv = $('<div>').addClass('col-6');
+                        var solutionTitleDiv = $('<div>');
+                        var solutionTitle = $('<h5>').addClass('fw-bold text-sec-color').html('SOLUTION :');
+                        var questionSolutionPre = $('<pre>').addClass('language-cpp').text(programmingQuestion
+                            .solutions);
+                        questionSolutionDiv.append(solutionTitleDiv, solutionTitle,
+                            questionSolutionPre);
+
+                        var studentCodeDiv = $('<div>').addClass('col-6');
+                        var studentCodeTitleDiv = $('<div>');
+                        var studentCodeTitle = $('<h5>').addClass('fw-bold').html('YOUR CODE :');
+                        var studentCodePre = $('<pre>').addClass('language-cpp');
+                        var studentTestSolution = test_student_question_details.find(function(detail) {
                             return detail.question_code === programmingQuestion.question_code;
                         });
+                        studentCodePre.text(studentTestSolution.student_code);
+                        studentCodeDiv.append(studentCodeTitleDiv, studentCodeTitle, studentCodePre);
 
-                        questionDiv.appendChild(questionText);
+                        newContainer.append(additionalInfoDiv, questionSolutionDiv, studentCodeDiv);
 
-                        highlightOptions(mcqOptions[index], questionDetails, questionDiv);
+                        var questionTitleDiv = $('<div>');
+                        var questionTitle = $('<h5>').addClass('fw-bold').html('Question ' + (index + 1));
 
-                        resultDiv.appendChild(questionDiv);
+                        var questionTextDiv = $('<div>');
+                        var questionText = $('<p>').html(programmingQuestion.questions);
+                        questionTextDiv.append(questionText);
+
+                        questionDiv.append(questionTitleDiv, questionTextDiv, newContainer);
+
+                        accordionBody.append(questionDiv);
+
+                        var testCasesAccordionContainer = $('<div>').addClass(
+                            'accordion test-cases-accordion mt-3');
+                        var testCasesAccordionItem = $('<div>').addClass('accordion-item row');
+
+                        var testCasesAccordionHeader = $('<h2>').addClass('accordion-header').attr('id',
+                            'test-cases-' + index + '-header');
+                        var testCasesButton = $('<button>').addClass(
+                                'accordion-button test-case-button w-100 btn btn-outline-primary fw-bold')
+                            .attr({
+                                'type': 'button',
+                                'data-bs-toggle': 'collapse',
+                                'data-bs-target': '#test-cases-' + index + '-content',
+                                'aria-expanded': 'false',
+                                'aria-controls': 'test-cases-' + index + '-content'
+                            })
+                            .text('Test Cases');
+
+                        testCasesAccordionHeader.append(testCasesButton);
+
+                        var testCasesAccordionBody = $('<div>').addClass('accordion-collapse collapse col-12')
+                            .attr({
+                                'id': 'test-cases-' + index + '-content',
+                                'aria-labelledby': 'test-cases-' + index + '-header'
+                            });
+
+                        var testCasesRow = $('<div>').addClass('row');
+
+                        $.each(programmingTestCase[index], function(testCaseIndex, testCase) {
+                            var testCaseDiv = $('<div>').addClass(
+                                'col-3 accordion-body rounded-2 text-center text-white  ms-5 mt-3');
+
+                            var executedOutputDiv = $('<div>');
+                            var executedOutputTitle = $('<h5>').addClass(
+                                    'fw-bold text-white mt-4  text-decoration-underline')
+                                .html(
+                                    'Executed Output :');
+                            var executedOutputPre = $('<pre>').text(testCase.executed_output);
+                            executedOutputDiv.append(executedOutputTitle, executedOutputPre);
+
+                            var expectedOutputDiv = $('<div>');
+                            var expectedOutputTitle = $('<h5>').addClass(
+                                'fw-bold text-white text-decoration-underline').html(
+                                'Expected Output :');
+                            var expectedOutputPre = $('<pre>').text(testCase.expected_output);
+                            expectedOutputDiv.append(expectedOutputTitle, expectedOutputPre);
+
+                            var executedOutputTrimmed = testCase.executed_output.trim().replaceAll(
+                                /[\r\n]/g,
+                                '');
+                            var expectedOutputTrimmed = testCase.expected_output.trim().replaceAll(
+                                /[\r\n]/g,
+                                '');
+
+                            var match = executedOutputTrimmed === expectedOutputTrimmed;
+                            testCaseDiv.css('background-color', match ? '#3c7a3c' : '#cf3131');
+
+                            testCaseDiv.append(executedOutputDiv, expectedOutputDiv);
+                            testCasesRow.append(testCaseDiv);
+                        });
+
+                        testCasesAccordionBody.append(testCasesRow);
+                        testCasesAccordionItem.append(testCasesAccordionHeader, testCasesAccordionBody);
+                        testCasesAccordionContainer.append(testCasesAccordionItem);
+
+                        accordionBody.append(testCasesAccordionContainer);
+                        accordionItem.append(accordionHeader, accordionBody);
+                        accordionContainer.append(accordionItem);
+
+                        cardBody.append(accordionContainer);
+                        cardContainer.append(cardBody);
+                        $('#resultDiv').append(cardContainer);
 
                         resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
+
+                        Prism.highlightAll();
                     });
+
+                    $('.accordion').each(function() {
+                        $(this).collapse({
+                            toggle: false
+                        });
+                    });
+
 
 
 
                 } else if (matchingCategory.cat == 2) {
 
+                    $("#resultDiv").empty();
 
-                    mcqQuestions.forEach(function(mcqQuestion, index) {
-                        var questionDiv = document.createElement('div');
-                        questionDiv.classList.add('question-container', 'mb-4');
+                    $.each(mcqQuestions, function(index, mcqQuestion) {
 
-                        var questionText = document.createElement('p');
-                        questionText.innerHTML = `Question ${index + 1}: ` + mcqQuestion.questions;
+                        var cardContainer = $('<div>').addClass('card mb-4');
+                        var cardBody = $('<div>').addClass('card-body');
+
+                        var accordionContainer = $('<div>').addClass('accordion');
+                        var accordionItem = $('<div>').addClass('accordion-item');
+                        var accordionHeader = $('<h2>').addClass('accordion-header').attr('id', 'question-' +
+                            index + '-header');
+
+                        var questionButton = $('<button>').addClass(
+                                'accordion-button btn btn-outline-primary fw-bold')
+                            .attr({
+                                'type': 'button',
+                                'data-bs-toggle': 'collapse',
+                                'data-bs-target': '#question-' + index + '-content',
+                                'aria-expanded': 'false',
+                                'aria-controls': 'question-' + index + '-content'
+                            })
+                            .html(`Question ${index + 1}`);
+
+                        accordionHeader.append(questionButton);
+
+                        var accordionBody = $('<div>').addClass('accordion-collapse collapse')
+                            .attr({
+                                'id': 'question-' + index + '-content',
+                                'aria-labelledby': 'question-' + index + '-header'
+                            });
+
+                        var questionDiv = $('<div>').addClass('accordion-body ');
+                        var questionText = $('<p>').addClass('mb-0 fs-5').html(mcqQuestion.questions);
+                        questionDiv.append(questionText);
 
                         var questionDetails = test_student_question_details.find(function(detail) {
+
                             return detail.question_code === mcqQuestion.question_code;
                         });
 
-                        questionDiv.appendChild(questionText);
+                        var optionsContainer = $('<div>').addClass(
+                            'options-container');
+                        highlightOptions(mcqOptions[index], questionDetails, optionsContainer);
 
-                        highlightOptions(mcqOptions[index], questionDetails, questionDiv);
+                        questionDiv.append(optionsContainer);
 
-                        resultDiv.appendChild(questionDiv);
-
-                        resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
+                        accordionBody.append(questionDiv);
+                        accordionItem.append(accordionHeader, accordionBody);
+                        accordionContainer.append(accordionItem);
+                        cardBody.append(accordionContainer);
+                        cardContainer.append(cardBody);
+                        $('#resultDiv').append(cardContainer);
                     });
 
+                    $('.accordion').each(function() {
+                        new bootstrap.Collapse($(this).find('.accordion-button'), {
+                            toggle: false
+                        });
+                    });
+
+                    resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
+                    $('#resultDiv p:empty').remove();
+
+                    $('.accordion').each(function() {
+                        $(this).collapse({
+                            toggle: false
+                        });
+                    });
                 }
-
-                $("#resultDiv").show();
-
             }
 
-
-
             function highlightOptions(options, questionDetails, containerDiv) {
-                options.forEach(function(option, index) {
-                    var optionContainer = document.createElement('div');
-                    optionContainer.classList.add('option-container');
+                $.each(options, function(index, option) {
+                    var optionContainer = $('<div>').addClass('option-container ');
+                    var radioInput = $('<input>').attr({
+                        'type': 'radio',
+                        'name': 'question_' + questionDetails.question_code,
+                        'value': option.id
+                    }).addClass('option-radio').prop('disabled', true);
 
-                    var radioInput = document.createElement('input');
-                    radioInput.type = 'radio';
-                    radioInput.name = 'question_' + questionDetails.question_code;
-                    radioInput.value = option.id;
-                    radioInput.classList.add('option-radio');
-                    radioInput.disabled = true;
-
-                    var optionElement = document.createElement('label');
-                    optionElement.classList.add('card-body');
+                    var optionElement = $('<label>').addClass('row col-12');
 
                     if (option.id == questionDetails.correct_answer && option.id == questionDetails
                         .answer_selected) {
-                        optionElement.classList.add('correct-answer');
+                        optionElement.addClass('correct-answer');
                         addTickOrCross(optionElement, true);
                     } else if (option.id == questionDetails.correct_answer) {
-                        optionElement.classList.add('correct-answer');
+                        optionElement.addClass('correct-answer');
                         addTickOrCross(optionElement, true);
                     } else if (option.id == questionDetails.answer_selected) {
-                        optionElement.classList.add('selected-answer');
+                        optionElement.addClass('selected-answer');
                         addTickOrCross(optionElement, false);
                     } else {
-                        optionElement.classList.add('normal-answer');
+                        optionElement.addClass('normal-answer');
                     }
 
-                    optionElement.innerHTML = option.option_answer;
-                    optionElement.innerHTML = optionElement.innerHTML.replaceAll('<p><br></p>', '');
-
-                    optionContainer.appendChild(radioInput);
-                    optionContainer.appendChild(optionElement);
-                    containerDiv.appendChild(optionContainer);
+                    optionElement.html(option.option_answer.replace('<p><br></p>', ''));
+                    optionContainer.append(optionElement);
+                    containerDiv.append(optionContainer);
                 });
             }
 
+
+
+
+
             function addTickOrCross(optionElement, isCorrect) {
-                var iconElement = document.createElement('span');
-                iconElement.classList.add(isCorrect ? 'tick' : 'cross');
-                iconElement.innerHTML = isCorrect ? '&#10003;' : 'X';
-                optionElement.appendChild(iconElement);
+                var iconElement = $('<span>').addClass(isCorrect ? 'tick' : 'cross').html(isCorrect ? '&#10003;' : 'X');
+                optionElement.append(iconElement);
             }
-
-
-
-
         }
     </script>
 

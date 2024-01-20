@@ -16,23 +16,57 @@ class StudentController extends Controller
     {
         $heading = "Dashboard";
         $sub_heading = "";
+
+        $student_det = DB::table('master_students')->where('register_no', session('userId'))->first();
+
         $stu_groups = DB::table('student_group')
             ->leftJoin('student_group_entry', 'student_group_entry.group_id', '=', 'student_group.group_id')
             ->where('student_group.is_active', 1)
             ->where('student_group.trash_key', 1)
-            ->where('student_group_entry.register_no', Session::get('userId'))
+            ->where('student_group_entry.register_no', session('userId'))
             ->get();
 
         $courses = [];
-        foreach ($stu_groups as $group) {
-            $course_id = DB::table('course_allocate_to_students')
-                ->whereRaw("FIND_IN_SET($group->group_id, groups_id)")
-                ->get();
-            foreach ($course_id as $c_id) {
-                $courses[] = DB::table('course_creation')->where('course_id', $c_id->course_id)->first();
-                $course_params[] = DB::table('course_test_parameters')->where('course_id', $c_id->course_id)->count();
+        $course_params = [];
+
+        if ($stu_groups->isEmpty()) {
+            $course_ids = DB::table('course_allocate_to_students')
+                ->where('college_id', $student_det->college_id)
+                ->where(function ($query) use ($student_det) {
+                    $query->where('department_id', $student_det->department_id)
+                        ->orWhereNull('department_id');
+                })
+                ->where(function ($query) use ($student_det) {
+                    $query->where('year', $student_det->year)
+                        ->orWhereNull('year');
+                })
+                ->pluck('course_id');
+        } else {
+            foreach ($stu_groups as $group) {
+                $course_ids = DB::table('course_allocate_to_students')
+                    ->where('college_id', $student_det->college_id)
+                    ->where(function ($query) use ($student_det) {
+                        $query->where('department_id', $student_det->department_id)
+                            ->orWhereNull('department_id');
+                    })
+                    ->where(function ($query) use ($student_det) {
+                        $query->where('year', $student_det->year)
+                            ->orWhereNull('year');
+                    })
+                    ->where(function ($query) use ($group) {
+                        $query->whereRaw("FIND_IN_SET($group->group_id, groups_id)")
+                            ->orWhereNull('groups_id');
+                    })
+                    ->pluck('course_id');
             }
         }
+        foreach ($course_ids as $course_id) {
+            $courses[] = DB::table('course_creation')->where('course_id', $course_id)->first();
+            $course_params[] = DB::table('course_test_parameters')->where('course_id', $course_id)->count();
+        }
+
+
+
         if (isset($course_params)) {
             $course_params = $course_params;
         } else {

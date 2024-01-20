@@ -5,11 +5,6 @@ namespace App\Http\Controllers\Students;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Session;
-use PDO;
-use Yajra\DataTables\DataTables;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ReportController extends Controller
 {
@@ -19,11 +14,12 @@ class ReportController extends Controller
         $heading = "Result";
         $sub_heading = "";
         $where = [
-            'test_code' => base64_decode(request()->segment(4))
+            'test_code' => base64_decode(request()->segment(4)),
+            'course_id' => base64_decode(request()->segment(3))
         ];
-        $test_details = DB::table('students_test_entries')->where($where)->first();
-        $test_question_details = DB::table('students_test_questions_answers_entry')->where($where)->get();
-        $section_wise_question = DB::table('test_section_wise_questions')->where($where)->get();
+        $test_details = DB::table('students_test_entries')->where($where)->where('student_reg_no', session('userId'))->first();
+        $test_question_details = DB::table('students_test_questions_answers_entry')->where($where)->where('student_reg_no', session('userId'))->get();
+        $section_wise_question = DB::table('test_section_wise_questions')->where('test_code', base64_decode(request()->segment(4)))->get();
 
         $total_marks_taken = 0;
         foreach ($test_question_details as $test_d) {
@@ -49,21 +45,23 @@ class ReportController extends Controller
                 $veryHard
             );
             $questions[] = $allQuestions;
-            foreach ($allQuestions as $key => $questionId) {
-                $question_details[] = DB::table('question_banks')->where('question_code', $questionId)->first();
+            foreach ($allQuestions as $key => $questionCode) {
 
-                if ($question_details[$key]->category == 1) {
-                    $programming_test_case[] = DB::table('programming_question_test_case')->where('question_code', $questionId)->get();
-                } else if ($question_details[$key]->category == 2) {
-                    $mcq_options[] = DB::table('question_bank_for_mcq')->where('question_code', $questionId)->get();
+                $question_details = DB::table('question_banks')->where('question_code', $questionCode)->first();
+
+                $ques_det[] = $question_details;
+
+                if ($question_details->category == 1) {
+                    $programming_test_case[] = DB::table('student_test_programming_test_cases')->where('question_code', $questionCode)->where('test_entry_id', $test_details->id)->get();
+                } else if ($question_details->category == 2) {
+                    $mcq_options[] = DB::table('question_bank_for_mcq')->where('question_code', $questionCode)->get();
                 }
 
-                $marks = DB::table('question_banks')->where('question_code', $questionId)->value('marks');
+                $marks = DB::table('question_banks')->where('question_code', $questionCode)->value('marks');
                 $totalMarks += $marks;
             }
         }
 
-        $ts = DB::table('test_section_wise_questions')->where($where)->get();
         $easyCount = 0;
         $mediumCount = 0;
         $hardCount = 0;
@@ -71,7 +69,7 @@ class ReportController extends Controller
         $common_test_questionCount = 0;
         $total_duration = 0;
         $total_sections = "";
-        foreach ($ts as $record) {
+        foreach ($section_wise_question as $record) {
             $easyCount += $record->easy ? count(explode(',', $record->easy)) : 0;
             $mediumCount += $record->medium ? count(explode(',', $record->medium)) : 0;
             $hardCount += $record->hard ? count(explode(',', $record->hard)) : 0;
@@ -88,7 +86,7 @@ class ReportController extends Controller
         $data = [
             'total_marks' =>  $total_marks_taken,
             'total_question_marks' =>  $totalMarks,
-            'question_details' => $question_details,
+            'question_details' => $ques_det,
             'mcq_options' => $mcq_options,
             'programming_test_case' => $programming_test_case,
             'total_questions' => $total_questions

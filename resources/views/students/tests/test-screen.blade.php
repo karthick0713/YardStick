@@ -142,6 +142,15 @@
             border-radius: 50%;
         }
 
+        .mark-for-review {
+            background: #fff;
+            color: #000;
+            border-radius: 0 0 1rem 0;
+            border-radius: 3rem;
+            padding: 2px 14px;
+            border: 1px solid #2b2b2b;
+        }
+
         ul.quiz_info li span.not_visited {
             background: #fff;
             border: 1px solid #2b2b2b;
@@ -436,7 +445,7 @@
                 <!-- footer -->
                 <footer>
                     <div class="footer-btn ">
-                        {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
+                        <button type="button" class="btn btn-theme mark-for-review-button">Mark for Review & Next</button>
                         <button type="button" class="btn btn-theme clear-response">Clear Response</button>
                         <button type="button" class="btn btn-info float-right save-next">Save & Next</button>
                     </div>
@@ -522,7 +531,7 @@
 
                     </div>
                 </div>
-                <div class="">
+                <div>
                     <div class="row col-12">
                         <div class="col-4" style="max-height: 80vh;">
                             <div class="card" style="height: 100%; overflow-y: auto;">
@@ -580,7 +589,6 @@
                                                     aria-labelledby="home-tab">
 
                                                     <div id="sample_correct_testcase" class="mt-4">
-
 
                                                     </div>
                                                 </div>
@@ -664,6 +672,8 @@
 
         <script>
             $(function() {
+
+
                 $("#side-bar .icon").click(function() {
                     $("body").toggleClass("side-bar-hide");
                 });
@@ -795,6 +805,35 @@
 
                 }
 
+                function markForReview() {
+                    var markedQuestions = JSON.parse(localStorage.getItem('markedQuestions')) || [];
+
+                    if (!markedQuestions.includes(currentQuestionIndex)) {
+
+                        markedQuestions.push(currentQuestionIndex);
+
+                        localStorage.setItem('markedQuestions', JSON.stringify(markedQuestions));
+
+                        $('.quiz_number li:eq(' + currentQuestionIndex + ')').addClass('mark-for-review');
+
+                        currentQuestionIndex++;
+
+                        showQuestion(currentQuestionIndex)
+                        localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                            currentQuestionIndex + 1);
+                    } else {
+                        alert('Question already marked for review.');
+                        currentQuestionIndex++;
+
+                        showQuestion(currentQuestionIndex)
+
+                        localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                            currentQuestionIndex + 1);
+                    }
+                }
+
+
+
                 var isReloaded = false;
 
 
@@ -837,8 +876,14 @@
 
                         })
 
+                        console.log(currentQuestionIndex);
+
                         $(".question" + currentQuestionIndex).removeClass('active');
+
                         currentQuestionIndex++;
+
+                        console.log(currentQuestionIndex);
+
                         $(".question" + currentQuestionIndex).addClass('active');
 
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
@@ -912,7 +957,9 @@
 
                 }
 
-
+                $(".mark-for-review-button").click(function() {
+                    markForReview();
+                });
 
 
                 $.ajax({
@@ -926,13 +973,12 @@
                     },
                     success: function(data) {
 
-                        console.log(data);
-
                         fetch_questions = data;
 
-                        if (localStorage.getItem("question_category") == null) {
+                        if (localStorage.getItem("question_category") == null || localStorage.getItem(
+                                "question_category") == "undefined") {
 
-                            localStorage.setItem('question_category', data[2][0][0]);
+                            localStorage.setItem('question_category', data[2][0]);
 
                         }
 
@@ -1430,18 +1476,20 @@
 
                             $("#content-to-fullscreen").show();
 
+                            var marked_questions = localStorage.getItem('markedQuestions');
+                            marked_questions = marked_questions ? JSON.parse(marked_questions) : [];
+
                             questionsData = data[1][localStorage.getItem("section")];
                             var len_question = questionsData;
                             var html = "";
+
                             for (var i = 1; i <= len_question.length; i++) {
+                                var isMarked = marked_questions.includes(i - 1);
                                 html +=
-                                    `<li class="span-ques"  style="cursor:pointer"><span  class=" question${i-1}">${i}</span></li>`;
+                                    `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i}</span></li>`;
                             }
+
                             $('.quiz_number').append(html);
-
-
-
-
 
                             showQuestion(currentQuestionIndex);
 
@@ -1470,11 +1518,6 @@
 
 
                 });
-
-
-
-
-
 
 
 
@@ -1511,6 +1554,8 @@
                             }
                         }
                     }
+
+
                 } else if (localStorage.getItem('question_category') == 1) {
 
 
@@ -1544,19 +1589,6 @@
                     currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex" + localStorage
                         .getItem(
                             'section')));
-
-                    setTimeout(() => {
-
-
-
-                        $(".question" + localStorage.getItem("currentQuestionIndex" + localStorage
-                            .getItem(
-                                'section'))).addClass('active');
-
-
-
-                    }, 200);
-
 
 
                 }
@@ -1611,7 +1643,7 @@
                         $(".minutes").text(("0" + minutes).slice(-2));
                         $(".seconds").text(("0" + seconds).slice(-2));
 
-                        if (totalSeconds < 1220) {
+                        if (totalSeconds < 1) {
 
                             $(".submit-test").prop("disabled", false);
 
@@ -1630,16 +1662,8 @@
                 }
 
 
-
-
-
                 $(".submit-test").on('click', function() {
 
-
-                    // var userResponse = window.prompt("Type Your Register No Submit the Test");
-                    // if (userResponse !== null) {
-                    //     var lowerCaseResponse = userResponse;
-                    //     if (lowerCaseResponse == "{{ session('userId') }}") {
                     localStorage.clear();
 
                     clearInterval(timer);
@@ -1653,15 +1677,13 @@
                     $(".seconds").text("00");
 
                     window.location.href = "{{ route('student-dashboard') }}";
-                    //     }
-                    // }
-
 
                 })
 
                 setTimeout(() => {
 
-                    $(".span-ques").on('click', function() {
+                    $(".mark-for-review").on('click', function() {
+                        alert();
 
                         var sp = $(this).children().attr("class");
 
@@ -1676,10 +1698,7 @@
             });
 
 
-
-
             function saveStudentTestEntry() {
-
 
                 $.ajax({
                     url: "{{ route('save-student-test-entry') }}",

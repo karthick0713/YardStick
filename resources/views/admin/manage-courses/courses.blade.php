@@ -69,6 +69,31 @@
         </div>
     </div>
 
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                    </div>
+                    <h4 class="modal-title">Are you sure?</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form action="" method="">
+                    <div class="modal-body">
+                        <p>Do You Want to Delete this Record ?</p>
+                        <input type="hidden" name="del_course_id" id="del_course_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn background-info text-white" data-bs-dismiss="modal"
+                            aria-label="Close">Cancel</button>
+                        <button type="button" onclick="deleteCourse()"
+                            class="btn background-secondary text-white">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             t = $(".dt-column-search");
@@ -141,13 +166,21 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
-                                var d = row.question_code;
+                                var d = row.course_id;
                                 return `
-                                <div class=''>
-                    <a class="icon-buttons"  onclick="openViewModal('${row.test_code}')">
-                        <i class="bx bx-show-alt"></i>
-                    </a>
+                                <div class='text-center'>
+
+                    <a class="icon-buttons text-black" href="{{ url('/admin/edit-course/${btoa(d)}') }}">
+                <i class="bx bx-edit-alt"></i>
+
+                
+                <a onclick="openDeleteModal('${d}')" class="text-black icon-buttons">
+                    <i class="bx bxs-trash"></i>
+                </a>
+
                     </div>
+
+                    
                 `;
                             },
                         },
@@ -186,10 +219,35 @@
 
         });
 
+        function openDeleteModal(value) {
+            $("#del_course_id").val(value);
+            $("#deleteModal").modal('show');
+        }
+
+
         $(document).ready(function() {
             $(".success-message").fadeIn().delay(3000).fadeOut();
             $(".error-message").fadeIn().delay(3000).fadeOut();
         })
+
+
+        function deleteCourse() {
+            var course_id = $("#del_course_id").val();
+            $.ajax({
+                url: '{{ route('delete-course') }}',
+                type: 'POST',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'course_id': course_id,
+                },
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(xhr) {
+                    location.reload();
+                }
+            });
+        }
     </script>
 
 

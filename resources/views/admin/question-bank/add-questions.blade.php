@@ -307,12 +307,9 @@
                                         <option value="yaml">YAML</option> --}}
                                     </select>
                                 </div>
-                                <div class="col-2 ms-3 mt-4">
-                                    <button type="button" class="btn btn-sm btn-primary play-button"
-                                        onclick="run_code()">Run Code</button>
-                                </div>
 
-                                <div class="col-3">
+
+                                <div class="col-3 ms-5">
                                     <label for=""class="fw-bold">Select language for Test:</label>
                                     <select id="language_for_test" name="language_for_test[]"
                                         class="select2 select-id-change form-select group-select" multiple>
@@ -332,7 +329,12 @@
 
                         <div class="row col-12 mt-2">
 
-                            <div class="col-md-6 mb-4">
+
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-sm btn-primary play-button"
+                                    onclick="run_code()">Run Code</button>
+                            </div>
+                            <div class="col-md-4 mb-4">
 
                             </div>
 
@@ -993,7 +995,6 @@
                         $("#code-output").addClass('fw-bold text-danger');
                         $("#code-output").val("");
                         $("#code-output").val(data.stderr);
-                        console.log(data.stderr);
                     }
                 },
                 error: function(data) {
@@ -1019,7 +1020,7 @@
             <td class='text-center'><textarea name="test_case_input[]" class="form-control" rows="4">${input}</textarea></td>
             <td class='text-center'><textarea name="test_case_output[]" class="form-control" rows="4">${output}</textarea></td>
             <td class='text-center'><input type='checkbox' name="test_case_sample[]" onclick="testCaseSample(this)" value="1"> <input type='hidden' name="sample[]" value="0" > </td>
-            <td class='text-center'><input type="number" name="test_case_weightage[]" value="0" class="form-control"></td>
+            <td class='text-center'><input type="number" name="test_case_weightage[]" value="0" class="form-control test_case_weightage"></td>
             <td class='text-center'><button type="button" onclick="remove_row(this)" class="btn btn-danger btn-sm">DELETE</button></td>
         </tr>
     `;
@@ -1033,10 +1034,14 @@
                 $(val).prop('checked', true);
                 $(val).val(1);
                 $(val).parent().find('input[type="hidden"]').val(1);
+                $(val).closest('tr').find('input[name="test_case_weightage[]"]').val(0);
+                $(val).closest('tr').find('input[name="test_case_weightage[]"]').prop('readonly', true);
             } else {
                 $(val).prop('checked', false);
                 $(val).val(0);
                 $(val).parent().find('input[type="hidden"]').val(0);
+                $(val).closest('tr').find('input[name="test_case_weightage[]"]').val("");
+                $(val).closest('tr').find('input[name="test_case_weightage[]"]').prop('readonly', false);
             }
         }
 
@@ -1521,9 +1526,7 @@
                     }
                     $('#skills').html(html);
                 },
-                error: function(data) {
-                    console.log('Error:', data);
-                }
+                error: function(data) {}
             })
         }
 
@@ -1541,9 +1544,7 @@
                     }
                     $('#difficulties').html(html);
                 },
-                error: function(data) {
-                    console.log('Error:', data);
-                }
+                error: function(data) {}
             })
         }
 
@@ -1565,9 +1566,7 @@
                     }
                     $('#topics').html(html);
                 },
-                error: function(data) {
-                    console.log('Error:', data);
-                }
+                error: function(data) {}
             })
         }
 
@@ -1606,12 +1605,30 @@
 
         }
 
+        function classEach(className) {
+            var sum = 0;
+            $('.' + className).each(function() {
+                sum += parseInt($(this).val(), 10) || 0;
+            });
+            return sum;
+        }
+
         function saving_status(value) {
             if (value == "submit") {
                 $("#question_saving_status").val("1");
+                var valus = classEach('test_case_weightage');
+                if (valus != 100) {
+                    alert('Please Check Weightage');
+                    return false;
+                }
                 $('form').submit()
             } else {
                 $("#question_saving_status").val("2");
+                var valus = classEach('test_case_weightage');
+                if (valus != 100) {
+                    alert('Please Check Weightage');
+                    return false;
+                }
                 $('form').submit()
             }
         }

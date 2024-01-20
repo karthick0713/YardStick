@@ -46,7 +46,7 @@ class StudentTestController extends Controller
     {
         $questions = DB::table('test_creation')->where('test_code', $request->input('test_code'))->first();
         $negative_marks = DB::table('course_negative_marks')->where('test_code', $request->input('test_code'))->first();
-        $neg_marks  = explode(',', $negative_marks->question_codes);
+        // $neg_marks  = explode(',', $negative_marks->question_codes);
         if ($questions && $questions->test_type == 1) {
             $sections = [];
             $testQuestions = [];

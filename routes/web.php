@@ -38,6 +38,7 @@ Route::get('register', function () {
 Route::group(['middleware' =>  "auth"], function () {
 
     Route::group(['middleware' =>  "admin"], function () {
+
         $controller_path = 'App\Http\Controllers';
         //   Admin
         // admin dashboard 
@@ -49,9 +50,14 @@ Route::group(['middleware' =>  "auth"], function () {
         Route::get('/admin/courses', $controller_path . '\Admin\ManageCourseController@manage_courses')->name('manage-courses');
         Route::get('/admin/new-course', $controller_path . '\Admin\ManageCourseController@create_new_course')->name('create-new-course');
         Route::get('/admin/get-test-questions', $controller_path . '\Admin\ManageCourseController@get_test_questions')->name('get-test-questions');
+        Route::get('/admin/edit-negative-marks', $controller_path . '\Admin\ManageCourseController@edit_negative_marks')->name('edit-negative-marks');
         Route::post('/admin/save-course', $controller_path . '\Admin\ManageCourseController@save_course')->name('save-course');
         Route::get('/admin/get-course-details', $controller_path . '\Admin\ManageCourseController@get_course_details')->name('get-course-details');
 
+        Route::get('/admin/edit-course/{id}', $controller_path . '\Admin\ManageCourseController@edit_course')->name('edit-course');
+        Route::post('/admin/update-course', $controller_path . '\Admin\ManageCourseController@update_course')->name('update-course');
+        Route::post('/admin/delete-course', $controller_path . '\Admin\ManageCourseController@delete_course')->name('delete-course');
+        Route::post('/admin/courses-test-delete', $controller_path . '\Admin\ManageCourseController@course_test_delete')->name('courses-test-delete');
 
 
         // Tests (Admin)
