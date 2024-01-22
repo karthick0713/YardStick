@@ -205,36 +205,7 @@
                                                 <span class="ms-4 fw-bold">{{ $course_params[$key] }} Tests</span>
                                             </div>
 
-                                            {{-- <i class="bx text-info bx-archive"></i><label class="">Total
-                                                    Durations</label>
-                                                <br>
-                                                <span class="ms-4 fw-bold">
-                                                    @php
-                                                        $data = DB::table('course_test_parameters')
-                                                            ->where('course_id', $course->course_id)
-                                                            ->get();
 
-                                                        $total_duration = 0;
-
-                                                        foreach ($data as $i => $d) {
-                                                            $section_durations = DB::table('test_section_wise_questions')
-                                                                ->select(DB::raw('SUM(duration) as duration'))
-                                                                ->where('test_code', $d->test_code)
-                                                                ->first();
-
-                                                            $total_duration += $section_durations->duration;
-                                                        }
-
-                                                        if ($total_duration < 60) {
-                                                            echo $total_duration . ' Mins';
-                                                        } else {
-                                                            $converted_time = date('H:i', mktime(0, $total_duration));
-                                                            echo $converted_time . ' Hours';
-                                                        }
-
-                                                    @endphp
-
-                                                </span> --}}
                                             <div class="col-6 ">
                                                 <i class="bx text-info bx-calendar"></i><label class="">Validity
                                                     From

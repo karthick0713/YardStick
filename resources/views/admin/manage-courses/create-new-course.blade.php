@@ -382,6 +382,7 @@
                                     <input type="hidden" name="test_code[]" class="form-control test_code${i}" value="${testCode}" >
                                     <input type="text"  name="title[]" class="form-control test_title${i}" value="${title}" readonly>
                                 </div>
+                                <input type="hidden" name="test_group_name[]" class="form-control test_group_name${i}" >
                                 <input type="hidden" name="shuffle_ques[]" class="form-control shuffle_ques${i}" >
                                 <input type="hidden" name="dis_fin_btn[]" class="form-control dis_fin_btn${i}" >
                                 <input type="hidden" name="re_att[]" class="form-control re_att${i}" >
@@ -420,6 +421,12 @@
 
                                 <div class="modal-body ms-4 mx-4">
                                     <div class="form-div">
+
+                                        <div class="row col-12">
+                                            <label for="testGroupTitle">Group Title</label>
+                                            <input type="text" class="ms-3 form-control mb-3" placeholder="Enter Group Title" id="testGroupTitle" name="test_group_title">
+                                        </div>
+
                                         <div class="row   col-12">
                                             <div class="col">
                                                 <label for="">Start Date Time</label>
@@ -469,15 +476,15 @@
                                                 style="border: 2px solid rgb(116, 119, 119); padding: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                                                 <h6>Display Result</h6>
                                                 <div class="">
-                                                    <input type="radio" name="result_status" id="" checked
+                                                    <input type="radio" name="result_status" id="immediate_result"  checked 
                                                         value="1">
-                                                    <label for="">Immediate</label>
+                                                    <label for="immediate_result">Immediate</label>
                                                 </div>
 
                                                 <div class="">
-                                                    <input type="radio" name="result_status" id=""
+                                                    <input type="radio" name="result_status" id="display_later"
                                                         value="2">
-                                                    <label for="">Later</label>
+                                                    <label for="display_later">Later</label>
                                                     <input style="width:200px" type="datetime-local" name="result_date"
                                                         class="form-control" id="">
                                                 </div>
@@ -588,8 +595,9 @@
                 result_date = $("input[name='result_date']").val();
             }
 
-            console.log($("input[name='end_date_time']").val());
+            var test_group_name = $("input[name='test_group_title']").val();
 
+            $(".test_group_name" + index).val(test_group_name);
             $(".shuffle_ques" + index).val(shuffle_questions);
             $(".dis_fin_btn" + index).val(disable_finish_button);
             $(".re_att" + index).val($("select[name='re_attempts']").val());

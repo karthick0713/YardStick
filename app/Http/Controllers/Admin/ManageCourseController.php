@@ -170,6 +170,7 @@ class ManageCourseController extends Controller
                 $up_data[] = [
                     'test_code' => $tc,
                     'course_id' => $course_id,
+                    'test_grouping_name' =>  $request->input('test_group_name')[$key],
                     'start_date' =>  $request->input('start_test_date')[$key],
                     'end_date' =>  $request->input('end_test_date')[$key],
                     'shuffle_questions' => $request->input('shuffle_ques')[$key],

@@ -1,6 +1,6 @@
 @extends('layouts/studentNavbarLayout')
 
-@section('title', 'Dashboard')
+@section('title', $heading)
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}">
@@ -316,6 +316,7 @@
                                                         <br>
                                                         <span class=" ms-4 fw-bold">
                                                             @php
+
                                                                 $dateString = $test->start_date;
                                                                 $dateTime = new DateTime($dateString);
                                                                 $formattedDate = $dateTime->format('j M, y H:i');
