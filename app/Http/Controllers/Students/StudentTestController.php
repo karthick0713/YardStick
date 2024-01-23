@@ -80,6 +80,7 @@ class StudentTestController extends Controller
                         ];
                     } else if ($ques && $ques->category == 3) {
                         $grouping = DB::table('mcq_grouping_questions')->where('question_code', $questionCode)->get()->toArray();
+                        $mcq = [];
                         foreach ($grouping as $g => $group) {
                             $mcq[] = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->where('grouping_question_id', $group->id)->get()->toArray();
                         }
