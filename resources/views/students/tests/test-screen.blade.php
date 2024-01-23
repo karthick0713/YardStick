@@ -661,6 +661,46 @@
 
 
 
+        <div class="mcq-grouping" id="mcq_grouping">
+
+            <nav class="navbar navbar-light bg-white">
+                <div class="container">
+                    <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
+                        <h6 class="m-0">GROUPING MCQ</h6>
+                        {{-- <div class="timer">
+                            <b>Time Left</b>
+                            <span id="hours" class="badge hours bg-secondary">00</span> :
+                            <span id="minutes" class="badge minutes bg-secondary">00</span> :
+                            <span id="seconds" class="badge seconds bg-secondary">00</span>
+                        </div> --}}
+                        <div id="clockdiv">
+                            <span class="fw-bold">TIME LEFT : &nbsp;&nbsp;</span>
+                            <div>
+
+                                <span class="hours" id="hour"></span>
+                            </div>
+                            <div>
+
+                                <span class="minutes" id="minute"></span>
+                            </div>
+                            <div>
+                                <span class="seconds" id="second"></span>
+                            </div>
+                        </div>
+                        <div class="mt-2 mt-md-0">
+                            <button type="button" class="btn fullscreen-btn btn-outline-info">
+                                Switch Full Screen
+                            </button>
+                            {{-- <button type="button" class="btn btn-outline-info">Pause</button> --}}
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
+
+        </div>
+
+
 
 
 
@@ -694,41 +734,29 @@
 
             $(document).ready(function() {
 
-
                 if (localStorage.getItem('theme') == null) {
                     localStorage.setItem('theme', 'vs-light')
                 }
 
                 $(".submit-test").prop("disabled", true);
 
-
                 function showQuestion(index) {
-
                     if (localStorage.getItem("question_category") == 2) {
-
-
                         var question = questionsData[index].question_for_test;
-
                         var mcqOptions = questionsData[index].mcq_options;
                         $(".question_count").text("Question No. " + (index + 1));
                         $(".org-marks").html(questionsData[index].question_marks)
                         $(".question-p").html(question.replaceAll('<p><br></p>', ""));
                         $(".Answer-options").empty();
-
                         var optionsContainer = $("<div>", {
                             class: "options-container"
                         });
-
-
                         for (var i = 0; i < mcqOptions.length; i++) {
-
-
                             var optionIndex = i + 1;
                             var correctOptId = mcqOptions[i].id;
                             var optionValue = mcqOptions[i].correct_answer;
                             var optionText = mcqOptions[i].option_answer;
                             var optquesCode = mcqOptions[i].question_code;
-
                             var radioElement = $("<input>", {
                                 class: "form-check-input",
                                 type: "radio",
@@ -736,38 +764,25 @@
                                 id: "option" + optionIndex,
                                 value: btoa(correctOptId)
                             });
-
                             radioElement.attr('data-quest', btoa(optquesCode));
-
                             var labelElement = $("<label>", {
                                 class: "form-check-label",
                                 for: "option" + optionIndex
                             });
-
                             labelElement.html(optionText.replaceAll('<p><br></p>', ""));
-
-
                             optionsContainer.append($("<div>", {
                                 class: "form-check"
                             }).append(radioElement, labelElement));
-
                         }
-
                         $(".Answer-options").append(optionsContainer);
-
-
                     } else if (localStorage.getItem("question_category") == 1) {
-
-
                         var question = questionsData[localStorage.getItem("section")][index].question_for_test
                             .questions;
-
                         question_code_for_save = questionsData[localStorage.getItem("section")][index].question_for_test
                             .question_code;
                         var testcasediv = "";
                         var coun = 1;
                         $(questionsData[localStorage.getItem("section")][index].test_cases).map((i, e) => {
-
                             testcasediv += `
                                     <h6 class="fw-bold">SAMPLE TEST CASE: ${coun ++}</h6>
                                     <div class="ms-2">
@@ -779,85 +794,52 @@
                                 `;
                             run_question_inputs.push(e.input)
                             run_question_outputs.push(e.output)
-                            // }
-                            // 
                             verify_question_inputs.push(e.input);
                             verify_question_outputs.push(e.output);
                         })
-
                         $(".test-case-div").append(testcasediv);
-
                         var input_format = questionsData[localStorage.getItem("section")][index].question_for_test
                             .input_format
                         var output_format = questionsData[localStorage.getItem("section")][index].question_for_test
                             .output_format
                         var code_constraints = questionsData[localStorage.getItem("section")][index].question_for_test
                             .code_constraints
-
-
                         $(".programming-questions").html(question)
                         $(".input-format").html(input_format)
                         $(".output-format").html(output_format)
                         $(".code-constraints").html(code_constraints)
-
                     }
-
-
                 }
 
                 function markForReview() {
                     var markedQuestions = JSON.parse(localStorage.getItem('markedQuestions')) || [];
-
                     if (!markedQuestions.includes(currentQuestionIndex)) {
-
                         markedQuestions.push(currentQuestionIndex);
-
                         localStorage.setItem('markedQuestions', JSON.stringify(markedQuestions));
-
                         $('.quiz_number li:eq(' + currentQuestionIndex + ')').addClass('mark-for-review');
-
                         currentQuestionIndex++;
-
                         showQuestion(currentQuestionIndex)
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex + 1);
                     } else {
                         alert('Question already marked for review.');
                         currentQuestionIndex++;
-
                         showQuestion(currentQuestionIndex)
-
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex + 1);
                     }
                 }
-
-
-
                 var isReloaded = false;
 
-
                 function saveAndNext() {
-
-
-
                     if (localStorage.getItem("question_category") == 2) {
-
-
                         var selectedAnswer = $("input[name='option']:checked");
-
-
                         if (selectedAnswer.length < 1) {
                             alert("Select Any one of the Option..!");
                             return false;
                         }
-
-
                         var remaiming_time = localStorage.getItem("remainingSeconds");
-
                         $.ajax({
-
-
                             url: "{{ route('save-questions-answers') }}",
                             type: "POST",
                             data: {
@@ -872,99 +854,45 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(data) {}
-
-
                         })
-
-                        console.log(currentQuestionIndex);
-
                         $(".question" + currentQuestionIndex).removeClass('active');
-
                         currentQuestionIndex++;
-
-                        console.log(currentQuestionIndex);
-
                         $(".question" + currentQuestionIndex).addClass('active');
-
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
-
                         if (currentQuestionIndex < questionsData.length) {
-
                             showQuestion(currentQuestionIndex);
-
-
-                        } else {
-
-
-                        }
-
-
-
+                        } else {}
                     } else if (localStorage.getItem("question_category") == 1) {
-
                         currentQuestionIndex++;
-
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
-
-
                         if (currentQuestionIndex < questionsData[0].length) {
-
                             showQuestion(currentQuestionIndex);
-
                             isReloaded = true;
-
                             location.reload();
-
-                        } else {
-
-
-
-
-                        }
-
+                        } else {}
                     }
-
-
-
                 }
 
                 $(".theme-button").click(function() {
-
                     localStorage.setItem("theme", $(this).attr("data-value"));
-
                     location.reload();
-
                 });
 
-
                 function previous() {
-
                     currentQuestionIndex--;
-
-
                     localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                         currentQuestionIndex);
-
-
                     if (currentQuestionIndex < questionsData[0].length) {
-
                         showQuestion(currentQuestionIndex);
-
                         location.reload();
                     }
-
                 }
-
                 $(".mark-for-review-button").click(function() {
                     markForReview();
                 });
-
-
                 $.ajax({
-
-
                     url: "{{ route('fetch-test-questions') }}",
                     type: "GET",
                     data: {
@@ -972,60 +900,31 @@
                         course_id: {{ base64_decode(request()->segment(2)) }},
                     },
                     success: function(data) {
-
                         fetch_questions = data;
-
                         if (localStorage.getItem("question_category") == null || localStorage.getItem(
                                 "question_category") == "undefined") {
-
                             localStorage.setItem('question_category', data[2][0]);
-
                         }
-
-
                         $(".sec_name").text(data[0].sections[localStorage.getItem("section")]);
-
-
-
-
                         if (localStorage.getItem('question_category') == 1) {
-
                             question_category_value = data[2];
-
                             $(data[0].sections).each(function(i, e) {
-
                                 $(".section-name-div").append(
                                     `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
                                 );
-
                             });
-
-
                             questionsData = data[1];
-
                             showQuestion(currentQuestionIndex);
-
                             $(".save-next").click(function() {
-
                                 saveAndNext();
-
                             });
-
 
                             $(".previous-button").click(function() {
                                 previous();
                             });
-
-
-
                             $(".test-title").html("<b>Programming Examination</b>");
-
                             $(".programming_screen").show();
-
                             $("#content-to-fullscreen").hide();
-
-
-
                             const languages = {
                                 java: {
                                     id: 'java',
@@ -1053,29 +952,19 @@
                                     extension: '.cs'
                                 },
                             }
-
                             var codes;
                             var editor;
-
-
                             setTimeout(() => {
-
-
                                 require.config({
                                     paths: {
                                         vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs",
                                     },
                                 });
                                 require(["vs/editor/editor.main"], function() {
-
-
                                     var languageSelector = document.getElementById(
                                         "languageSelect");
-
                                     var codeEditor = document.getElementById("code-editor");
-
                                     var initialLoad = true;
-
                                     editor = monaco.editor.create(
                                         codeEditor, {
                                             value: `/* Type Your Code */`,
@@ -1083,9 +972,6 @@
                                             theme: localStorage.getItem('theme'),
                                         }
                                     );
-
-
-
                                     if (localStorage.getItem(
                                             "typed_coding")) {
                                         editor.setValue(localStorage
@@ -1094,28 +980,21 @@
                                                 .getItem('section') +
                                                 currentQuestionIndex))
                                     }
-
                                     editor.setValue(localStorage
                                         .getItem(
                                             `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
                                         ));
-
                                     codes = editor.getValue();
-
                                     languageSelector.addEventListener("change", function() {
                                         var selectedLanguage = this.value;
-
                                         if (!initialLoad) {
                                             var currentCode = editor.getValue();
                                             codes = currentCode;
                                         }
-
                                         editor.getModel().dispose();
-
                                         editor.setModel(monaco.editor.createModel(
                                             initialLoad ? "" : codes,
                                             selectedLanguage));
-
                                         initialLoad = false;
                                         setTimeout(() => {
                                             $(".slider").remove();
@@ -1129,20 +1008,13 @@
                                             }
                                         }, 100);
                                     });
-
-
                                     $(".slider").remove();
                                 });
-
-
                             }, 500);
-
 
                             function findLanguageById(id) {
                                 return Object.values(languages).find(lang => lang.id === id);
                             }
-
-
                             $("#code-editor").on("keyup", function() {
                                 setTimeout(() => {
                                     localStorage.setItem(
@@ -1151,18 +1023,13 @@
 
                                 }, 100);
                             });
-
-
                             $(".programming_run_button").click(function() {
-
-
                                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                                 var lang = $("#languageSelect option:selected").val()
                                     .toLowerCase();
                                 const languageIdToFind = lang;
                                 const foundLanguage = findLanguageById(languageIdToFind);
                                 var editorContent = editor.getValue();
-
                                 $.ajax({
                                     url: "{{ route('run-code') }}",
                                     type: "POST",
@@ -1177,30 +1044,20 @@
                                     },
                                     success: function(data) {
                                         $("#sample_correct_testcase").empty();
-
                                         if (data[0].stderr != null) {
                                             var formattedStderr = data[0].stderr
                                                 .replace(/\n/g, '<br>');
-
                                             $("#sample_correct_testcase").html(
                                                 formattedStderr).addClass(
                                                 "text-danger fw-bold");
-
-
                                             $("#home-tab").addClass("active");
-
                                             $("#home ").addClass("active show");
-
                                             $("#profile-tab").removeClass("active");
-
                                             $("#profile").removeClass("active show");
-
                                             return false;
                                         } else {
-
                                             $("#sample_correct_testcase").removeClass(
                                                 "text-danger fw-bold");
-
                                             var test_case_correct;
                                             $(data).each(function(i, elem) {
                                                 var cleanStdout = elem.stdout
@@ -1211,11 +1068,8 @@
                                                     run_question_outputs[i]
                                                     .trim().split('\n').join('')
                                                     .split('\r').join('');
-
-
                                                 if (arraysEqual(cleanStdout,
                                                         cleanExpectedOutput)) {
-
                                                     test_case_correct = `
                                                 <div class="accordion accordion-flush" id="sampleCrctExample${i}">
                                                             <div class="accordion-item rounded-3 border-0 shadow mb-2">
@@ -1251,7 +1105,6 @@
                                                             test_case_correct);
 
                                                 } else {
-
                                                     test_case_correct = `
                                                 <div class="accordion accordion-flush" id="sampleCrctExample${i}">
                                                             <div class="accordion-item rounded-3 border-0 shadow mb-2">
@@ -1279,13 +1132,11 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                        `;
 
                                                     $("#sample_correct_testcase")
                                                         .append(
                                                             test_case_correct);
-
                                                 }
                                             });
 
@@ -1298,37 +1149,18 @@
                                                 }
                                                 return true;
                                             }
-
-
                                             $("#home-tab").addClass("active");
-
                                             $("#home ").addClass("active show");
-
                                             $("#profile-tab").removeClass("active");
-
                                             $("#profile").removeClass("active show");
-
-
-
-
-
                                         }
-
-
-
-
                                     },
                                     error: function(data) {
                                         alert('Something went wrong');
                                     }
                                 })
                             });
-
-
-
                             $(".verify-button").click(function() {
-
-
                                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                                 var lang = $("#languageSelect option:selected").val()
                                     .toLowerCase();
@@ -1348,33 +1180,20 @@
                                         filename: `index${foundLanguage.extension}`,
                                     },
                                     success: function(data) {
-
                                         if (data[0].stderr != null) {
-
                                             var formattedStderr = data[0].stderr
                                                 .replace(/\n/g, '<br>');
-
                                             $(".verify-error").html(formattedStderr);
-
-
                                             $("#home-tab").removeClass("active");
-
                                             $("#home ").removeClass("active show");
-
                                             $("#profile-tab").addClass("active");
-
                                             $("#profile").addClass("active show");
                                             return false;
-
                                         } else {
-
                                             $(".verify-error").empty();
                                             var tot = data.length;
-
                                             var passed_case = 0;
-
                                             var rejected_case = 0;
-
                                             $(data).each(function(i, elem) {
                                                 var cleanStdout = elem.stdout
                                                     .trim()
@@ -1389,16 +1208,13 @@
                                                         cleanExpectedOutput)) {
                                                     passed_case++;
                                                 } else {
-
                                                     rejected_case++;
                                                 }
                                             });
-
                                             $(".test-case-count").text(tot);
                                             $(".passed-case-count").text(passed_case);
                                             $(".rejected-case-count").text(
                                                 rejected_case);
-
 
                                             function arraysEqual(arr1, arr2) {
                                                 if (arr1.length !== arr2.length)
@@ -1409,26 +1225,14 @@
                                                 }
                                                 return true;
                                             }
-
                                             $("#home-tab").removeClass("active");
-
                                             $("#home ").removeClass("active show");
-
                                             $("#profile-tab").addClass("active");
-
                                             $("#profile").addClass("active show");
-
-
-
                                             $(".hidden-testcase-tab")
                                                 .show();
-
-
-
                                         }
-
                                         $.ajax({
-
                                             url: "{{ route('test-testcase-update') }}",
                                             type: 'POST',
                                             data: {
@@ -1448,37 +1252,22 @@
                                                 'X-CSRF-TOKEN': csrfToken
                                             },
                                             success: function(data) {}
-
                                         });
-
-
-
                                     },
                                     error: function(data) {
                                         alert('Something went wrong');
                                     }
                                 })
                             });
-
-
-
                         } else if (localStorage.getItem('question_category') == 2) {
-
                             $(data[0].sections).each(function(i, e) {
-
                                 $("#section-buttons").before(
                                     `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
                                 );
-
                             });
-
-
-
                             $("#content-to-fullscreen").show();
-
                             var marked_questions = localStorage.getItem('markedQuestions');
                             marked_questions = marked_questions ? JSON.parse(marked_questions) : [];
-
                             questionsData = data[1][localStorage.getItem("section")];
                             var len_question = questionsData;
                             var html = "";
@@ -1488,64 +1277,35 @@
                                 html +=
                                     `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i}</span></li>`;
                             }
-
                             $('.quiz_number').append(html);
-
                             showQuestion(currentQuestionIndex);
-
                             $(".save-next").click(function() {
                                 saveAndNext();
                             });
-
-
-
-                        }
-
-
-
+                        } else if (localStorage.getItem('question_category') == 3) {}
                         if (localStorage.getItem('get_id') == null) {
-
                             saveStudentTestEntry();
-
                         } else {
-
                             var get_id = localStorage.getItem('get_id');
-
                             $("#student_test_entry_id").val(get_id);
-
                         }
                     }
-
-
                 });
-
-
-
                 if (localStorage.getItem('question_category') == 2) {
-
                     $(".test-title").text("MCQ Examination");
-
                     $(".clear-response").on('click', function() {
                         $("input[type='radio']").prop('checked', false);
                     });
-
                     if (localStorage.getItem('section') === null) {
                         localStorage.setItem('section', 0)
                     }
-
-
                     $("#layout-menu").toggleClass("toggled");
-
                     document.getElementsByClassName('fullscreen-btn')[0].addEventListener('click', function() {
                         toggleFullScreen();
                     });
 
-
                     function toggleFullScreen() {
-
-
                         const element = document.getElementById('content-to-fullscreen');
-
                         if (!document.fullscreenElement) {
                             element.requestFullscreen();
                         } else {
@@ -1554,21 +1314,13 @@
                             }
                         }
                     }
-
-
                 } else if (localStorage.getItem('question_category') == 1) {
-
-
                     document.getElementById('pro-fullscreen-btn').addEventListener('click', function() {
                         toggleFullScreen();
                     });
 
-
                     function toggleFullScreen() {
-
-
                         const element = document.getElementById('programming_screen');
-
                         if (!document.fullscreenElement) {
                             element.requestFullscreen();
                         } else {
@@ -1577,85 +1329,63 @@
                             }
                         }
                     }
+                } else if (localStorage.getItem('question_category') == 3) {
+                    document.getElementById('pro-fullscreen-btn').addEventListener('click', function() {
+                        toggleFullScreen();
+                    });
 
-
+                    function toggleFullScreen() {
+                        const element = document.getElementById('mcq_grouping');
+                        if (!document.fullscreenElement) {
+                            element.requestFullscreen();
+                        } else {
+                            if (document.exitFullscreen) {
+                                document.exitFullscreen();
+                            }
+                        }
+                    }
                 }
-
-
                 if (localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
                         'section'))) {
-
-
                     currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex" + localStorage
                         .getItem(
                             'section')));
-
-
                 }
-
-
                 if (totalSeconds) {
-
                     startTimer(parseInt(totalSeconds));
-
                     total_duration = totalSeconds / 60;
-
-
                 } else {
-
-
                     $.ajax({
-
-
                         url: "{{ route('get-total-duration') }}",
                         type: "GET",
                         data: {
                             test_code: '{{ base64_decode(request()->segment(3)) }}'
                         },
                         success: function(totalDurationInMinutes) {
-
                             total_duration = totalDurationInMinutes;
-
                             totalSeconds = totalDurationInMinutes * 60;
-
                             startTimer(totalSeconds);
                         }
-
-
                     });
-
-
                 }
 
-
                 function startTimer(initialSeconds) {
-
-
                     timer = setInterval(function() {
-
                         totalSeconds--;
-
                         var hours = Math.floor(totalSeconds / 3600);
                         var minutes = Math.floor((totalSeconds % 3600) / 60);
                         var seconds = totalSeconds % 60;
-
                         $(".hours").text(("0" + hours).slice(-2));
                         $(".minutes").text(("0" + minutes).slice(-2));
                         $(".seconds").text(("0" + seconds).slice(-2));
-
                         if (totalSeconds < 1) {
-
                             $(".submit-test").prop("disabled", false);
-
                             $(".submit-test").trigger('click');
-
                             $("form").submit();
                             clearInterval(timer);
                         } else {
                             localStorage.setItem("remainingSeconds", totalSeconds);
                         }
-
-
                     }, 1000);
 
 
@@ -1663,40 +1393,23 @@
 
 
                 $(".submit-test").on('click', function() {
-
                     localStorage.clear();
-
                     clearInterval(timer);
-
                     localStorage.removeItem("remainingSeconds");
-
                     totalSeconds = 00;
-
                     $(".hours").text("00");
                     $(".minutes").text("00");
                     $(".seconds").text("00");
-
                     window.location.href = "{{ route('student-dashboard') }}";
-
                 })
-
                 setTimeout(() => {
-
                     $(".mark-for-review").on('click', function() {
-                        alert();
-
                         var sp = $(this).children().attr("class");
-
                         var index = $(this).index();
-
                         showQuestion(index);
-
                     });
                 }, 1000);
-
-
             });
-
 
             function saveStudentTestEntry() {
 

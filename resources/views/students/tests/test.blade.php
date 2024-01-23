@@ -661,6 +661,46 @@
 
 
 
+        <div class="mcq-grouping" id="mcq_grouping">
+
+            <nav class="navbar navbar-light bg-white">
+                <div class="container">
+                    <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
+                        <h6 class="m-0">GROUPING MCQ</h6>
+                        {{-- <div class="timer">
+                            <b>Time Left</b>
+                            <span id="hours" class="badge hours bg-secondary">00</span> :
+                            <span id="minutes" class="badge minutes bg-secondary">00</span> :
+                            <span id="seconds" class="badge seconds bg-secondary">00</span>
+                        </div> --}}
+                        <div id="clockdiv">
+                            <span class="fw-bold">TIME LEFT : &nbsp;&nbsp;</span>
+                            <div>
+
+                                <span class="hours" id="hour"></span>
+                            </div>
+                            <div>
+
+                                <span class="minutes" id="minute"></span>
+                            </div>
+                            <div>
+                                <span class="seconds" id="second"></span>
+                            </div>
+                        </div>
+                        <div class="mt-2 mt-md-0">
+                            <button type="button" class="btn fullscreen-btn btn-outline-info">
+                                Switch Full Screen
+                            </button>
+                            {{-- <button type="button" class="btn btn-outline-info">Pause</button> --}}
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
+
+        </div>
+
+
 
 
 
@@ -973,19 +1013,18 @@
                     },
                     success: function(data) {
 
+                        console.log(data);
+
                         fetch_questions = data;
 
                         if (localStorage.getItem("question_category") == null || localStorage.getItem(
                                 "question_category") == "undefined") {
 
                             localStorage.setItem('question_category', data[2][0]);
-
                         }
 
 
                         $(".sec_name").text(data[0].sections[localStorage.getItem("section")]);
-
-
 
 
                         if (localStorage.getItem('question_category') == 1) {
@@ -1499,6 +1538,11 @@
 
 
 
+                        } else if (localStorage.getItem('question_category') == 3) {
+
+
+
+
                         }
 
 
@@ -1568,6 +1612,29 @@
 
 
                         const element = document.getElementById('programming_screen');
+
+                        if (!document.fullscreenElement) {
+                            element.requestFullscreen();
+                        } else {
+                            if (document.exitFullscreen) {
+                                document.exitFullscreen();
+                            }
+                        }
+                    }
+
+
+                } else if (localStorage.getItem('question_category') == 3) {
+
+
+                    document.getElementById('pro-fullscreen-btn').addEventListener('click', function() {
+                        toggleFullScreen();
+                    });
+
+
+                    function toggleFullScreen() {
+
+
+                        const element = document.getElementById('mcq_grouping');
 
                         if (!document.fullscreenElement) {
                             element.requestFullscreen();

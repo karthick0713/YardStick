@@ -78,9 +78,20 @@ class StudentTestController extends Controller
                             'question_for_test'  => $ques,
                             'test_cases' => $test_cases
                         ];
+                    } else if ($ques && $ques->category == 3) {
+                        $grouping = DB::table('mcq_grouping_questions')->where('question_code', $questionCode)->get()->toArray();
+                        foreach ($grouping as $g => $group) {
+                            $mcq[] = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->where('grouping_question_id', $group->id)->get()->toArray();
+                        }
+
+                        $questionsData[$key][] = [
+                            'question_for_test'  => $ques,
+                            'grouping_questions' => $grouping,
+                            'mcq_options' => $mcq,
+                        ];
                     }
                 }
-                $question_category[$key]   = $ques->category;
+                $question_category[$key] = $ques->category;
             }
 
 
