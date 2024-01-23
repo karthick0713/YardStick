@@ -130,8 +130,8 @@
         }
 
         /* label.card-body {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                line-height: 0.1cm !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        line-height: 0.1cm !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
 
         .custom-align-center {
             display: flex;
@@ -291,7 +291,7 @@
     </div>
 
     <div class="container mt-4">
-        <h5 style="display:none" class="report-title fw-bold mt-5 ms-4">DETAILED REPORT:</h5>
+        <h5 class="report-title fw-bold mt-5 ms-4">DETAILED REPORT:</h5>
         <div id="resultDiv"></div>
     </div>
 
@@ -300,6 +300,7 @@
         var question_details = @json($data['question_details']);
         var mcqOptions = @json($data['mcq_options']);
         var programmingTestCase = @json($data['programming_test_case']);
+
 
         var programmingQuestions = question_details.filter(function(question) {
             return question.category == 1;
@@ -345,6 +346,7 @@
             $(".report-title").show();
 
             if (categories.some(category => category.opt_id == value)) {
+
                 var matchingCategory = categories.find(category => category.opt_id == value);
 
                 if (matchingCategory.cat == 1) {

@@ -198,6 +198,7 @@
                                 @php
                                     $practice = DB::table('students_test_entries')
                                         ->where('test_code', $test->test_code)
+                                        ->where('course_id', $test->course_id)
                                         ->where('student_reg_no', session('userId'))
                                         ->count();
                                 @endphp
@@ -361,7 +362,11 @@
             <div class="row">
                 <div class="grid-container">
                     @foreach ($tests as $key => $test)
+
+
+
                         @php
+
                             $givenTimestamp = strtotime($test->display_result_date);
                             $currentTimestamp = time();
 

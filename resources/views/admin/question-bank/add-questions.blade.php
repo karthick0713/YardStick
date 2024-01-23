@@ -1616,19 +1616,18 @@
         function saving_status(value) {
             if (value == "submit") {
                 $("#question_saving_status").val("1");
-                var valus = classEach('test_case_weightage');
-                if (valus != 100) {
-                    alert('Please Check Weightage');
-                    return false;
+                if ($("#category").val() == 1) {
+                    var valus = classEach('test_case_weightage');
+                    if (valus != 100) {
+                        alert('Please Check Weightage');
+                        return false;
+                    }
                 }
                 $('form').submit()
             } else {
                 $("#question_saving_status").val("2");
                 var valus = classEach('test_case_weightage');
-                if (valus != 100) {
-                    alert('Please Check Weightage');
-                    return false;
-                }
+
                 $('form').submit()
             }
         }

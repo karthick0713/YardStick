@@ -22,12 +22,13 @@
         a:hover .background-light {
             color: white;
             background-color: rgb(238, 118, 118);
+            transition: 0.3s;
         }
 
         .grid-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(4, 1fr);
+
             gap: 10px;
 
             @media (max-width: 600px) {
@@ -52,7 +53,8 @@
                                         fill="white" />
                                 </svg>
                             </div>
-                            <div class="ms-3 fw-bold" style="padding-top: 10px">
+                            <div class="ms-3 fw-bold" style="padding-top: 
+                            10px">
                                 Enrolled<br>
                                 <label for="" class="icon-text-color">3</label>
                             </div>
