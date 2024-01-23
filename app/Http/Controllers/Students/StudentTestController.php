@@ -93,7 +93,7 @@ class StudentTestController extends Controller
                 }
                 $question_category[$key] = $ques->category;
             }
-
+            // dd($questionsData);
 
             $data = [
                 'sections' => $sections,
