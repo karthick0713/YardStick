@@ -1556,6 +1556,7 @@
 
 
                         } else if (localStorage.getItem('question_category') == 3) {
+                            var currentPassage = 0;
 
                             $(data[0].sections).each(function(i, e) {
                                 $(".section-buttons").before(
@@ -1564,6 +1565,7 @@
                             });
 
                             questionsData = data[1];
+
                             var questionCategories = data[2];
 
                             showPassageAndQuestions(currentQuestionIndex);
@@ -1592,16 +1594,21 @@
                                             index
                                         ].grouping_questions.length > 0) {
                                         $(".question-col").html(
-                                            `<p>${questionsData[0][index].grouping_questions[0].questions}</p>`
+                                            `<p>${questionsData[0][index].grouping_questions[currentPassage].questions}</p>`
                                         );
 
-                                        var mcqOptions = questionsData[0][index]
+                                        var mcqOptions = questionsData[0][currentQuestionIndex]
                                             .mcq_options;
-                                        mcqOptions[currentQuestionIndex].forEach(function(opt) {
+
+
+
+                                        mcqOptions[currentPassage].forEach(function(
+                                            opt) {
+                                            console.log(opt);
                                             $(".question-col").append(`
                     <div>
                         <label class="form-check-label">
-                            <input type="radio" name="mcqOption" value="${opt.id}">
+                            <input type="radio" name="mcqOption" data-question="${opt.question_code}" data-groupid="${questionsData[0][index].grouping_questions[currentPassage].id}" value="${opt.id}">
                             ${opt.option_name}: ${opt.option_answer}
                         </label>
                     </div>
@@ -1618,27 +1625,31 @@
                                 }
                             }
 
-
-
-
                             function saveAndNextCategory3() {
-                                currentQuestionIndex++;
 
+                                if (currentPassage < questionsData[0][currentQuestionIndex]
+                                    .grouping_questions.length - 1) {
+                                    currentPassage++;
+                                } else {
+                                    currentQuestionIndex++;
+                                    currentPassage = 0;
+                                }
                                 if (currentQuestionIndex < questionsData[0].length) {
                                     showPassageAndQuestions(currentQuestionIndex);
                                 } else {
                                     currentQuestionIndex = 0;
-
-                                    if (questionsData.length > 1) {
-                                        showPassageAndQuestions(currentQuestionIndex);
-                                    } else {
-                                        currentQuestionIndex = 0;
-                                    }
+                                    currentPassage = 0;
                                 }
+
+                                localStorage.setItem('currentPassage', currentPassage);
 
                                 localStorage.setItem("currentQuestionIndex" + localStorage.getItem(
                                     'section'), currentQuestionIndex);
+                                localStorage.setItem("currentPassage" + localStorage.getItem('section'),
+                                    currentPassage);
+
                             }
+
 
 
                         }
