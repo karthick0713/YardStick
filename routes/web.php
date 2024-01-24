@@ -222,7 +222,7 @@ Route::group(['middleware' =>  "auth"], function () {
     Route::get('/Test/get-total-duration', $controller_path . '\Students\StudentTestController@get_total_duration')->name('get-total-duration');
 
     Route::post('/Test/save-student-test-entry', $controller_path . '\Students\StudentTestController@save_student_test_entry')->name('save-student-test-entry');
-    Route::post('/Test/save-question-response', $controller_path . '\Students\StudentTestController@student_test_questions_answers_update')->name('save-question-response');
+    // Route::post('/Test/save-question-response', $controller_path . '\Students\StudentTestController@student_test_questions_answers_update')->name('save-question-response');
     Route::post('/Test/save-questions-answers', $controller_path . '\Students\StudentTestController@student_test_questions_answers_update')->name('save-questions-answers');
     Route::post('/Test/test-testcase-update', $controller_path . '\Students\StudentTestController@verify_testcase_update')->name('test-testcase-update');
 

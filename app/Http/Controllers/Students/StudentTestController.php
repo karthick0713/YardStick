@@ -168,17 +168,28 @@ class StudentTestController extends Controller
     {
 
         $question_code = $request->input('question_code');
-        $question = DB::table('question_banks')->where('question_code', $question_code)->first();
-        if ($question->category == 2) {
-            $selected_option = DB::table('question_bank_for_mcq')->where('question_code', $question->question_code)->where('id', $request->input('option_id'))->first();
-            $correct_option = DB::table('question_bank_for_mcq')->where('question_code', $question->question_code)->where('correct_answer', 1)->first();
 
+        $question = DB::table('question_banks')->where('question_code', $question_code)->first();
+
+        $selected_option = DB::table('question_bank_for_mcq')->where('question_code', $question->question_code)->where('id', $request->input('option_id'))->first();
+
+        if ($question->category == 2) {
+            $correct_option = DB::table('question_bank_for_mcq')->where('question_code', $question->question_code)->where('correct_answer', 1)->first();
             if ($selected_option->correct_answer == $correct_option->correct_answer) {
                 $ans = $question->marks;
             } else {
                 $ans = 0;
             }
+        } else if ($question->category == 3) {
+            $correct_option = DB::table('question_bank_for_mcq')->where('question_code', $question->question_code)->where('grouping_question_id', $request->input('group_question_id'))->where('correct_answer', 1)->first();
+            if ($selected_option->correct_answer == $correct_option->correct_answer) {
+                $ans = 1;
+            } else {
+                $ans = 0;
+            }
         }
+
+
         $data = [
             'student_reg_no' => $request->input('user_id'),
             'test_entry_id' => $request->input('test_entry_id'),
@@ -188,11 +199,16 @@ class StudentTestController extends Controller
             'question_code' => $question_code,
             'mark_taken_for_this_question' => $ans,
             'mark_for_each_question' => $question->marks,
-            'answer_selected' => $selected_option->id,
+            'answer_selected' => $request->input('option_id'),
             'correct_answer' => $correct_option->id,
             'created_at' => now(),
             'updated_at' => now(),
         ];
+
+        if ($question->category == 3) {
+            $data['group_question_id'] = $request->input('group_question_id');
+        }
+
 
         DB::table('students_test_questions_answers_entry')->insert($data);
     }

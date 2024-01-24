@@ -12,7 +12,9 @@
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 @endsection
 @section('content')
-
+    <script>
+        document.body.classList.add('side-bar-hide');
+    </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
 
@@ -22,7 +24,7 @@
     <style>
         * {
             --side-bar-width: 420px;
-            --qz-green: #28b163;
+            --qz-green: #010202;
             --qz-violet: #915ab8;
             --qz-red: #c13a24;
             /* user-select: none; */
@@ -58,6 +60,11 @@
 
         .side-bar-hide #side-bar {
             transform: translateX(var(--side-bar-width));
+        }
+
+
+        body:not(.side-bar-hide) .mcq-grouping {
+            max-width: min(100% - var(--side-bar-width));
         }
 
         .side-bar-hide #side-bar .icon i {
@@ -312,18 +319,11 @@
 
     <body>
 
-        <div id="content-to-fullscreen">
-            <!-- nav -->
+        <div id="all-test-screens" style="background-color:#ffffff !important">
             <nav class="navbar navbar-light bg-white">
                 <div class="container">
                     <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
-                        <h6 class="m-0">MCQ Test</h6>
-                        {{-- <div class="timer">
-                            <b>Time Left</b>
-                            <span id="hours" class="badge hours bg-secondary">00</span> :
-                            <span id="minutes" class="badge minutes bg-secondary">00</span> :
-                            <span id="seconds" class="badge seconds bg-secondary">00</span>
-                        </div> --}}
+                        <h6 class="m-0"></h6>
                         <div id="clockdiv">
                             <span class="fw-bold">TIME LEFT : &nbsp;&nbsp;</span>
                             <div>
@@ -339,7 +339,7 @@
                             </div>
                         </div>
                         <div class="mt-2 mt-md-0">
-                            <button type="button" class="btn fullscreen-btn btn-outline-info">
+                            <button type="button" id="fullscreen-btn" class="btn fullscreen-btn btn-outline-info">
                                 Switch Full Screen
                             </button>
                             {{-- <button type="button" class="btn btn-outline-info">Pause</button> --}}
@@ -348,381 +348,369 @@
                 </div>
 
             </nav>
-            <!-- end nav -->
-            <!-- side bar -->
-            <aside>
-                <div id="side-bar" class="px-2  mt-3">
-                    <div class="icon">
-                        <i class="fa fa-chevron-right"></i>
-                    </div>
-                    <div class="user-info border-bottom py-2">
-                        <img src="https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes/128/user-male-circle-blue-512.png"
-                            class="rounded-circle user-img" alt="user-img" />
-                        <span class="fs-5 ms-2">{{ session('userName') }}</span>
-                    </div>
-                    <input type="hidden" name="student_test_entry_id" id="student_test_entry_id">
-                    <ul class="quiz_info d-flex flex-wrap border-bottom py-2 ps-0">
-                        <li><span class="answered">0</span>Answered</li>
-                        <li><span class="marked">0</span>Marked</li>
-                        <li><span class="not_visited">0</span>Not Visited</li>
-                    </ul>
-                    <div class="quiz_list_number_box">
-                        <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
-                        <ul class="quiz_number quiz_info d-flex flex-wrap border-bottom py-2">
-                            {{-- <li><span class="active">1</span></li>
+
+            <div id="content-to-fullscreen">
+                <!-- nav -->
+
+                <!-- end nav -->
+                <!-- side bar -->
+                <aside>
+                    <div id="side-bar" class="px-2  mt-3">
+                        <div class="icon">
+                            <i class="fa fa-chevron-right"></i>
+                        </div>
+                        <div class="user-info border-bottom py-2">
+                            <img src="https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes/128/user-male-circle-blue-512.png"
+                                class="rounded-circle user-img" alt="user-img" />
+                            <span class="fs-5 ms-2">{{ session('userName') }}</span>
+                        </div>
+                        <input type="hidden" name="student_test_entry_id" id="student_test_entry_id">
+                        <ul class="quiz_info d-flex flex-wrap border-bottom py-2 ps-0">
+                            <li><span class="answered">0</span>Answered</li>
+                            <li><span class="marked">0</span>Marked</li>
+                            <li><span class="not_visited">0</span>Not Visited</li>
+                        </ul>
+                        <div class="quiz_list_number_box">
+                            <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
+                            <ul class="quiz_number quiz_info d-flex flex-wrap border-bottom py-2">
+                                {{-- <li><span class="active">1</span></li>
                             <li><span class="not_answered">2</span></li>
                             <li><span class="answered">3</span></li>
                             <li><span class="active">4</span></li> --}}
-                        </ul>
-                    </div>
-                    <div class="side_bar_footer border-top">
-                        <div class="help-btn d-flex justify-content-between my-2">
-                            <button class="btn btn-theme">Question Paper</button>
-                            <button class="btn btn-theme">Instruction</button>
+                            </ul>
                         </div>
-                        <button type="button" class="w-100 btn btn-info submit-test">Submit Test</button>
-                    </div>
-                </div>
-            </aside>
-            <!-- end side bar -->
-            <main>
-                <section>
-                    <div id="content" class="bg-light">
-
-                        <div id="section-buttons"></div>
-
-                        <div class="container-fluid">
-                            <!-- header bar -->
-                            <div class="header-bar d-flex">
-
+                        <div class="side_bar_footer border-top">
+                            <div class="help-btn d-flex justify-content-between my-2">
+                                <button class="btn btn-theme">Question Paper</button>
+                                <button class="btn btn-theme">Instruction</button>
                             </div>
-                            <!-- end of header bar -->
-                            <div class="question-wrapper bg-white py-3 px-4 border-bottom">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <p class="fw-bold question_count m-0">Question No. </p>
-                                    </div>
-                                    <div class="col-md-2">
-                                        Marks <br />
-                                        <span class="badge rounded-pill org-marks bg-success"></span>
-                                        <span class="badge rounded-pill neg-marks bg-danger">-0.5</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn dropdown-toggle py-0"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa fa-warning"></i> Report
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="#">Wrong Question</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">Formatting Issue</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">Wrong Translation</a>
-                                                </li>
-                                                <li><a class="dropdown-item" href="#">Others</a></li>
-                                            </ul>
+                            <button type="button" class="w-100 btn btn-info submit-test">Submit Test</button>
+                        </div>
+                    </div>
+                </aside>
+                <!-- end side bar -->
+                <main>
+                    <section>
+                        <div id="content" class="bg-light">
+
+                            <div id="section-buttons"></div>
+
+                            <div class="container-fluid">
+                                <!-- header bar -->
+                                <div class="header-bar d-flex">
+
+                                </div>
+                                <!-- end of header bar -->
+                                <div class="question-wrapper bg-white py-3 px-4 border-bottom">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <p class="fw-bold question_count m-0">Question No. </p>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- question box -->
-                            <div class="question-box bg-white py-4 px-4">
-                                <p class="fs-5 question-p">
-
-                                </p>
-                                <hr />
-                                <div class="Answer-options">
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!-- footer -->
-                <footer>
-                    <div class="footer-btn ">
-                        <button type="button" class="btn btn-theme mark-for-review-button">Mark for Review & Next</button>
-                        <button type="button" class="btn btn-theme clear-response">Clear Response</button>
-                        <button type="button" class="btn btn-info float-right save-next">Save & Next</button>
-                    </div>
-                </footer>
-                <!-- end footer -->
-            </main>
-        </div>
-
-        <div id="programming_screen" class="programming_screen">
-            <nav class="navbar navbar-light bg-white">
-                <div class="container">
-                    <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
-                        <h6 class="m-0 test-title"> </h6>
-                        <div id="clockdiv">
-                            <span class="fw-bold">TIME LEFT : &nbsp;&nbsp;</span>
-                            <div>
-
-                                <span class="hours" id="hour"></span>
-                            </div>
-                            <div>
-
-                                <span class="minutes" id="minute"></span>
-                            </div>
-                            <div>
-                                <span class="seconds" id="second"></span>
-                            </div>
-                        </div>
-                        <div class="mt-2 mt-md-0">
-                            <button type="button" id="pro-fullscreen-btn"
-                                class="btn  pro-fullscreen-btn btn-outline-info">
-                                Switch Full Screen
-                            </button>
-                            {{-- <button type="button" class="btn btn-outline-info">Pause</button> --}}
-                        </div>
-                    </div>
-                </div>
-
-            </nav>
-            <div>
-                <div class="header-bar">
-                    <div class="row col-12">
-
-                        <div class="col-5 section-name-div"></div>
-                        <div class="col-4">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <select name="" style="" class="form-control" id="languageSelect">
-                                        <option value="c">C</option>
-                                        <option value="cpp">C++</option>
-                                        <option value="csharp">C#</option>
-                                        <option value="java">Java</option>
-                                        <option value="python">Python</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="d-flex">
-                                        <button type="button"
-                                            class="btn btn-outline-info programming_run_button">&#x23F8;
-                                            Compile & Run</button>
-                                        <button type="button" class="btn btn-theme mx-4 verify-button">Verify</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <div class="dropdown float-end">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button"
-                                            id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                            🎨
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="themeDropdown">
-                                            <li><a class="dropdown-item theme-button" data-value="vs-dark"
-                                                    href="#">Dark Theme</a></li>
-                                            <li><a class="dropdown-item theme-button" data-value="vs-light"
-                                                    href="#">Light Theme</a></li>
-                                            <li><a class="dropdown-item theme-button" data-value="hc-black"
-                                                    href="#">High-Contrast Theme</a>
-                                            </li>
-                                            <!-- Add more theme options as needed -->
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div>
-                    <div class="row col-12">
-                        <div class="col-4" style="max-height: 80vh;">
-                            <div class="card" style="height: 100%; overflow-y: auto;">
-                                <div class="ms-1 card-body">
-                                    <div class="programming-questions"></div>
-
-                                    <label class="mt-4 fw-bold">INPUT FORMAT</label>
-                                    <div class="mt-2 ms-2 input-format"></div>
-
-                                    <label class="mt-4 fw-bold">OUTPUT FORMAT</label>
-                                    <div class="mt-2 ms-2 output-format"></div>
-
-                                    <label class="fw-bold mt-4"> CODE CONSTRAINTS</label>
-                                    <div class="mt-2 ms-2 code-constraints"></div>
-
-                                    <div class="mt-4  test-case-div"></div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-5">
-
-                            <div id="code-editor"></div>
-                        </div>
-
-
-
-
-
-
-                        <div class="col-3" style="max-height: 80vh;">
-                            <div class="card" style="height: 100%; overflow-y: auto;">
-
-                                <div class="card-body">
-                                    <div class="row col-12 ">
-
-                                        <div class="">
-                                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                                <li class="nav-item" role="presentation">
-                                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-                                                        data-bs-target="#home" type="button" role="tab"
-                                                        aria-controls="home" aria-selected="true">Sample Test
-                                                        Case</button>
-                                                </li>
-                                                <li class="ms-2 nav-item" role="presentation">
-                                                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                                        data-bs-target="#profile" type="button" role="tab"
-                                                        aria-controls="profile" aria-selected="false">Hidden Test
-                                                        Case</button>
-                                                </li>
-                                            </ul>
-                                            <div class="tab-content">
-                                                <div class="tab-pane fade show active" id="home" role="tabpanel"
-                                                    aria-labelledby="home-tab">
-
-                                                    <div id="sample_correct_testcase" class="mt-4">
-
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="profile" role="tabpanel"
-                                                    aria-labelledby="profile-tab">
-                                                    <div class="verify-error mt-4 fw-bold text-danger"></div>
-                                                    <div class="hidden-testcase-tab">
-                                                        <div class="card mt-4">
-                                                            <div class="card-body">
-                                                                <h6 class="fw-bold d-inline-block">Total Test Case: </h6>
-                                                                <span
-                                                                    class="test-case-count fw-bold text-success d-inline-block">
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="card mt-2">
-                                                            <div class="card-body">
-                                                                <h6 class="fw-bold d-inline-block">Passed Test Case: </h6>
-                                                                <span
-                                                                    class="passed-case-count fw-bold text-success d-inline-block"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="card mt-2">
-                                                            <div class="card-body">
-                                                                <h6 class="fw-bold d-inline-block">Rejected Test Case:
-                                                                </h6>
-                                                                <span
-                                                                    class="rejected-case-count text-danger fw-bold d-inline-block"></span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                </div>
+                                        <div class="col-md-2">
+                                            Marks <br />
+                                            <span class="badge rounded-pill org-marks bg-success"></span>
+                                            <span class="badge rounded-pill neg-marks bg-danger">-0.5</span>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn dropdown-toggle py-0"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-warning"></i> Report
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" href="#">Wrong Question</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#">Formatting Issue</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#">Wrong Translation</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#">Others</a></li>
+                                                </ul>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <!-- question box -->
+                                <div class="question-box bg-white py-4 px-4">
+                                    <p class="fs-5 question-p">
 
+                                    </p>
+                                    <hr />
+                                    <div class="Answer-options">
 
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- footer -->
+                    <footer>
+                        <div class="footer-btn ">
+                            <button type="button" class="btn btn-theme mark-for-review-button">Mark for Review &
+                                Next</button>
+                            <button type="button" class="btn btn-theme clear-response">Clear Response</button>
+                            <button type="button" class="btn btn-info float-right save-next">Save & Next</button>
+                        </div>
+                    </footer>
+                    <!-- end footer -->
+                </main>
+            </div>
+
+            <div id="programming_screen" class="programming_screen">
+
+                <div>
+                    <div class="header-bar">
+                        <div class="row col-12">
+
+                            <div class="col-5 section-name-div"></div>
+                            <div class="col-4">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select name="" style="" class="form-control" id="languageSelect">
+                                            <option value="c">C</option>
+                                            <option value="cpp">C++</option>
+                                            <option value="csharp">C#</option>
+                                            <option value="java">Java</option>
+                                            <option value="python">Python</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="d-flex">
+                                            <button type="button"
+                                                class="btn btn-outline-info programming_run_button">&#x23F8;
+                                                Compile & Run</button>
+                                            <button type="button"
+                                                class="btn btn-theme mx-4 verify-button">Verify</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="dropdown float-end">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                🎨
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+                                                <li><a class="dropdown-item theme-button" data-value="vs-dark"
+                                                        href="#">Dark Theme</a></li>
+                                                <li><a class="dropdown-item theme-button" data-value="vs-light"
+                                                        href="#">Light Theme</a></li>
+                                                <li><a class="dropdown-item theme-button" data-value="hc-black"
+                                                        href="#">High-Contrast Theme</a>
+                                                </li>
+                                                <!-- Add more theme options as needed -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row col-12">
+                            <div class="col-4" style="max-height: 100vh;">
+                                <div class="card" style="height: 100%; overflow-y: auto;">
+                                    <div class="ms-1 card-body">
+                                        <div class="programming-questions"></div>
+
+                                        <label class="mt-4 fw-bold">INPUT FORMAT</label>
+                                        <div class="mt-2 ms-2 input-format"></div>
+
+                                        <label class="mt-4 fw-bold">OUTPUT FORMAT</label>
+                                        <div class="mt-2 ms-2 output-format"></div>
+
+                                        <label class="fw-bold mt-4"> CODE CONSTRAINTS</label>
+                                        <div class="mt-2 ms-2 code-constraints"></div>
+
+                                        <div class="mt-4  test-case-div"></div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-5">
+
+                                <div id="code-editor"></div>
+                            </div>
+
+
+                            <div class="col-3" style="max-height: 100vh;">
+                                <div class="card" style="height: 100%; overflow-y: auto;">
+
+                                    <div class="card-body">
+                                        <div class="row col-12 ">
+
+                                            <div class="">
+                                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link active" id="home-tab"
+                                                            data-bs-toggle="tab" data-bs-target="#home" type="button"
+                                                            role="tab" aria-controls="home"
+                                                            aria-selected="true">Sample Test
+                                                            Case</button>
+                                                    </li>
+                                                    <li class="ms-2 nav-item" role="presentation">
+                                                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                                            data-bs-target="#profile" type="button" role="tab"
+                                                            aria-controls="profile" aria-selected="false">Hidden Test
+                                                            Case</button>
+                                                    </li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane fade show active" id="home" role="tabpanel"
+                                                        aria-labelledby="home-tab">
+
+                                                        <div id="sample_correct_testcase" class="mt-4">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="profile" role="tabpanel"
+                                                        aria-labelledby="profile-tab">
+                                                        <div class="verify-error mt-4 fw-bold text-danger"></div>
+                                                        <div class="hidden-testcase-tab">
+                                                            <div class="card mt-4">
+                                                                <div class="card-body">
+                                                                    <h6 class="fw-bold d-inline-block">Total Test Case:
+                                                                    </h6>
+                                                                    <span
+                                                                        class="test-case-count fw-bold text-success d-inline-block">
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card mt-2">
+                                                                <div class="card-body">
+                                                                    <h6 class="fw-bold d-inline-block">Passed Test Case:
+                                                                    </h6>
+                                                                    <span
+                                                                        class="passed-case-count fw-bold text-success d-inline-block"></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card mt-2">
+                                                                <div class="card-body">
+                                                                    <h6 class="fw-bold d-inline-block">Rejected Test Case:
+                                                                    </h6>
+                                                                    <span
+                                                                        class="rejected-case-count text-danger fw-bold d-inline-block"></span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
 
                             </div>
 
 
+
+
+
+
+
+
+                        </div>
+                    </div>
+                    <footer>
+                        <div class="col-12 footer-btn d-flex justify-content-center">
+                            {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
+                            <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
+                            <button type="button" class="btn btn-theme mx-4 save-next next-button">&raquo;</button>
+
+                            <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
+                        </div>
+                    </footer>
+                </div>
+
+            </div>
+
+
+
+            <div class="mcq-grouping" id="mcq_grouping" style="display:none;background-color:#ffffff !important;">
+
+                <aside>
+                    <div id="side-bar" class="px-2  mt-3">
+                        <div class="icon">
+                            <i class="fa fa-chevron-right"></i>
+                        </div>
+                        <div class="user-info border-bottom py-2">
+                            <img src="https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes/128/user-male-circle-blue-512.png"
+                                class="rounded-circle user-img" alt="user-img" />
+                            <span class="fs-5 ms-2">{{ session('userName') }}</span>
+                        </div>
+                        <input type="hidden" name="student_test_entry_id" id="student_test_entry_id">
+
+                        <div class="quiz_list_number_box">
+                            <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
+                            <div class="accordion" id="passageAccordion">
+
+                            </div>
+                        </div>
+                        <div class="side_bar_footer border-top">
+                            <div class="help-btn d-flex justify-content-between my-2">
+                                <button class="btn btn-theme">Question Paper</button>
+                                <button class="btn btn-theme">Instruction</button>
+                            </div>
+                            <button type="button" class="w-100 btn btn-info submit-test">Submit Test</button>
+                        </div>
+                    </div>
+                </aside>
+
+
+                <div class="row col-12 mb-5">
+                    <div class="col-5 section-buttons "></div>
+
+                </div>
+                <div class="row col-12">
+                    <div class="col-6" style="max-height: 100vh; max-width: 100vw;">
+                        <div class="card" style="height: 100%; overflow-y: auto;">
+                            <div class="card-body">
+                                <div class="passage-title"
+                                    style="position: sticky; top: 0; background-color: #ffffff; z-index: 1;">
+                                    <h5 class="fw-bold">Read the Below passage and Answer the questions:</h5>
+                                </div>
+                                <div class="passage-col">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6" style="max-height: 100vh; max-width: 100vw;">
+                        <div class="card" style="height: 100%; overflow-y: auto;">
+                            <div class="card-body ">
+                                <div class="question-col">
+                                </div>
+                                <div class="mt-5">
+                                    <button type="button"
+                                        class="btn background-info text-white grouping-mark-for-review">Mark For
+                                        Review</button>
+
+                                    <button type="button"
+                                        class="btn background-secondary text-white float-end grouping-save-next">Save &
+                                        Next</button>
+                                </div>
+                            </div>
                         </div>
 
-
-
-
-
-
-
-
                     </div>
+
                 </div>
-                <footer>
-                    <div class="col-12 footer-btn d-flex justify-content-center">
-                        {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
-                        <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
-                        <button type="button" class="btn btn-theme mx-4 save-next next-button">&raquo;</button>
 
-                        <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
-                    </div>
-                </footer>
             </div>
+
 
         </div>
-
-
-
-        <div class="mcq-grouping" id="mcq_grouping">
-
-            <nav class="navbar navbar-light bg-white">
-                <div class="container">
-                    <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
-                        <h6 class="m-0">GROUPING MCQ</h6>
-                        {{-- <div class="timer">
-                            <b>Time Left</b>
-                            <span id="hours" class="badge hours bg-secondary">00</span> :
-                            <span id="minutes" class="badge minutes bg-secondary">00</span> :
-                            <span id="seconds" class="badge seconds bg-secondary">00</span>
-                        </div> --}}
-                        <div id="clockdiv">
-                            <span class="fw-bold">TIME LEFT : &nbsp;&nbsp;</span>
-                            <div>
-
-                                <span class="hours" id="hour"></span>
-                            </div>
-                            <div>
-
-                                <span class="minutes" id="minute"></span>
-                            </div>
-                            <div>
-                                <span class="seconds" id="second"></span>
-                            </div>
-                        </div>
-                        <div class="mt-2 mt-md-0">
-                            <button type="button" class="btn fullscreen-btn btn-outline-info">
-                                Switch Full Screen
-                            </button>
-                            {{-- <button type="button" class="btn btn-outline-info">Pause</button> --}}
-                        </div>
-                    </div>
-                </div>
-
-            </nav>
-            <div class="row mb-5">
-                <div class="section-buttons "></div>
-
-            </div>
-            <div class="row col-12">
-                <div class="col-6">
-                    <div class="passage-col">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="question-col">
-                    </div>
-
-                    <div class="mt-5">
-                        <button type="button"
-                            class="btn background-secondary text-white float-end grouping-save-next">Save &
-                            Next</button>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-
-
 
 
 
@@ -1556,15 +1544,50 @@
 
 
                         } else if (localStorage.getItem('question_category') == 3) {
+
+                            $(".mcq-grouping").show();
+
+                            questionsData = data[1];
+
+                            var passageAccordionItem = "";
+
                             var currentPassage = 0;
 
                             $(data[0].sections).each(function(i, e) {
-                                $(".section-buttons").before(
-                                    `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
+                                $(".section-buttons").append(
+                                    `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button> `
                                 );
+
                             });
 
-                            questionsData = data[1];
+                            $(questionsData[0]).each(function(i, e) {
+                                var questionButtons = "";
+
+                                for (var j = 1; j <= e.grouping_questions.length; j++) {
+                                    questionButtons +=
+                                        `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-question="${j}" >${j}</button></div>`;
+                                }
+
+                                passageAccordionItem += `
+        <div class="accordion-item mt-3">
+            <h2 class="accordion-header" id="passageHeading${i}">
+                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
+                   Question ${i + 1}
+                </button>
+            </h2>
+            <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
+                <div class="accordion-body">
+                    <div class= "mt-4 row col-12 ">
+                        ${questionButtons}
+                     </div>
+                </div>
+            </div>
+        </div>`;
+                            });
+
+                            $("#passageAccordion").append(passageAccordionItem);
+
+
 
                             var questionCategories = data[2];
 
@@ -1572,7 +1595,41 @@
 
                             $(".grouping-save-next").click(function() {
 
-                                saveAndNextCategory3();
+                                if ($('input[type="radio"]:checked').length == 0) {
+                                    alert('Please Select Any Option');
+                                    return false;
+                                }
+
+                                var selectedAnswer = $("input[type='radio']:checked");
+
+                                $.ajax({
+                                    url: '{{ route('save-questions-answers') }}',
+                                    type: 'POST',
+                                    data: {
+                                        test_entry_id: $("#student_test_entry_id").val(),
+                                        course_id: {{ base64_decode(request()->segment(2)) }},
+                                        test_code: "{{ base64_decode(request()->segment(3)) }}",
+                                        question_code: $(selectedAnswer).attr(
+                                            "data-question"),
+                                        group_question_id: $(selectedAnswer).attr(
+                                            "data-groupid"),
+                                        option_id: $(selectedAnswer).val(),
+                                        user_id: "{{ session('userId') }}",
+                                    },
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                            'content')
+                                    },
+                                    success: function(data) {
+                                        saveAndNextCategory3();
+                                    },
+                                    error: function(data) {
+                                        alert('Something went wrong');
+                                    }
+                                });
+
+
+
                             });
 
                             $(".test-title").html("<b>Category 3: Passage Reading MCQ</b>");
@@ -1604,7 +1661,6 @@
 
                                         mcqOptions[currentPassage].forEach(function(
                                             opt) {
-                                            console.log(opt);
                                             $(".question-col").append(`
                     <div>
                         <label class="form-check-label">
@@ -1649,13 +1705,7 @@
                                     currentPassage);
 
                             }
-
-
-
                         }
-
-
-
                         if (localStorage.getItem('get_id') == null) {
 
                             saveStudentTestEntry();
@@ -1712,7 +1762,7 @@
                 } else if (localStorage.getItem('question_category') == 1) {
 
 
-                    document.getElementById('pro-fullscreen-btn').addEventListener('click', function() {
+                    document.getElementById('fullscreen-btn').addEventListener('click', function() {
                         toggleFullScreen();
                     });
 
@@ -1734,16 +1784,14 @@
 
                 } else if (localStorage.getItem('question_category') == 3) {
 
-
-                    document.getElementById('pro-fullscreen-btn').addEventListener('click', function() {
+                    document.getElementById('fullscreen-btn').addEventListener('click', function() {
                         toggleFullScreen();
                     });
-
 
                     function toggleFullScreen() {
 
 
-                        const element = document.getElementById('mcq_grouping');
+                        const element = document.getElementById('all-test-screens');
 
                         if (!document.fullscreenElement) {
                             element.requestFullscreen();
