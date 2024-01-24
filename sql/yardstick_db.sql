@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 23, 2024 at 02:16 PM
+-- Generation Time: Jan 24, 2024 at 02:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1047,13 +1047,9 @@ CREATE TABLE `students_test_entries` (
 --
 
 INSERT INTO `students_test_entries` (`id`, `student_reg_no`, `course_id`, `test_code`, `total_questions`, `total_duration`, `total_marks`, `total_attend_questions`, `time_taken`, `total_attempts`, `created_at`, `updated_at`) VALUES
-(1, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-23 09:37:29', NULL),
-(2, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-23 10:04:43', NULL),
-(3, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-23 10:06:18', NULL),
-(4, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-23 10:57:14', NULL),
-(5, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-23 11:07:23', NULL),
-(6, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-23 11:12:55', NULL),
-(7, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-23 12:09:13', NULL);
+(1, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-24 11:53:27', NULL),
+(2, '19BCS801', 4, '65af4ca250fba', NULL, 90, NULL, NULL, NULL, NULL, '2024-01-24 11:53:39', NULL),
+(3, '19BCS801', 1, '65a959fa9696f', NULL, 20, NULL, NULL, NULL, NULL, '2024-01-24 12:04:19', NULL);
 
 -- --------------------------------------------------------
 
@@ -1070,6 +1066,7 @@ CREATE TABLE `students_test_questions_answers_entry` (
   `time_taken_for_each_question` varchar(12) DEFAULT NULL,
   `mark_for_each_question` int(11) DEFAULT NULL,
   `question_code` varchar(50) DEFAULT NULL,
+  `group_question_id` int(11) DEFAULT NULL COMMENT 'If category = 3, set group question id \r\n',
   `category_id` int(11) DEFAULT NULL,
   `question` text DEFAULT NULL,
   `student_code` text DEFAULT NULL,
@@ -1079,6 +1076,19 @@ CREATE TABLE `students_test_questions_answers_entry` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `students_test_questions_answers_entry`
+--
+
+INSERT INTO `students_test_questions_answers_entry` (`id`, `test_entry_id`, `student_reg_no`, `test_code`, `course_id`, `time_taken_for_each_question`, `mark_for_each_question`, `question_code`, `group_question_id`, `category_id`, `question`, `student_code`, `answer_selected`, `correct_answer`, `mark_taken_for_this_question`, `created_at`, `updated_at`) VALUES
+(1, 2, '19BCS801', '65af4ca250fba', 4, NULL, 5, '65ae572a765b5', 1, 3, NULL, NULL, '103', '104', 0, '2024-01-24 11:58:44', '2024-01-24 11:58:44'),
+(2, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f767e95ca', NULL, 2, NULL, NULL, '8', '5', 0, '2024-01-24 12:04:30', '2024-01-24 12:04:30'),
+(3, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f8371f85e', NULL, 2, NULL, NULL, '23', '24', 0, '2024-01-24 12:04:32', '2024-01-24 12:04:32'),
+(4, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f86ce1416', NULL, 2, NULL, NULL, '27', '29', 0, '2024-01-24 12:04:34', '2024-01-24 12:04:34'),
+(5, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f89c9e824', NULL, 2, NULL, NULL, '101', '98', 0, '2024-01-24 12:04:38', '2024-01-24 12:04:38'),
+(6, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f912cb091', NULL, 2, NULL, NULL, '95', '96', 0, '2024-01-24 12:04:40', '2024-01-24 12:04:40'),
+(7, 2, '19BCS801', '65af4ca250fba', 4, NULL, 5, '65ae572a765b5', 1, 3, NULL, NULL, '105', '104', 0, '2024-01-24 13:20:11', '2024-01-24 13:20:11');
 
 -- --------------------------------------------------------
 
@@ -1614,13 +1624,13 @@ ALTER TABLE `question_bank_for_mcq`
 -- AUTO_INCREMENT for table `students_test_entries`
 --
 ALTER TABLE `students_test_entries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `students_test_questions_answers_entry`
 --
 ALTER TABLE `students_test_questions_answers_entry`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `student_group`
