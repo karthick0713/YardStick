@@ -75,6 +75,7 @@ class StudentTestController extends Controller
                     } else if ($ques && $ques->category == 1) {
                         $test_cases = DB::table('programming_question_test_case')->where('question_code', $questionCode)->get();
                         $questionsData[$key][] = [
+                            'category' => $ques->category,
                             'question_for_test'  => $ques,
                             'test_cases' => $test_cases
                         ];
@@ -86,6 +87,7 @@ class StudentTestController extends Controller
                         }
 
                         $questionsData[$key][] = [
+                            'category' => $ques->category,
                             'question_for_test'  => $ques,
                             'grouping_questions' => $grouping,
                             'mcq_options' => $mcq,
@@ -94,7 +96,6 @@ class StudentTestController extends Controller
                 }
                 $question_category[$key] = $ques->category;
             }
-            // dd($questionsData);
 
             $data = [
                 'sections' => $sections,

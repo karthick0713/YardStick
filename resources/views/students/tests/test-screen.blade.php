@@ -54,6 +54,10 @@
             z-index: 70;
         }
 
+        .accordion-button:not(.collapsed) {
+            background-color: #ffffff;
+        }
+
         #side-bar .icon i {
             transition: all 0.2s ease-in-out;
         }
@@ -186,6 +190,10 @@
 
         .quiz_list_number_box .list_title {
             background: #b4daed;
+        }
+
+        .question-button.marked {
+            background-color: #00bf96 !important;
         }
 
         .side-bar-hide main,
@@ -654,6 +662,14 @@
 
                         <div class="quiz_list_number_box">
                             <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
+                            <br>
+                            <div class="row col-12">
+                                <div class=" d-flex">
+                                    <label class="question-button marked btn text-white btn-sm">&nbsp;</label>
+                                    <span class="fw-bold ms-2 mt-2">=> Marked Questions</span>
+                                </div>
+
+                            </div>
                             <div class="accordion" id="passageAccordion">
 
                             </div>
@@ -670,6 +686,7 @@
 
 
                 <div class="row col-12 mb-5">
+
                     <div class="col-5 section-buttons "></div>
 
                 </div>
@@ -721,7 +738,6 @@
 
         <script>
             $(function() {
-
 
                 $("#side-bar .icon").click(function() {
                     $("body").toggleClass("side-bar-hide");
@@ -828,8 +844,6 @@
                                 `;
                             run_question_inputs.push(e.input)
                             run_question_outputs.push(e.output)
-                            // }
-                            // 
                             verify_question_inputs.push(e.input);
                             verify_question_outputs.push(e.output);
                         })
@@ -1021,6 +1035,8 @@
                     success: function(data) {
 
                         fetch_questions = data;
+
+                        console.log(data)
 
                         if (localStorage.getItem("question_category") == null || localStorage.getItem(
                                 "question_category") == "undefined") {
@@ -1545,6 +1561,10 @@
 
                         } else if (localStorage.getItem('question_category') == 3) {
 
+                            if (localStorage.getItem('section') === null) {
+                                localStorage.setItem('section', 0)
+                            }
+
                             $(".mcq-grouping").show();
 
                             questionsData = data[1];
@@ -1553,6 +1573,8 @@
 
                             var currentPassage = 0;
 
+                            var current_pass_and_quest = [];
+
                             $(data[0].sections).each(function(i, e) {
                                 $(".section-buttons").append(
                                     `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button> `
@@ -1560,12 +1582,81 @@
 
                             });
 
+                            var markedQuestions = JSON.parse(localStorage.getItem('markedQuestions')) || [];
+
+                            markedQuestions = markedQuestions.filter((item, index, self) => {
+                                const strItem = JSON.stringify(item);
+                                return index === self.findIndex(t => JSON.stringify(t) === strItem);
+                            });
+
+
+                            setTimeout(() => {
+
+                                markedQuestions.forEach(function(questionIndex, i) {
+
+                                    $(`.question-button[data-index="${currentQuestionIndex}"][data-question="${questionIndex[1] + 1}"]`)
+                                        .addClass('marked');
+
+                                });
+
+
+                            }, 1000);
+
+
+                            function markForReview() {
+                                var current_pass_and_quest = [currentQuestionIndex, currentPassage];
+
+                                var isMarked = markedQuestions.some(function(question) {
+                                    return question[0] === current_pass_and_quest[0] && question[
+                                        1] === current_pass_and_quest[1];
+                                });
+
+                                if (!isMarked) {
+                                    markedQuestions.push(current_pass_and_quest);
+                                    localStorage.setItem('markedQuestions', JSON.stringify(
+                                        markedQuestions));
+
+                                    saveAndNextCategory3();
+
+                                    setTimeout(function() {
+                                        $(`.question-button[data-index="${currentQuestionIndex}"][data-question="${current_pass_and_quest[1] + 1}"]`)
+                                            .addClass('marked');
+                                    }, 500);
+                                } else {
+                                    alert('You have already marked this question');
+                                    saveAndNextCategory3();
+                                }
+                            }
+
+
+                            function navigateToMarkedQuestion(passageIndex, questionIndex) {
+                                currentPassage = passageIndex -
+                                    1;
+                                currentQuestionIndex = questionIndex;
+                                showPassageAndQuestions(currentQuestionIndex);
+                            }
+
+
+                            $(document).on("click", ".question-button.marked", function() {
+                                var questionIndex = $(this).data('index');
+                                var passageIndex = $(this).data('question');
+
+                                console.log(passageIndex, questionIndex);
+                                navigateToMarkedQuestion(passageIndex, questionIndex);
+                            });
+
+
+
+                            $(".grouping-mark-for-review").click(function() {
+                                markForReview();
+                            });
+
                             $(questionsData[0]).each(function(i, e) {
                                 var questionButtons = "";
 
                                 for (var j = 1; j <= e.grouping_questions.length; j++) {
                                     questionButtons +=
-                                        `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-question="${j}" >${j}</button></div>`;
+                                        `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
                                 }
 
                                 passageAccordionItem += `
@@ -1664,7 +1755,7 @@
                                             $(".question-col").append(`
                     <div>
                         <label class="form-check-label">
-                            <input type="radio" name="mcqOption" data-question="${opt.question_code}" data-groupid="${questionsData[0][index].grouping_questions[currentPassage].id}" value="${opt.id}">
+                            <input type="radio" name="mcqOption" data-question="${opt.question_code}"  data-groupid="${questionsData[0][index].grouping_questions[currentPassage].id}" value="${opt.id}">
                             ${opt.option_name}: ${opt.option_answer}
                         </label>
                     </div>
@@ -1760,6 +1851,10 @@
 
 
                 } else if (localStorage.getItem('question_category') == 1) {
+
+                    if (localStorage.getItem('section') === null) {
+                        localStorage.setItem('section', 0)
+                    }
 
 
                     document.getElementById('fullscreen-btn').addEventListener('click', function() {
@@ -1962,9 +2057,6 @@
                 localStorage.setItem('section', value);
 
                 location.reload();
-
-
-
 
             }
         </script>
