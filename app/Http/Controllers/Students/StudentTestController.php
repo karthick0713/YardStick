@@ -97,6 +97,8 @@ class StudentTestController extends Controller
                 $question_category[$key] = $ques->category;
             }
 
+
+
             $data = [
                 'sections' => $sections,
                 'test_questions' => $testQuestions,

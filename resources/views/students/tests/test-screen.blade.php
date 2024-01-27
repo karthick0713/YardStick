@@ -769,8 +769,12 @@
 
                 function showQuestion(index) {
 
+
+
+
                     if (localStorage.getItem("question_category") == 2) {
 
+                        localStorage.setItem('question_category', questionsData[index].category);
 
                         var question = questionsData[index].question_for_test;
 
@@ -823,6 +827,7 @@
 
                     } else if (localStorage.getItem("question_category") == 1) {
 
+                        localStorage.setItem('question_category', questionsData[0][index].category);
 
                         var question = questionsData[localStorage.getItem("section")][index].question_for_test
                             .questions;
@@ -1036,12 +1041,12 @@
 
                         fetch_questions = data;
 
-                        console.log(data)
 
                         if (localStorage.getItem("question_category") == null || localStorage.getItem(
                                 "question_category") == "undefined") {
 
-                            localStorage.setItem('question_category', data[2][0]);
+                            localStorage.setItem('question_category', data[1][0][0]['category']);
+
                         }
 
 
@@ -1641,7 +1646,6 @@
                                 var questionIndex = $(this).data('index');
                                 var passageIndex = $(this).data('question');
 
-                                console.log(passageIndex, questionIndex);
                                 navigateToMarkedQuestion(passageIndex, questionIndex);
                             });
 
@@ -1652,28 +1656,32 @@
                             });
 
                             $(questionsData[0]).each(function(i, e) {
-                                var questionButtons = "";
 
-                                for (var j = 1; j <= e.grouping_questions.length; j++) {
-                                    questionButtons +=
-                                        `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
+                                if (questionsData[0][i].category == 3) {
+                                    var questionButtons = "";
+
+                                    for (var j = 1; j <= e.grouping_questions.length; j++) {
+                                        questionButtons +=
+                                            `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
+                                    }
+
+                                    passageAccordionItem += `
+                                    <div class="accordion-item mt-3">
+                                    <h2 class="accordion-header" id="passageHeading${i}">
+                                    <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
+                                    Question ${i + 1}
+                                    </button>
+                                    </h2>
+                                    <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
+                                    <div class="accordion-body">
+                                    <div class= "mt-4 row col-12 ">
+                                    ${questionButtons}
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>`;
                                 }
 
-                                passageAccordionItem += `
-        <div class="accordion-item mt-3">
-            <h2 class="accordion-header" id="passageHeading${i}">
-                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
-                   Question ${i + 1}
-                </button>
-            </h2>
-            <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
-                <div class="accordion-body">
-                    <div class= "mt-4 row col-12 ">
-                        ${questionButtons}
-                     </div>
-                </div>
-            </div>
-        </div>`;
                             });
 
                             $("#passageAccordion").append(passageAccordionItem);
@@ -2052,7 +2060,7 @@
 
                 var values = fetch_questions[2][value];
 
-                localStorage.setItem('question_category', values);
+                // localStorage.setItem('question_category', values);
 
                 localStorage.setItem('section', value);
 
