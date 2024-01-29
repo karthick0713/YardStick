@@ -387,6 +387,10 @@
                             <li><span class="active">4</span></li> --}}
                             </ul>
                         </div>
+
+                        <div class="accordion" id="passageAccordion">
+
+                        </div>
                         <div class="side_bar_footer border-top">
                             <div class="help-btn d-flex justify-content-between my-2">
                                 <button class="btn btn-theme">Question Paper</button>
@@ -659,6 +663,42 @@
                             <span class="fs-5 ms-2">{{ session('userName') }}</span>
                         </div>
                         <input type="hidden" name="student_test_entry_id" id="student_test_entry_id">
+                        <ul class="quiz_info d-flex flex-wrap border-bottom py-2 ps-0">
+                            <li><span class="answered">0</span>Answered</li>
+                            <li><span class="marked">0</span>Marked</li>
+                            <li><span class="not_visited">0</span>Not Visited</li>
+                        </ul>
+                        <div class="quiz_list_number_box">
+                            <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
+                            <ul class="quiz_number quiz_info d-flex flex-wrap border-bottom py-2">
+
+                            </ul>
+                        </div>
+
+                        <div class="accordion" id="passageAccordion">
+
+                        </div>
+                        <div class="side_bar_footer border-top">
+                            <div class="help-btn d-flex justify-content-between my-2">
+                                <button class="btn btn-theme">Question Paper</button>
+                                <button class="btn btn-theme">Instruction</button>
+                            </div>
+                            <button type="button" class="w-100 btn btn-info submit-test">Submit Test</button>
+                        </div>
+                    </div>
+                </aside>
+
+                {{-- <aside>
+                    <div id="side-bar" class="px-2  mt-3">
+                        <div class="icon">
+                            <i class="fa fa-chevron-right"></i>
+                        </div>
+                        <div class="user-info border-bottom py-2">
+                            <img src="https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes/128/user-male-circle-blue-512.png"
+                                class="rounded-circle user-img" alt="user-img" />
+                            <span class="fs-5 ms-2">{{ session('userName') }}</span>
+                        </div>
+                        <input type="hidden" name="student_test_entry_id" id="student_test_entry_id">
 
                         <div class="quiz_list_number_box">
                             <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
@@ -682,7 +722,7 @@
                             <button type="button" class="w-100 btn btn-info submit-test">Submit Test</button>
                         </div>
                     </div>
-                </aside>
+                </aside> --}}
 
 
                 <div class="row col-12 mb-5">
@@ -759,6 +799,9 @@
 
             $(document).ready(function() {
 
+                var marked_questions = localStorage.getItem('markedQuestions_cat2');
+                marked_questions = marked_questions ? JSON.parse(marked_questions) : [];
+
 
                 if (localStorage.getItem('theme') == null) {
                     localStorage.setItem('theme', 'vs-light')
@@ -768,9 +811,6 @@
 
 
                 function showQuestion(index) {
-
-
-
 
                     if (localStorage.getItem("question_category") == 2) {
 
@@ -874,29 +914,33 @@
                 }
 
                 function markForReview() {
-                    var markedQuestions = JSON.parse(localStorage.getItem('markedQuestions')) || [];
+
+                    var markedQuestions = JSON.parse(localStorage.getItem('markedQuestions_cat2')) || [];
 
                     if (!markedQuestions.includes(currentQuestionIndex)) {
 
                         markedQuestions.push(currentQuestionIndex);
 
-                        localStorage.setItem('markedQuestions', JSON.stringify(markedQuestions));
+                        localStorage.setItem('markedQuestions_cat2', JSON.stringify(markedQuestions));
 
                         $('.quiz_number li:eq(' + currentQuestionIndex + ')').addClass('mark-for-review');
 
                         currentQuestionIndex++;
 
-                        showQuestion(currentQuestionIndex)
+                        showQuestion(currentQuestionIndex);
+
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
-                            currentQuestionIndex + 1);
+                            currentQuestionIndex);
                     } else {
+
                         alert('Question already marked for review.');
+
                         currentQuestionIndex++;
 
                         showQuestion(currentQuestionIndex)
 
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
-                            currentQuestionIndex + 1);
+                            currentQuestionIndex);
                     }
                 }
 
@@ -910,6 +954,8 @@
 
 
                     if (localStorage.getItem("question_category") == 2) {
+
+
 
 
                         var selectedAnswer = $("input[name='option']:checked");
@@ -1024,8 +1070,12 @@
                 }
 
                 $(".mark-for-review-button").click(function() {
+
                     markForReview();
+
                 });
+
+
 
 
                 $.ajax({
@@ -1040,6 +1090,55 @@
                     success: function(data) {
 
                         fetch_questions = data;
+
+
+
+                        var passageAccordionItem = "";
+
+                        var html = "";
+
+
+                        $(fetch_questions[1][0]).each(function(i, e) {
+
+                            if (fetch_questions[1][0][i].category == 2) {
+
+
+                                var isMarked = marked_questions.includes(i);
+
+                                html +=
+                                    `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i+1}</span></li>`;
+
+                            } else if (fetch_questions[1][0][i].category == 3) {
+                                var questionButtons = "";
+
+                                for (var j = 1; j <= e.grouping_questions.length; j++) {
+                                    questionButtons +=
+                                        `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
+                                }
+
+                                passageAccordionItem += `
+                                         <div class="accordion-item mt-3">
+                                         <h2 class="accordion-header" id="passageHeading${i}">
+                                         <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
+                                         Question ${i + 1}
+                                         </button>
+                                         </h2>
+                                         <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
+                                         <div class="accordion-body">
+                                         <div class= "mt-4 row col-12 ">
+                                         ${questionButtons}
+                                         </div>
+                                         </div>
+                                         </div>
+                                         </div>`;
+                            }
+
+                        });
+
+
+                        $('.quiz_number').append(html);
+
+                        $("#passageAccordion").append(passageAccordionItem);
 
 
                         if (localStorage.getItem("question_category") == null || localStorage.getItem(
@@ -1067,6 +1166,9 @@
 
 
                             questionsData = data[1];
+
+
+
 
                             showQuestion(currentQuestionIndex);
 
@@ -1541,20 +1643,18 @@
 
                             $("#content-to-fullscreen").show();
 
-                            var marked_questions = localStorage.getItem('markedQuestions');
-                            marked_questions = marked_questions ? JSON.parse(marked_questions) : [];
 
                             questionsData = data[1][localStorage.getItem("section")];
-                            var len_question = questionsData;
-                            var html = "";
 
-                            for (var i = 1; i <= len_question.length; i++) {
-                                var isMarked = marked_questions.includes(i - 1);
-                                html +=
-                                    `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i}</span></li>`;
-                            }
+                            // for (var i = 1; i <= questionsData.length; i++) {
+                            //     if (questionsData[i - 1]['category'] == 2) {
+                            //         var isMarked = marked_questions.includes(i - 1);
+                            //         html +=
+                            //             `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i}</span></li>`;
+                            //     }
+                            // }
 
-                            $('.quiz_number').append(html);
+                            // $('.quiz_number').append(html);
 
                             showQuestion(currentQuestionIndex);
 
@@ -1572,9 +1672,7 @@
 
                             $(".mcq-grouping").show();
 
-                            questionsData = data[1];
-
-                            var passageAccordionItem = "";
+                            questionsData = data[1][localStorage.getItem('section')];
 
                             var currentPassage = 0;
 
@@ -1587,9 +1685,10 @@
 
                             });
 
-                            var markedQuestions = JSON.parse(localStorage.getItem('markedQuestions')) || [];
+                            var markedQuestions_cat3 = JSON.parse(localStorage.getItem(
+                                'markedQuestions_cat3')) || [];
 
-                            markedQuestions = markedQuestions.filter((item, index, self) => {
+                            markedQuestions_cat3 = markedQuestions_cat3.filter((item, index, self) => {
                                 const strItem = JSON.stringify(item);
                                 return index === self.findIndex(t => JSON.stringify(t) === strItem);
                             });
@@ -1597,7 +1696,7 @@
 
                             setTimeout(() => {
 
-                                markedQuestions.forEach(function(questionIndex, i) {
+                                markedQuestions_cat3.forEach(function(questionIndex, i) {
 
                                     $(`.question-button[data-index="${currentQuestionIndex}"][data-question="${questionIndex[1] + 1}"]`)
                                         .addClass('marked');
@@ -1607,25 +1706,27 @@
 
                             }, 1000);
 
+                            function markForReviews() {
 
-                            function markForReview() {
                                 var current_pass_and_quest = [currentQuestionIndex, currentPassage];
 
-                                var isMarked = markedQuestions.some(function(question) {
+                                var isMarked = markedQuestions_cat3.some(function(question) {
                                     return question[0] === current_pass_and_quest[0] && question[
                                         1] === current_pass_and_quest[1];
                                 });
 
                                 if (!isMarked) {
-                                    markedQuestions.push(current_pass_and_quest);
-                                    localStorage.setItem('markedQuestions', JSON.stringify(
-                                        markedQuestions));
+                                    markedQuestions_cat3.push(current_pass_and_quest);
+                                    localStorage.setItem('markedQuestions_cat3', JSON.stringify(
+                                        markedQuestions_cat3));
 
                                     saveAndNextCategory3();
 
                                     setTimeout(function() {
+
                                         $(`.question-button[data-index="${currentQuestionIndex}"][data-question="${current_pass_and_quest[1] + 1}"]`)
                                             .addClass('marked');
+
                                     }, 500);
                                 } else {
                                     alert('You have already marked this question');
@@ -1652,39 +1753,39 @@
 
 
                             $(".grouping-mark-for-review").click(function() {
-                                markForReview();
+                                markForReviews();
                             });
 
-                            $(questionsData[0]).each(function(i, e) {
+                            // $(questionsData[0]).each(function(i, e) {
 
-                                if (questionsData[0][i].category == 3) {
-                                    var questionButtons = "";
+                            //     if (questionsData[0][i].category == 3) {
+                            //         var questionButtons = "";
 
-                                    for (var j = 1; j <= e.grouping_questions.length; j++) {
-                                        questionButtons +=
-                                            `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
-                                    }
+                            //         for (var j = 1; j <= e.grouping_questions.length; j++) {
+                            //             questionButtons +=
+                            //                 `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
+                            //         }
 
-                                    passageAccordionItem += `
-                                    <div class="accordion-item mt-3">
-                                    <h2 class="accordion-header" id="passageHeading${i}">
-                                    <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
-                                    Question ${i + 1}
-                                    </button>
-                                    </h2>
-                                    <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
-                                    <div class="accordion-body">
-                                    <div class= "mt-4 row col-12 ">
-                                    ${questionButtons}
-                                    </div>
-                                    </div>
-                                    </div>
-                                    </div>`;
-                                }
+                            //         passageAccordionItem += `
+                    //         <div class="accordion-item mt-3">
+                    //         <h2 class="accordion-header" id="passageHeading${i}">
+                    //         <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
+                    //         Question ${i + 1}
+                    //         </button>
+                    //         </h2>
+                    //         <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
+                    //         <div class="accordion-body">
+                    //         <div class= "mt-4 row col-12 ">
+                    //         ${questionButtons}
+                    //         </div>
+                    //         </div>
+                    //         </div>
+                    //         </div>`;
+                            //     }
 
-                            });
+                            // });
 
-                            $("#passageAccordion").append(passageAccordionItem);
+                            // $("#passageAccordion").append(passageAccordionItem);
 
 
 
@@ -1736,34 +1837,34 @@
                             $("#content-to-fullscreen").hide();
 
                             function showPassageAndQuestions(index) {
-                                if (questionsData[0] && questionsData[
-                                        0][index] && questionsData[0][
+
+
+
+                                if (questionsData && questionsData[index] && questionsData[
                                         index
                                     ]
                                     .question_for_test) {
                                     $(".passage-col").html(
-                                        `<p>${questionsData[0][index].question_for_test.title}</p>`
+                                        `<p>${questionsData[index].question_for_test.title}</p>`
                                     );
 
-                                    if (questionsData[0][index].grouping_questions &&
-                                        questionsData[0][
+                                    if (questionsData[index].grouping_questions &&
+                                        questionsData[
                                             index
                                         ].grouping_questions.length > 0) {
                                         $(".question-col").html(
-                                            `<p>${questionsData[0][index].grouping_questions[currentPassage].questions}</p>`
+                                            `<p>${questionsData[index].grouping_questions[currentPassage].questions}</p>`
                                         );
 
-                                        var mcqOptions = questionsData[0][currentQuestionIndex]
+                                        var mcqOptions = questionsData[currentQuestionIndex]
                                             .mcq_options;
-
-
 
                                         mcqOptions[currentPassage].forEach(function(
                                             opt) {
                                             $(".question-col").append(`
                     <div>
                         <label class="form-check-label">
-                            <input type="radio" name="mcqOption" data-question="${opt.question_code}"  data-groupid="${questionsData[0][index].grouping_questions[currentPassage].id}" value="${opt.id}">
+                            <input type="radio" name="mcqOption" data-question="${opt.question_code}"  data-groupid="${questionsData[index].grouping_questions[currentPassage].id}" value="${opt.id}">
                             ${opt.option_name}: ${opt.option_answer}
                         </label>
                     </div>
@@ -1782,14 +1883,14 @@
 
                             function saveAndNextCategory3() {
 
-                                if (currentPassage < questionsData[0][currentQuestionIndex]
+                                if (currentPassage < questionsData[currentQuestionIndex]
                                     .grouping_questions.length - 1) {
                                     currentPassage++;
                                 } else {
                                     currentQuestionIndex++;
                                     currentPassage = 0;
                                 }
-                                if (currentQuestionIndex < questionsData[0].length) {
+                                if (currentQuestionIndex < questionsData.length) {
                                     showPassageAndQuestions(currentQuestionIndex);
                                 } else {
                                     currentQuestionIndex = 0;
@@ -2007,20 +2108,21 @@
 
                 })
 
-                setTimeout(() => {
 
-                    $(".mark-for-review").on('click', function() {
-                        alert();
+                $(document).on("click", ".mark-for-review", function() {
 
-                        var sp = $(this).children().attr("class");
 
-                        var index = $(this).index();
+                    var sp = $(this).children().attr("class");
 
-                        showQuestion(index);
+                    var index = $(this).index();
 
-                    });
-                }, 1000);
 
+                    showQuestion(index);
+
+                    localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                        index);
+
+                });
 
             });
 
@@ -2055,12 +2157,11 @@
             }
 
 
-
             function save_session(value) {
 
-                var values = fetch_questions[2][value];
+                var values = fetch_questions[1][value][0].category;
 
-                // localStorage.setItem('question_category', values);
+                localStorage.setItem('question_category', values);
 
                 localStorage.setItem('section', value);
 
