@@ -802,6 +802,10 @@
                 var marked_questions = localStorage.getItem('markedQuestions_cat2');
                 marked_questions = marked_questions ? JSON.parse(marked_questions) : [];
 
+                if (localStorage.getItem('section') === null) {
+                    localStorage.setItem('section', 0)
+                }
+
 
                 if (localStorage.getItem('theme') == null) {
                     localStorage.setItem('theme', 'vs-light')
@@ -813,6 +817,8 @@
                 function showQuestion(index) {
 
                     if (localStorage.getItem("question_category") == 2) {
+
+
 
                         localStorage.setItem('question_category', questionsData[index].category);
 
@@ -863,6 +869,7 @@
                         }
 
                         $(".Answer-options").append(optionsContainer);
+
 
 
                     } else if (localStorage.getItem("question_category") == 1) {
@@ -954,9 +961,6 @@
 
 
                     if (localStorage.getItem("question_category") == 2) {
-
-
-
 
                         var selectedAnswer = $("input[name='option']:checked");
 
@@ -1091,8 +1095,6 @@
 
                         fetch_questions = data;
 
-
-
                         var passageAccordionItem = "";
 
                         var html = "";
@@ -1166,8 +1168,6 @@
 
 
                             questionsData = data[1];
-
-
 
 
                             showQuestion(currentQuestionIndex);
@@ -1656,7 +1656,9 @@
 
                             // $('.quiz_number').append(html);
 
+
                             showQuestion(currentQuestionIndex);
+
 
                             $(".save-next").click(function() {
                                 saveAndNext();
@@ -1666,9 +1668,7 @@
 
                         } else if (localStorage.getItem('question_category') == 3) {
 
-                            if (localStorage.getItem('section') === null) {
-                                localStorage.setItem('section', 0)
-                            }
+
 
                             $(".mcq-grouping").show();
 
@@ -1932,9 +1932,7 @@
                         $("input[type='radio']").prop('checked', false);
                     });
 
-                    if (localStorage.getItem('section') === null) {
-                        localStorage.setItem('section', 0)
-                    }
+
 
 
                     $("#layout-menu").toggleClass("toggled");
@@ -1960,10 +1958,6 @@
 
 
                 } else if (localStorage.getItem('question_category') == 1) {
-
-                    if (localStorage.getItem('section') === null) {
-                        localStorage.setItem('section', 0)
-                    }
 
 
                     document.getElementById('fullscreen-btn').addEventListener('click', function() {
