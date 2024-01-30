@@ -762,13 +762,45 @@
             var total_duration;
             var totalSeconds = localStorage.getItem("remainingSeconds");
             var timer;
+            var question_category_value = [];
+            var codes;
+            var editor;
             var run_question_inputs = [];
             var run_question_outputs = [];
             var verify_question_inputs = [];
             var verify_question_outputs = [];
-            var question_category_value = [];
 
             $(document).ready(function() {
+
+                const languages = {
+                    java: {
+                        id: 'java',
+                        name: 'Java',
+                        extension: '.java'
+                    },
+                    python: {
+                        id: 'python',
+                        name: 'Python',
+                        extension: '.py'
+                    },
+                    c: {
+                        id: 'c',
+                        name: 'C',
+                        extension: '.c'
+                    },
+                    cpp: {
+                        id: 'cpp',
+                        name: 'C++',
+                        extension: '.cpp'
+                    },
+                    csharp: {
+                        id: 'csharp',
+                        name: 'C#',
+                        extension: '.cs'
+                    },
+                }
+
+
 
 
                 var marked_questions = localStorage.getItem('markedQuestions_cat2');
@@ -844,6 +876,18 @@
 
                     } else if (localStorage.getItem("question_category") == 1) {
 
+                        run_question_inputs = [];
+                        run_question_outputs = [];
+                        verify_question_inputs = [];
+                        verify_question_outputs = [];
+
+                        $(".test-case-div").empty();
+
+                        $("#sample_correct_testcase").empty();
+                        $(".test-case-count").text("");
+                        $(".passed-case-count").text("");
+                        $(".rejected-case-count").text("");
+
                         localStorage.setItem('question_category', questionsData[localStorage.getItem('section')][index]
                             .category);
 
@@ -865,8 +909,8 @@
                                     <p>${e.output}</p>
                                 </div>
                                 `;
-                            run_question_inputs.push(e.input)
-                            run_question_outputs.push(e.output)
+                            run_question_inputs.push(e.input);
+                            run_question_outputs.push(e.output);
                             verify_question_inputs.push(e.input);
                             verify_question_outputs.push(e.output);
                         })
@@ -885,6 +929,97 @@
                         $(".input-format").html(input_format)
                         $(".output-format").html(output_format)
                         $(".code-constraints").html(code_constraints)
+
+
+
+                        function code_editor() {
+
+                            setTimeout(() => {
+
+
+                                require.config({
+                                    paths: {
+                                        vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs",
+                                    },
+                                });
+                                require(["vs/editor/editor.main"], function() {
+
+
+                                    var languageSelector = document.getElementById(
+                                        "languageSelect");
+
+                                    var codeEditor = document.getElementById(
+                                        "code-editor");
+
+                                    var initialLoad = true;
+
+                                    if (editor) {
+                                        editor.dispose();
+                                    }
+
+                                    editor = monaco.editor.create(
+                                        codeEditor, {
+                                            value: `/* Type Your Code */`,
+                                            language: languageSelector.value,
+                                            theme: localStorage.getItem('theme'),
+                                        }
+                                    );
+
+
+                                    function updateEditorValue() {
+                                        var editorValueKey =
+                                            `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`;
+                                        var savedCode = localStorage.getItem(editorValueKey) || '';
+                                        editor.setValue(savedCode);
+                                    }
+
+                                    updateEditorValue();
+
+
+                                    codes = editor.getValue();
+
+                                    languageSelector.addEventListener("change",
+                                        function() {
+                                            var selectedLanguage = this.value;
+
+                                            if (!initialLoad) {
+                                                var currentCode = editor.getValue();
+                                                codes = currentCode;
+                                            }
+
+                                            editor.getModel().dispose();
+
+                                            editor.setModel(monaco.editor
+                                                .createModel(
+                                                    initialLoad ? "" : codes,
+                                                    selectedLanguage));
+
+                                            initialLoad = false;
+                                            setTimeout(() => {
+                                                $(".slider").remove();
+                                                var savedCode = localStorage
+                                                    .getItem(
+                                                        `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
+                                                    ) || '';
+
+                                                if (savedCode) {
+                                                    editor.setValue(
+                                                        savedCode);
+                                                }
+                                            }, 100);
+                                        });
+
+
+
+                                    $(".slider").remove();
+                                });
+
+
+                            }, 500);
+
+                        }
+
+                        code_editor();
 
                     }
 
@@ -1166,127 +1301,7 @@
 
 
 
-                            const languages = {
-                                java: {
-                                    id: 'java',
-                                    name: 'Java',
-                                    extension: '.java'
-                                },
-                                python: {
-                                    id: 'python',
-                                    name: 'Python',
-                                    extension: '.py'
-                                },
-                                c: {
-                                    id: 'c',
-                                    name: 'C',
-                                    extension: '.c'
-                                },
-                                cpp: {
-                                    id: 'cpp',
-                                    name: 'C++',
-                                    extension: '.cpp'
-                                },
-                                csharp: {
-                                    id: 'csharp',
-                                    name: 'C#',
-                                    extension: '.cs'
-                                },
-                            }
 
-                            var codes;
-                            var editor;
-
-                            function code_editor() {
-
-                                setTimeout(() => {
-
-
-                                    require.config({
-                                        paths: {
-                                            vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs",
-                                        },
-                                    });
-                                    require(["vs/editor/editor.main"], function() {
-
-
-                                        var languageSelector = document.getElementById(
-                                            "languageSelect");
-
-                                        var codeEditor = document.getElementById(
-                                            "code-editor");
-
-                                        var initialLoad = true;
-
-                                        editor = monaco.editor.create(
-                                            codeEditor, {
-                                                value: `/* Type Your Code */`,
-                                                language: languageSelector.value,
-                                                theme: localStorage.getItem('theme'),
-                                            }
-                                        );
-
-
-
-                                        if (localStorage.getItem(
-                                                "typed_coding")) {
-                                            editor.setValue(localStorage
-                                                .getItem(
-                                                    "typed_coding" + localStorage
-                                                    .getItem('section') +
-                                                    currentQuestionIndex))
-                                        }
-
-                                        editor.setValue(localStorage
-                                            .getItem(
-                                                `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
-                                            ));
-
-                                        codes = editor.getValue();
-
-                                        languageSelector.addEventListener("change",
-                                            function() {
-                                                var selectedLanguage = this.value;
-
-                                                if (!initialLoad) {
-                                                    var currentCode = editor.getValue();
-                                                    codes = currentCode;
-                                                }
-
-                                                editor.getModel().dispose();
-
-                                                editor.setModel(monaco.editor
-                                                    .createModel(
-                                                        initialLoad ? "" : codes,
-                                                        selectedLanguage));
-
-                                                initialLoad = false;
-                                                setTimeout(() => {
-                                                    $(".slider").remove();
-                                                    var savedCode = localStorage
-                                                        .getItem(
-                                                            `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
-                                                        ) || '';
-
-                                                    if (savedCode) {
-                                                        editor.setValue(
-                                                            savedCode);
-                                                    }
-                                                }, 100);
-                                            });
-
-
-                                        $(".slider").remove();
-                                    });
-
-
-                                }, 500);
-
-                            }
-
-
-
-                            code_editor();
 
                             function findLanguageById(id) {
                                 return Object.values(languages).find(lang => lang.id === id);
@@ -1299,8 +1314,7 @@
                                     localStorage.setItem(
                                         `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`,
                                         editor.getValue());
-
-                                }, 1000);
+                                }, 500);
 
                             });
 
@@ -1550,7 +1564,6 @@
                                                         cleanExpectedOutput)) {
                                                     passed_case++;
                                                 } else {
-
                                                     rejected_case++;
                                                 }
                                             });

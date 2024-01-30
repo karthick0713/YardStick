@@ -471,21 +471,28 @@
                                                             $test_question = DB::table('test_section_wise_questions')
                                                                 ->where('test_code', $test->test_code)
                                                                 ->get();
+
+                                                            $count = 0;
+
                                                             foreach ($test_question as $tq) {
-                                                                $count = count(explode(',', $tq->common_test_question));
+                                                                $count += count(explode(',', $tq->common_test_question));
                                                             }
+
                                                             echo $count . ' questions';
                                                         } else {
                                                             $test_question = DB::table('test_section_wise_questions')
                                                                 ->where('test_code', $test->test_code)
                                                                 ->get();
+
                                                             foreach ($test_question as $tq) {
                                                                 $count = 0;
+
                                                                 foreach (['easy', 'medium', 'hard', 'very_hard'] as $difficulty) {
                                                                     if (!empty($tq->$difficulty)) {
                                                                         $count += count(explode(',', $tq->$difficulty));
                                                                     }
                                                                 }
+
                                                                 echo $count . ' questions';
                                                             }
                                                         }
