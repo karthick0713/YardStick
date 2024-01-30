@@ -304,12 +304,12 @@
             /* Firefox */
         }
 
-        .card::-webkit-scrollbar {
+        ::-webkit-scrollbar {
             width: 6px;
             /* Adjust as needed */
         }
 
-        .card::-webkit-scrollbar-thumb {
+        ::-webkit-scrollbar-thumb {
             background-color: transparent;
             /* Hide scrollbar thumb */
         }
@@ -322,12 +322,19 @@
             margin-left: -100%;
             /* Adjust the value based on your layout */
         }
+
+        #passageAccordion-2 {
+            max-height: 55%;
+            overflow: auto;
+        }
     </style>
     </head>
 
     <body>
 
         <div id="all-test-screens" style="background-color:#ffffff !important">
+
+
             <nav class="navbar navbar-light bg-white">
                 <div class="container">
                     <div class="nav-items-cont w-100 d-flex flex-column flex-md-row justify-content-between p-2">
@@ -388,7 +395,7 @@
                             </ul>
                         </div>
 
-                        <div class="accordion" id="passageAccordion">
+                        <div class="accordion" id="passageAccordion-1">
 
                         </div>
                         <div class="side_bar_footer border-top">
@@ -675,9 +682,10 @@
                             </ul>
                         </div>
 
-                        <div class="accordion" id="passageAccordion">
+                        <div class="accordion" id="passageAccordion-2">
 
                         </div>
+
                         <div class="side_bar_footer border-top">
                             <div class="help-btn d-flex justify-content-between my-2">
                                 <button class="btn btn-theme">Question Paper</button>
@@ -687,43 +695,6 @@
                         </div>
                     </div>
                 </aside>
-
-                {{-- <aside>
-                    <div id="side-bar" class="px-2  mt-3">
-                        <div class="icon">
-                            <i class="fa fa-chevron-right"></i>
-                        </div>
-                        <div class="user-info border-bottom py-2">
-                            <img src="https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes/128/user-male-circle-blue-512.png"
-                                class="rounded-circle user-img" alt="user-img" />
-                            <span class="fs-5 ms-2">{{ session('userName') }}</span>
-                        </div>
-                        <input type="hidden" name="student_test_entry_id" id="student_test_entry_id">
-
-                        <div class="quiz_list_number_box">
-                            <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
-                            <br>
-                            <div class="row col-12">
-                                <div class=" d-flex">
-                                    <label class="question-button marked btn text-white btn-sm">&nbsp;</label>
-                                    <span class="fw-bold ms-2 mt-2">=> Marked Questions</span>
-                                </div>
-
-                            </div>
-                            <div class="accordion" id="passageAccordion">
-
-                            </div>
-                        </div>
-                        <div class="side_bar_footer border-top">
-                            <div class="help-btn d-flex justify-content-between my-2">
-                                <button class="btn btn-theme">Question Paper</button>
-                                <button class="btn btn-theme">Instruction</button>
-                            </div>
-                            <button type="button" class="w-100 btn btn-info submit-test">Submit Test</button>
-                        </div>
-                    </div>
-                </aside> --}}
-
 
                 <div class="row col-12 mb-5">
 
@@ -799,6 +770,7 @@
 
             $(document).ready(function() {
 
+
                 var marked_questions = localStorage.getItem('markedQuestions_cat2');
                 marked_questions = marked_questions ? JSON.parse(marked_questions) : [];
 
@@ -817,8 +789,6 @@
                 function showQuestion(index) {
 
                     if (localStorage.getItem("question_category") == 2) {
-
-
 
                         localStorage.setItem('question_category', questionsData[index].category);
 
@@ -874,7 +844,8 @@
 
                     } else if (localStorage.getItem("question_category") == 1) {
 
-                        localStorage.setItem('question_category', questionsData[0][index].category);
+                        localStorage.setItem('question_category', questionsData[localStorage.getItem('section')][index]
+                            .category);
 
                         var question = questionsData[localStorage.getItem("section")][index].question_for_test
                             .questions;
@@ -959,7 +930,6 @@
                 function saveAndNext() {
 
 
-
                     if (localStorage.getItem("question_category") == 2) {
 
                         var selectedAnswer = $("input[name='option']:checked");
@@ -1005,13 +975,18 @@
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
 
-                        if (currentQuestionIndex < questionsData.length) {
+                        var mcq_count = 0;
+
+                        questionsData[0]
+
+                        if (currentQuestionIndex < questionsData.length - 1) {
 
                             showQuestion(currentQuestionIndex);
 
 
                         } else {
 
+                            location.reload();
 
                         }
 
@@ -1021,17 +996,18 @@
 
                         currentQuestionIndex++;
 
+
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
 
 
-                        if (currentQuestionIndex < questionsData[0].length) {
+                        if (currentQuestionIndex < questionsData[localStorage.getItem('section')].length) {
 
                             showQuestion(currentQuestionIndex);
 
                             isReloaded = true;
 
-                            location.reload();
+                            // location.reload();
 
                         } else {
 
@@ -1046,29 +1022,23 @@
 
                 }
 
-                $(".theme-button").click(function() {
-
-                    localStorage.setItem("theme", $(this).attr("data-value"));
-
-                    location.reload();
-
-                });
 
 
                 function previous() {
 
-                    currentQuestionIndex--;
 
+                    if (currentQuestionIndex > 0) {
 
-                    localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
-                        currentQuestionIndex);
+                        currentQuestionIndex--;
 
-
-                    if (currentQuestionIndex < questionsData[0].length) {
+                        localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
+                            currentQuestionIndex);
 
                         showQuestion(currentQuestionIndex);
 
-                        location.reload();
+                        // location.reload();
+                    } else {
+
                     }
 
                 }
@@ -1100,47 +1070,50 @@
                         var html = "";
 
 
-                        $(fetch_questions[1][0]).each(function(i, e) {
+                        var html = "";
+                        var passageAccordionItem = "";
 
-                            if (fetch_questions[1][0][i].category == 2) {
+                        $(fetch_questions[1][localStorage.getItem('section')]).each(function(i, e) {
 
-
+                            if (e.category == 2) {
                                 var isMarked = marked_questions.includes(i);
-
                                 html +=
                                     `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i+1}</span></li>`;
-
-                            } else if (fetch_questions[1][0][i].category == 3) {
+                            } else if (e.category == 3) {
                                 var questionButtons = "";
-
                                 for (var j = 1; j <= e.grouping_questions.length; j++) {
                                     questionButtons +=
-                                        `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
+                                        `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-question="${j}" >${j}</button></div>`;
                                 }
-
                                 passageAccordionItem += `
-                                         <div class="accordion-item mt-3">
-                                         <h2 class="accordion-header" id="passageHeading${i}">
-                                         <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
-                                         Question ${i + 1}
-                                         </button>
-                                         </h2>
-                                         <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
-                                         <div class="accordion-body">
-                                         <div class= "mt-4 row col-12 ">
-                                         ${questionButtons}
-                                         </div>
-                                         </div>
-                                         </div>
-                                         </div>`;
+            <div class="accordion-item mt-3">
+                <h2 class="accordion-header" id="passageHeading${i}">
+                    <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
+                        Question ${i + 1}
+                    </button>
+                </h2>
+                <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion-1">
+                    <div class="accordion-body">
+                        <div class= "mt-4 row col-12 ">
+                            ${questionButtons}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
                             }
-
                         });
 
-
-                        $('.quiz_number').append(html);
-
-                        $("#passageAccordion").append(passageAccordionItem);
+                        if (html && passageAccordionItem) {
+                            $('.quiz_number').append(html);
+                            $("#passageAccordion-1").append(passageAccordionItem);
+                        } else {
+                            if (html) {
+                                $('.quiz_number').append(html);
+                            }
+                            if (passageAccordionItem) {
+                                $("#passageAccordion-2").append(passageAccordionItem);
+                            }
+                        }
 
 
                         if (localStorage.getItem("question_category") == null || localStorage.getItem(
@@ -1224,86 +1197,96 @@
                             var codes;
                             var editor;
 
+                            function code_editor() {
 
-                            setTimeout(() => {
-
-
-                                require.config({
-                                    paths: {
-                                        vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs",
-                                    },
-                                });
-                                require(["vs/editor/editor.main"], function() {
+                                setTimeout(() => {
 
 
-                                    var languageSelector = document.getElementById(
-                                        "languageSelect");
+                                    require.config({
+                                        paths: {
+                                            vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs",
+                                        },
+                                    });
+                                    require(["vs/editor/editor.main"], function() {
 
-                                    var codeEditor = document.getElementById("code-editor");
 
-                                    var initialLoad = true;
+                                        var languageSelector = document.getElementById(
+                                            "languageSelect");
 
-                                    editor = monaco.editor.create(
-                                        codeEditor, {
-                                            value: `/* Type Your Code */`,
-                                            language: languageSelector.value,
-                                            theme: localStorage.getItem('theme'),
+                                        var codeEditor = document.getElementById(
+                                            "code-editor");
+
+                                        var initialLoad = true;
+
+                                        editor = monaco.editor.create(
+                                            codeEditor, {
+                                                value: `/* Type Your Code */`,
+                                                language: languageSelector.value,
+                                                theme: localStorage.getItem('theme'),
+                                            }
+                                        );
+
+
+
+                                        if (localStorage.getItem(
+                                                "typed_coding")) {
+                                            editor.setValue(localStorage
+                                                .getItem(
+                                                    "typed_coding" + localStorage
+                                                    .getItem('section') +
+                                                    currentQuestionIndex))
                                         }
-                                    );
 
-
-
-                                    if (localStorage.getItem(
-                                            "typed_coding")) {
                                         editor.setValue(localStorage
                                             .getItem(
-                                                "typed_coding" + localStorage
-                                                .getItem('section') +
-                                                currentQuestionIndex))
-                                    }
+                                                `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
+                                            ));
 
-                                    editor.setValue(localStorage
-                                        .getItem(
-                                            `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
-                                        ));
+                                        codes = editor.getValue();
 
-                                    codes = editor.getValue();
+                                        languageSelector.addEventListener("change",
+                                            function() {
+                                                var selectedLanguage = this.value;
 
-                                    languageSelector.addEventListener("change", function() {
-                                        var selectedLanguage = this.value;
+                                                if (!initialLoad) {
+                                                    var currentCode = editor.getValue();
+                                                    codes = currentCode;
+                                                }
 
-                                        if (!initialLoad) {
-                                            var currentCode = editor.getValue();
-                                            codes = currentCode;
-                                        }
+                                                editor.getModel().dispose();
 
-                                        editor.getModel().dispose();
+                                                editor.setModel(monaco.editor
+                                                    .createModel(
+                                                        initialLoad ? "" : codes,
+                                                        selectedLanguage));
 
-                                        editor.setModel(monaco.editor.createModel(
-                                            initialLoad ? "" : codes,
-                                            selectedLanguage));
+                                                initialLoad = false;
+                                                setTimeout(() => {
+                                                    $(".slider").remove();
+                                                    var savedCode = localStorage
+                                                        .getItem(
+                                                            `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
+                                                        ) || '';
 
-                                        initialLoad = false;
-                                        setTimeout(() => {
-                                            $(".slider").remove();
-                                            var savedCode = localStorage
-                                                .getItem(
-                                                    `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`
-                                                ) || '';
+                                                    if (savedCode) {
+                                                        editor.setValue(
+                                                            savedCode);
+                                                    }
+                                                }, 100);
+                                            });
 
-                                            if (savedCode) {
-                                                editor.setValue(savedCode);
-                                            }
-                                        }, 100);
+
+                                        $(".slider").remove();
                                     });
 
 
-                                    $(".slider").remove();
-                                });
+                                }, 500);
+
+                            }
 
 
-                            }, 500);
 
+                            code_editor();
 
                             function findLanguageById(id) {
                                 return Object.values(languages).find(lang => lang.id === id);
@@ -1311,17 +1294,28 @@
 
 
                             $("#code-editor").on("keyup", function() {
+
                                 setTimeout(() => {
                                     localStorage.setItem(
                                         `typed_coding_${localStorage.getItem('section')}_${currentQuestionIndex}`,
                                         editor.getValue());
 
-                                }, 100);
+                                }, 1000);
+
                             });
 
 
-                            $(".programming_run_button").click(function() {
+                            $(".theme-button").click(function() {
 
+                                localStorage.setItem("theme", $(this).attr("data-value"));
+
+                                code_editor();
+
+                            });
+
+
+
+                            $(".programming_run_button").click(function() {
 
                                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                                 var lang = $("#languageSelect option:selected").val()
@@ -1640,28 +1634,19 @@
                             });
 
 
-
                             $("#content-to-fullscreen").show();
 
 
                             questionsData = data[1][localStorage.getItem("section")];
-
-                            // for (var i = 1; i <= questionsData.length; i++) {
-                            //     if (questionsData[i - 1]['category'] == 2) {
-                            //         var isMarked = marked_questions.includes(i - 1);
-                            //         html +=
-                            //             `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i}</span></li>`;
-                            //     }
-                            // }
-
-                            // $('.quiz_number').append(html);
 
 
                             showQuestion(currentQuestionIndex);
 
 
                             $(".save-next").click(function() {
+
                                 saveAndNext();
+
                             });
 
 
@@ -1755,38 +1740,6 @@
                             $(".grouping-mark-for-review").click(function() {
                                 markForReviews();
                             });
-
-                            // $(questionsData[0]).each(function(i, e) {
-
-                            //     if (questionsData[0][i].category == 3) {
-                            //         var questionButtons = "";
-
-                            //         for (var j = 1; j <= e.grouping_questions.length; j++) {
-                            //             questionButtons +=
-                            //                 `<div class="col-2"><button type="button" class="btn btn-sm background-info text-white question-button" data-index="${i+1}" data-group-index="${currentPassage}" data-question="${j}" >${j}</button></div>`;
-                            //         }
-
-                            //         passageAccordionItem += `
-                    //         <div class="accordion-item mt-3">
-                    //         <h2 class="accordion-header" id="passageHeading${i}">
-                    //         <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#passageCollapse${i}" aria-expanded="true" aria-controls="passageCollapse${i}">
-                    //         Question ${i + 1}
-                    //         </button>
-                    //         </h2>
-                    //         <div id="passageCollapse${i}" class="accordion-collapse collapse" aria-labelledby="passageHeading${i}" data-bs-parent="#passageAccordion">
-                    //         <div class="accordion-body">
-                    //         <div class= "mt-4 row col-12 ">
-                    //         ${questionButtons}
-                    //         </div>
-                    //         </div>
-                    //         </div>
-                    //         </div>`;
-                            //     }
-
-                            // });
-
-                            // $("#passageAccordion").append(passageAccordionItem);
-
 
 
                             var questionCategories = data[2];
@@ -2004,13 +1957,11 @@
                 }
 
 
-                if (localStorage.getItem("currentQuestionIndex" + localStorage.getItem(
-                        'section'))) {
+                if (localStorage.getItem("currentQuestionIndex" + localStorage.getItem('section'))) {
 
 
                     currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex" + localStorage
-                        .getItem(
-                            'section')));
+                        .getItem('section')));
 
 
                 }
