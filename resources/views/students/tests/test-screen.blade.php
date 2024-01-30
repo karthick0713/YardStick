@@ -365,10 +365,7 @@
             </nav>
 
             <div id="content-to-fullscreen">
-                <!-- nav -->
 
-                <!-- end nav -->
-                <!-- side bar -->
                 <aside>
                     <div id="side-bar" class="px-2  mt-3">
                         <div class="icon">
@@ -388,10 +385,7 @@
                         <div class="quiz_list_number_box">
                             <div class="list_title p-2"><b>SECTION</b> : <span class="sec_name"></span></div>
                             <ul class="quiz_number quiz_info d-flex flex-wrap border-bottom py-2">
-                                {{-- <li><span class="active">1</span></li>
-                            <li><span class="not_answered">2</span></li>
-                            <li><span class="answered">3</span></li>
-                            <li><span class="active">4</span></li> --}}
+
                             </ul>
                         </div>
 
@@ -624,21 +618,12 @@
                                                 </div>
                                             </div>
 
-
                                         </div>
                                     </div>
 
                                 </div>
 
-
                             </div>
-
-
-
-
-
-
-
 
                         </div>
                     </div>
@@ -769,6 +754,7 @@
             var run_question_outputs = [];
             var verify_question_inputs = [];
             var verify_question_outputs = [];
+            var saved_questions = [];
 
             $(document).ready(function() {
 
@@ -1064,6 +1050,12 @@
 
                 function saveAndNext() {
 
+                    console.log(marked_questions);
+
+                    if (marked_questions.includes(currentQuestionIndex)) {
+                        alert('yes');
+                    }
+
 
                     if (localStorage.getItem("question_category") == 2) {
 
@@ -1090,11 +1082,14 @@
                                 question_code: atob($(selectedAnswer).attr("data-quest")),
                                 option_id: atob($(selectedAnswer).val()),
                                 user_id: "{{ session('userId') }}",
+                                // question_index: currentQuestionIndex,
                             },
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(data) {}
+                            success: function(data) {
+                                saved_questions.push(data)
+                            }
 
 
                         })
@@ -1117,7 +1112,6 @@
                         if (currentQuestionIndex < questionsData.length - 1) {
 
                             showQuestion(currentQuestionIndex);
-
 
                         } else {
 
@@ -1180,6 +1174,7 @@
 
                 $(".mark-for-review-button").click(function() {
 
+
                     markForReview();
 
                 });
@@ -1213,7 +1208,7 @@
                             if (e.category == 2) {
                                 var isMarked = marked_questions.includes(i);
                                 html +=
-                                    `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i-1}">${i+1}</span></li>`;
+                                    `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i}">${i+1}</span></li>`;
                             } else if (e.category == 3) {
                                 var questionButtons = "";
                                 for (var j = 1; j <= e.grouping_questions.length; j++) {
@@ -1288,7 +1283,9 @@
 
 
                             $(".previous-button").click(function() {
+
                                 previous();
+
                             });
 
 
@@ -1323,7 +1320,7 @@
 
                                 localStorage.setItem("theme", $(this).attr("data-value"));
 
-                                code_editor();
+                                showQuestion(currentQuestionIndex);
 
                             });
 
@@ -1899,8 +1896,6 @@
                     });
 
 
-
-
                     $("#layout-menu").toggleClass("toggled");
 
                     document.getElementsByClassName('fullscreen-btn')[0].addEventListener('click', function() {
@@ -2069,11 +2064,11 @@
 
                 $(document).on("click", ".mark-for-review", function() {
 
-
                     var sp = $(this).children().attr("class");
 
                     var index = $(this).index();
 
+                    let found = false;
 
                     showQuestion(index);
 

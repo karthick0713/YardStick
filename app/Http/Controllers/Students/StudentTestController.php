@@ -213,7 +213,12 @@ class StudentTestController extends Controller
         }
 
 
-        DB::table('students_test_questions_answers_entry')->insert($data);
+
+
+        if (DB::table('students_test_questions_answers_entry')->insert($data)) {
+
+            return $request->input('question_index');
+        }
     }
 
 
