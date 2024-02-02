@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2024 at 02:35 PM
+-- Generation Time: Feb 02, 2024 at 01:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,10 +43,10 @@ CREATE TABLE `course_allocate_to_students` (
 --
 
 INSERT INTO `course_allocate_to_students` (`id`, `course_id`, `college_id`, `department_id`, `year`, `groups_id`, `created_at`, `updated_at`) VALUES
-(12, '1', '1', '1', 1, '1,2', '2024-01-22 16:30:59', '2024-01-22 16:30:59'),
-(11, '3', '1', NULL, NULL, NULL, '2024-01-22 10:57:37', '2024-01-22 10:57:37'),
-(13, '1', '2', NULL, NULL, NULL, '2024-01-22 16:30:59', '2024-01-22 16:30:59'),
-(14, '4', '1', NULL, NULL, NULL, '2024-01-23 10:52:16', '2024-01-23 10:52:16');
+(12, '1', '3', NULL, NULL, '1', '2024-02-02 11:44:22', '2024-02-02 11:44:22'),
+(11, '1', '1', NULL, NULL, NULL, '2024-02-02 11:44:22', '2024-02-02 11:44:22'),
+(13, '2', '1', NULL, NULL, '1', '2024-02-02 11:47:25', '2024-02-02 11:47:25'),
+(14, '3', '1', NULL, NULL, NULL, '2024-02-02 11:55:53', '2024-02-02 11:55:53');
 
 -- --------------------------------------------------------
 
@@ -70,10 +70,9 @@ CREATE TABLE `course_creation` (
 --
 
 INSERT INTO `course_creation` (`course_id`, `course_title`, `validity_from`, `validity_to`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
-(1, 'DEMO CREATIVE BEES', '2024-01-13', '2024-01-15', '1', '1', '2024-01-22 16:30:59', '2024-01-22 16:30:59'),
-(2, 'PSG NEW COURSE', '2024-01-18', '2024-01-20', '1', '1', '2024-01-18 22:34:58', '2024-01-18 22:34:58'),
-(3, 'new courses', '2024-01-22', '2024-01-25', '1', '1', '2024-01-22 10:57:37', '2024-01-22 10:57:37'),
-(4, 'MCQ GROUPING TEST COURSE', '2024-01-23', '2024-01-27', '1', '1', '2024-01-23 10:52:16', '2024-01-23 10:52:16');
+(1, 'new courses', '2024-02-02', '2024-02-13', '1', '1', '2024-02-02 11:44:22', '2024-02-02 11:44:22'),
+(2, 'DEMO CREATIVE BEES', '2024-02-02', '2024-02-08', '1', '1', '2024-02-02 11:47:25', '2024-02-02 11:47:25'),
+(3, 'all section course', '2024-02-02', '2024-02-14', '1', '1', '2024-02-02 11:55:53', '2024-02-02 11:55:53');
 
 -- --------------------------------------------------------
 
@@ -96,10 +95,9 @@ CREATE TABLE `course_negative_marks` (
 --
 
 INSERT INTO `course_negative_marks` (`id`, `course_id`, `test_code`, `question_codes`, `negative_marks`, `created_at`, `updated_at`) VALUES
-(11, 3, '65a959fa9696f', '6593f767e95ca,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091,6597d21560fd7,6597ddd20f94b', '0,0,0,0,0,0,0', '2024-01-22 10:57:37', '2024-01-22 10:57:37'),
-(12, 1, '65a959fa9696f', '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091,6593f94ad8238,6593f99c5036d,6593f9c96411d,6597d21560fd7,6597d431331e5,6597ddd20f94b', '1,0,0,0,0,0,0,0,0,0,0,0,0,0,0', '2024-01-22 16:30:59', '2024-01-22 16:30:59'),
-(13, 1, '65a959fa9696f', '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091,6593f94ad8238,6593f99c5036d,6593f9c96411d,6597d21560fd7,6597d431331e5,6597ddd20f94b', '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0', '2024-01-22 16:30:59', '2024-01-22 16:30:59'),
-(14, 4, '65af4ca250fba', '65ae572a765b5,65ae5d9a22659,65af481a77470,65af495f1be6f,65af4b42945c5', '0,0,0,0,0', '2024-01-23 10:52:16', '2024-01-23 10:52:16');
+(7, 1, '65bb7b0b91719', '6593fada01494,6593fb217170a,6593fb54e2e68,6593fc1ee708a', '0,0,0,0', '2024-02-02 11:44:22', '2024-02-02 11:44:22'),
+(8, 2, '65b4d2951628b', '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e,6597d21560fd7,6597d431331e5,6597ddd20f94b,65ae572a765b5,65ae5d9a22659,65af481a77470,65af495f1be6f', '0,0,0,0,0,0,0,0,0,0,0,0,0', '2024-02-02 11:47:25', '2024-02-02 11:47:25'),
+(9, 3, '65b23acb26fd8', '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091,6593f94ad8238,6597d21560fd7,6597d431331e5,6597ddd20f94b,65ae572a765b5,65ae5d9a22659,65af481a77470,65af495f1be6f', '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0', '2024-02-02 11:55:53', '2024-02-02 11:55:53');
 
 -- --------------------------------------------------------
 
@@ -129,10 +127,9 @@ CREATE TABLE `course_test_parameters` (
 --
 
 INSERT INTO `course_test_parameters` (`id`, `course_id`, `test_code`, `section_name`, `test_grouping_name`, `start_date`, `end_date`, `shuffle_questions`, `disable_finish_button`, `re_attempts`, `display_result_status`, `display_result_date`, `created_at`, `updated_at`) VALUES
-(13, 1, '65a959fa9696f', NULL, NULL, '2024-01-13T17:17', '2024-01-24T05:17', 1, 0, '1', 1, '0', '2024-01-22 16:30:59', '2024-01-22 16:30:59'),
-(12, 1, '65a12d9baa130', NULL, NULL, '2024-01-13T17:17', '2024-01-24T05:17', 1, 0, '1', 1, '0', '2024-01-22 16:30:59', '2024-01-22 16:30:59'),
-(11, 3, '65a959fa9696f', NULL, '1st Part Test', '2024-01-22T10:57', '2024-01-24T10:57', 1, 0, '2', 1, '0', '2024-01-22 10:57:37', '2024-01-22 10:57:37'),
-(14, 4, '65af4ca250fba', NULL, 'Grouping Test', '2024-01-23T10:51', '2024-01-26T00:00', 1, 1, '2', 1, '0', '2024-01-23 10:52:16', '2024-01-23 10:52:16');
+(7, 1, '65bb7b0b91719', NULL, NULL, '2024-02-02T11:31', '2024-02-08T11:31', 1, 0, '1', 1, '0', '2024-02-02 11:44:22', '2024-02-02 11:44:22'),
+(8, 2, '65b4d2951628b', NULL, 'Grouping Test', '2024-02-02T11:47', '2024-02-07T11:47', 1, 0, '1', 1, '0', '2024-02-02 11:47:25', '2024-02-02 11:47:25'),
+(9, 3, '65b23acb26fd8', NULL, 'testtest', '2024-02-03T11:55', '2024-02-13T11:55', 0, 1, '1', 1, '0', '2024-02-02 11:55:53', '2024-02-02 11:55:53');
 
 -- --------------------------------------------------------
 
@@ -458,7 +455,9 @@ INSERT INTO `master_students` (`student_id`, `student_name`, `register_no`, `col
 (509, ' KONNE AKASH', '721120114336', 1, '1,4', 4, 3, 6, 'aakashaakash99001@gmail.com', 9391616947, 3, '1', 2, '1', '2023-11-29 17:28:38', '2023-11-29 17:28:38'),
 (510, 'MAHESH B N', '721120114340', 1, '1,4', 4, 3, 6, 'bokkachanna465@gmail.com', 9494292679, 3, '1', 2, '1', '2023-11-29 17:28:38', '2023-11-29 17:28:38'),
 (511, 'SOUNDHAR S', '721120114371', 1, '1,4', 4, 3, 6, 'soundharmech337@gmail.com', 7806883273, 3, '1', 2, '1', '2023-11-29 17:28:38', '2023-11-29 17:28:38'),
-(512, 'SRINATH REDDY M', '721120114373', 1, '1,4', 4, 3, 6, 'marellasrinathreddy@gmail.com', 7995755038, 3, '1', 2, '1', '2023-11-29 17:28:38', '2023-11-29 17:28:38');
+(512, 'SRINATH REDDY M', '721120114373', 1, '1,4', 4, 3, 6, 'marellasrinathreddy@gmail.com', 7995755038, 3, '1', 2, '1', '2023-11-29 17:28:38', '2023-11-29 17:28:38'),
+(517, 'karthick raja', '12354', 1, '3', 1, 1, 1, 'karthick@gmail.com', 9361872234, 3, '1', 0, '1', '2024-02-02 10:20:40', '2024-02-02 10:20:40'),
+(518, 'karthick raja', '12345', 1, '4', 1, 1, 1, 'karthickd@gmail.com', 3424545453, 3, '1', 0, '1', '2024-02-02 10:22:06', '2024-02-02 10:22:06');
 
 -- --------------------------------------------------------
 
@@ -966,7 +965,11 @@ INSERT INTO `question_bank_for_mcq` (`id`, `question_id`, `grouping_question_id`
 (220, 29, 30, '65af4b42945c5', 'Option A', '<p>&nbsp;Symbolic reasoning</p>', '0', '2024-01-23 10:44:42', '2024-01-23 10:44:42'),
 (221, 29, 30, '65af4b42945c5', 'Option B', '<p>Expert systems</p>', '0', '2024-01-23 10:44:42', '2024-01-23 10:44:42'),
 (222, 29, 30, '65af4b42945c5', 'Option C', '<p>&nbsp;Deep learning</p>', '1', '2024-01-23 10:44:42', '2024-01-23 10:44:42'),
-(223, 29, 30, '65af4b42945c5', 'Option D', '<p>Rule-based systems</p>', '0', '2024-01-23 10:44:42', '2024-01-23 10:44:42');
+(223, 29, 30, '65af4b42945c5', 'Option D', '<p>Rule-based systems</p>', '0', '2024-01-23 10:44:42', '2024-01-23 10:44:42'),
+(224, 30, NULL, '65bb6da1a7141', 'Option A', '<p>ds</p>', '0', '2024-02-01 15:38:33', '2024-02-01 15:38:33'),
+(225, 30, NULL, '65bb6da1a7141', 'Option B', '<p>sdsd</p>', '0', '2024-02-01 15:38:33', '2024-02-01 15:38:33'),
+(226, 30, NULL, '65bb6da1a7141', 'Option C', '<p>sds</p>', '0', '2024-02-01 15:38:33', '2024-02-01 15:38:33'),
+(227, 30, NULL, '65bb6da1a7141', 'Option D', '<p>sdsd</p>', '1', '2024-02-01 15:38:33', '2024-02-01 15:38:33');
 
 -- --------------------------------------------------------
 
@@ -1038,6 +1041,11 @@ CREATE TABLE `students_test_entries` (
   `total_attend_questions` int(11) DEFAULT NULL,
   `time_taken` varchar(50) DEFAULT NULL,
   `total_attempts` int(11) DEFAULT NULL,
+  `user_os` text DEFAULT NULL,
+  `ip_address` text DEFAULT NULL,
+  `browser` text DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `city` text NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1046,10 +1054,10 @@ CREATE TABLE `students_test_entries` (
 -- Dumping data for table `students_test_entries`
 --
 
-INSERT INTO `students_test_entries` (`id`, `student_reg_no`, `course_id`, `test_code`, `total_questions`, `total_duration`, `total_marks`, `total_attend_questions`, `time_taken`, `total_attempts`, `created_at`, `updated_at`) VALUES
-(1, '19BCS801', 4, '65af4ca250fba', NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-24 11:53:27', NULL),
-(2, '19BCS801', 4, '65af4ca250fba', NULL, 90, NULL, NULL, NULL, NULL, '2024-01-24 11:53:39', NULL),
-(3, '19BCS801', 1, '65a959fa9696f', NULL, 20, NULL, NULL, NULL, NULL, '2024-01-24 12:04:19', NULL);
+INSERT INTO `students_test_entries` (`id`, `student_reg_no`, `course_id`, `test_code`, `total_questions`, `total_duration`, `total_marks`, `total_attend_questions`, `time_taken`, `total_attempts`, `user_os`, `ip_address`, `browser`, `user_agent`, `city`, `created_at`, `updated_at`) VALUES
+(1, '19BCS801', 3, '65b23acb26fd8', 17, 90, NULL, NULL, '50', NULL, 'Windows', '49.47.241.128', 'Google Chrome', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36', 'Coimbatore', '2024-02-02 06:45:29', NULL),
+(2, '721120104010', 3, '65b23acb26fd8', 17, 90, NULL, NULL, '45', NULL, 'Windows', '49.47.241.128', 'Google Chrome', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36', 'Coimbatore', '2024-02-02 06:52:33', NULL),
+(9, '721120106302', 3, '65b23acb26fd8', NULL, 90, NULL, NULL, '0.18333333333333712', NULL, 'Windows', '49.47.241.128', 'Google Chrome', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36', 'Coimbatore', '2024-02-02 12:24:18', '2024-02-02 12:29:28');
 
 -- --------------------------------------------------------
 
@@ -1082,13 +1090,72 @@ CREATE TABLE `students_test_questions_answers_entry` (
 --
 
 INSERT INTO `students_test_questions_answers_entry` (`id`, `test_entry_id`, `student_reg_no`, `test_code`, `course_id`, `time_taken_for_each_question`, `mark_for_each_question`, `question_code`, `group_question_id`, `category_id`, `question`, `student_code`, `answer_selected`, `correct_answer`, `mark_taken_for_this_question`, `created_at`, `updated_at`) VALUES
-(1, 2, '19BCS801', '65af4ca250fba', 4, NULL, 5, '65ae572a765b5', 1, 3, NULL, NULL, '103', '104', 0, '2024-01-24 11:58:44', '2024-01-24 11:58:44'),
-(2, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f767e95ca', NULL, 2, NULL, NULL, '8', '5', 0, '2024-01-24 12:04:30', '2024-01-24 12:04:30'),
-(3, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f8371f85e', NULL, 2, NULL, NULL, '23', '24', 0, '2024-01-24 12:04:32', '2024-01-24 12:04:32'),
-(4, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f86ce1416', NULL, 2, NULL, NULL, '27', '29', 0, '2024-01-24 12:04:34', '2024-01-24 12:04:34'),
-(5, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f89c9e824', NULL, 2, NULL, NULL, '101', '98', 0, '2024-01-24 12:04:38', '2024-01-24 12:04:38'),
-(6, 3, '19BCS801', '65a959fa9696f', 1, NULL, 1, '6593f912cb091', NULL, 2, NULL, NULL, '95', '96', 0, '2024-01-24 12:04:40', '2024-01-24 12:04:40'),
-(7, 2, '19BCS801', '65af4ca250fba', 4, NULL, 5, '65ae572a765b5', 1, 3, NULL, NULL, '105', '104', 0, '2024-01-24 13:20:11', '2024-01-24 13:20:11');
+(1, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f736d7fee', NULL, 2, NULL, NULL, '1', '2', 0, '2024-02-02 06:29:04', '2024-02-02 06:29:04'),
+(2, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f767e95ca', NULL, 2, NULL, NULL, '5', '5', 1, '2024-02-02 06:29:09', '2024-02-02 06:29:09'),
+(3, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f79663ec6', NULL, 2, NULL, NULL, '9', '9', 1, '2024-02-02 06:29:16', '2024-02-02 06:29:16'),
+(4, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 2, '6593f7cd083dc', NULL, 2, NULL, NULL, '14', '13', 0, '2024-02-02 06:29:22', '2024-02-02 06:29:22'),
+(5, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f7f744450', NULL, 2, NULL, NULL, '18', '18', 1, '2024-02-02 06:29:27', '2024-02-02 06:29:27'),
+(6, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f8371f85e', NULL, 2, NULL, NULL, '24', '24', 1, '2024-02-02 06:29:34', '2024-02-02 06:29:34'),
+(7, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f86ce1416', NULL, 2, NULL, NULL, '29', '29', 1, '2024-02-02 06:29:39', '2024-02-02 06:29:39'),
+(8, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f89c9e824', NULL, 2, NULL, NULL, '98', '98', 1, '2024-02-02 06:29:45', '2024-02-02 06:29:45'),
+(9, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f912cb091', NULL, 2, NULL, NULL, '96', '96', 1, '2024-02-02 06:29:52', '2024-02-02 06:29:52'),
+(10, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 1, '6593f94ad8238', NULL, 2, NULL, NULL, '40', '40', 1, '2024-02-02 06:30:02', '2024-02-02 06:30:02'),
+(11, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 10, '6597d21560fd7', NULL, 1, NULL, 'a = 11\r\nb = 22\r\nresult = a + b\r\noutput = \"The sum of {} and {} is: {}\".format(a, b, result)\r\nprint(output)', NULL, NULL, 5, '2024-02-02 06:37:49', '2024-02-02 06:37:49'),
+(13, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 10, '6597d431331e5', NULL, 1, NULL, '#include <stdio.h>\r\n\r\nint main() {\r\n    int num1, num2, num3, num4, num5;\r\n\r\n    // Input\r\n    scanf(\"%d %d %d %d %d\", &num1, &num2, &num3, &num4, &num5);\r\n\r\n    // Find the largest number\r\n    int largest = num1;\r\n    if (num2 > largest) {\r\n        largest = num2;\r\n    }\r\n    if (num3 > largest) {\r\n        largest = num3;\r\n    }\r\n    if (num4 > largest) {\r\n        largest = num4;\r\n    }\r\n    if (num5 > largest) {\r\n        largest = num5;\r\n    }\r\n\r\n    // Output\r\n    printf(\"The largest number is: %d\\n\", largest);\r\n\r\n    return 0;\r\n}', NULL, NULL, 10, '2024-02-02 06:41:57', '2024-02-02 06:41:57'),
+(14, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 20, '6597ddd20f94b', NULL, 1, NULL, '#include <iostream>\r\nint main() {\r\nconst int MAX_SIZE = 100; // Maximum size of the array\r\nint arr[MAX_SIZE]; // Array to store the elements\r\nint size; // Actual size of the array\r\n// Read the size of the array from the user\r\n//std::cout << \"Enter the size of the array: \";\r\nstd::cin >> size;\r\n// Read the elements of the array from the user\r\n// std::cout << \"Enter the elements of the array:\\n\";\r\nfor (int i = 0; i < size; i++) {\r\n// std::cout << \"Element \" << i + 1 << \": \";\r\nstd::cin >> arr[i];\r\n}\r\n// Display the original array\r\nstd::cout << \"Original array: \";\r\nfor (int i = 0; i < size; i++) {\r\nstd::cout << arr[i] << \" \";\r\n}\r\nstd::cout << std::endl;\r\n// Prompt the user to enter the position of the element to be deleted\r\nint position;\r\n// std::cout << \"Enter the position of the element to be deleted: \";\r\nstd::cin >> position;\r\n// Validate the position\r\nif (position < 1 || position > size) {\r\nstd::cout << \"Invalid position!\" << std::endl;\r\nreturn 0;\r\n}\r\n// Shift the elements to the left to overwrite the element to be deleted\r\nfor (int i = position - 1; i < size - 1; i++) {\r\narr[i] = arr[i + 1];\r\n}\r\n// Decrement the size of the array\r\nsize--;\r\n// Display the updated array\r\nstd::cout << \"Updated array: \";\r\nfor (int i = 0; i < size; i++) {\r\nstd::cout << arr[i] << \" \";\r\n}std::cout << std::endl;\r\nreturn 0;\r\n}', NULL, NULL, 17, '2024-02-02 06:42:28', '2024-02-02 06:42:28'),
+(15, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 1, 3, NULL, NULL, '105', '104', 0, '2024-02-02 06:43:14', '2024-02-02 06:43:14'),
+(16, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 2, 3, NULL, NULL, '106', '106', 1, '2024-02-02 06:43:18', '2024-02-02 06:43:18'),
+(17, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 3, 3, NULL, NULL, '112', '110', 0, '2024-02-02 06:43:21', '2024-02-02 06:43:21'),
+(18, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 4, 3, NULL, NULL, '115', '116', 0, '2024-02-02 06:43:31', '2024-02-02 06:43:31'),
+(19, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 5, 3, NULL, NULL, '118', '120', 0, '2024-02-02 06:43:35', '2024-02-02 06:43:35'),
+(20, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 6, 3, NULL, NULL, '124', '124', 1, '2024-02-02 06:43:38', '2024-02-02 06:43:38'),
+(21, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 7, 3, NULL, NULL, '129', '129', 1, '2024-02-02 06:43:41', '2024-02-02 06:43:41'),
+(22, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 8, 3, NULL, NULL, '132', '132', 1, '2024-02-02 06:43:45', '2024-02-02 06:43:45'),
+(23, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 9, 3, NULL, NULL, '136', '136', 1, '2024-02-02 06:43:49', '2024-02-02 06:43:49'),
+(24, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 10, 3, NULL, NULL, '140', '140', 1, '2024-02-02 06:43:55', '2024-02-02 06:43:55'),
+(25, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 16, 3, NULL, NULL, '165', '164', 0, '2024-02-02 06:43:58', '2024-02-02 06:43:58'),
+(26, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 17, 3, NULL, NULL, '171', '171', 1, '2024-02-02 06:44:02', '2024-02-02 06:44:02'),
+(27, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 18, 3, NULL, NULL, '175', '175', 1, '2024-02-02 06:44:05', '2024-02-02 06:44:05'),
+(28, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 19, 3, NULL, NULL, '179', '176', 0, '2024-02-02 06:44:10', '2024-02-02 06:44:10'),
+(29, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 20, 3, NULL, NULL, '183', '181', 0, '2024-02-02 06:44:14', '2024-02-02 06:44:14'),
+(30, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 21, 3, NULL, NULL, '187', '185', 0, '2024-02-02 06:44:17', '2024-02-02 06:44:17'),
+(31, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 22, 3, NULL, NULL, '190', '191', 0, '2024-02-02 06:44:20', '2024-02-02 06:44:20'),
+(32, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 23, 3, NULL, NULL, '195', '192', 0, '2024-02-02 06:44:24', '2024-02-02 06:44:24'),
+(33, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 24, 3, NULL, NULL, '199', '199', 0, '2024-02-02 06:44:28', '2024-02-02 06:44:28'),
+(34, 1, '19BCS801', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 25, 3, NULL, NULL, '201', '202', 0, '2024-02-02 06:44:31', '2024-02-02 06:44:31'),
+(35, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f736d7fee', NULL, 2, NULL, NULL, '2', '2', 1, '2024-02-02 06:53:07', '2024-02-02 06:53:07'),
+(36, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f767e95ca', NULL, 2, NULL, NULL, '6', '5', 0, '2024-02-02 06:53:13', '2024-02-02 06:53:13'),
+(37, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f79663ec6', NULL, 2, NULL, NULL, '10', '9', 0, '2024-02-02 06:53:18', '2024-02-02 06:53:18'),
+(38, 2, '721120104010', '65b23acb26fd8', 3, NULL, 2, '6593f7cd083dc', NULL, 2, NULL, NULL, '14', '13', 0, '2024-02-02 06:53:23', '2024-02-02 06:53:23'),
+(39, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f7f744450', NULL, 2, NULL, NULL, '18', '18', 1, '2024-02-02 06:53:28', '2024-02-02 06:53:28'),
+(40, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f8371f85e', NULL, 2, NULL, NULL, '24', '24', 1, '2024-02-02 06:53:34', '2024-02-02 06:53:34'),
+(41, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f86ce1416', NULL, 2, NULL, NULL, '29', '29', 1, '2024-02-02 06:53:40', '2024-02-02 06:53:40'),
+(42, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f89c9e824', NULL, 2, NULL, NULL, '98', '98', 1, '2024-02-02 06:53:46', '2024-02-02 06:53:46'),
+(43, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f912cb091', NULL, 2, NULL, NULL, '96', '96', 1, '2024-02-02 06:53:51', '2024-02-02 06:53:51'),
+(44, 2, '721120104010', '65b23acb26fd8', 3, NULL, 1, '6593f94ad8238', NULL, 2, NULL, NULL, '40', '40', 1, '2024-02-02 06:53:56', '2024-02-02 06:53:56'),
+(45, 2, '721120104010', '65b23acb26fd8', 3, NULL, 10, '6597d21560fd7', NULL, 1, NULL, 'a = 11\r\nb = 22\r\nresult = a + b\r\noutput = \"The sum of {} and {} is: {}\".format(a, b, result)\r\nprint(output)', NULL, NULL, 5, '2024-02-02 06:54:24', '2024-02-02 06:54:24'),
+(46, 2, '721120104010', '65b23acb26fd8', 3, NULL, 10, '6597d431331e5', NULL, 1, NULL, '#include <stdio.h>\r\n\r\nint main() {\r\n    int num1, num2, num3, num4, num5;\r\n\r\n    scanf(\"%d %d %d %d %d\", &num1, &num2, &num3, &num4, &num5);\r\n\r\n    // Find the largest number\r\n    int largest = num1;\r\n    if (num2 > largest) {\r\n        largest = num2;\r\n    }\r\n    if (num3 > largest) {\r\n        largest = num3;\r\n    }\r\n    if (num4 > largest) {\r\n        largest = num4;\r\n    }\r\n    if (num5 > largest) {\r\n        largest = num5;\r\n    }\r\n\r\n    // Output\r\n    printf(\"The largest number is: %d\\n\", largest);\r\n\r\n    return 0;\r\n}', NULL, NULL, 10, '2024-02-02 06:54:40', '2024-02-02 06:54:40'),
+(47, 2, '721120104010', '65b23acb26fd8', 3, NULL, 20, '6597ddd20f94b', NULL, 1, NULL, '#include <iostream>\r\nint main() {\r\nconst int MAX_SIZE = 100; // Maximum size of the array\r\nint arr[MAX_SIZE]; // Array to store the elements\r\nint size; // Actual size of the array\r\n// Read the size of the array from the user\r\n//std::cout << \"Enter the size of the array: \";\r\nstd::cin >> size;\r\n// Read the elements of the array from the user\r\n// std::cout << \"Enter the elements of the array:\\n\";\r\nfor (int i = 0; i < size; i++) {\r\n// std::cout << \"Element \" << i + 1 << \": \";\r\nstd::cin >> arr[i];\r\n}\r\n// Display the original array\r\nstd::cout << \"Original array: \";\r\nfor (int i = 0; i < size; i++) {\r\nstd::cout << arr[i] << \" \";\r\n}\r\nstd::cout << std::endl;\r\n// Prompt the user to enter the position of the element to be deleted\r\nint position;\r\n// std::cout << \"Enter the position of the element to be deleted: \";\r\nstd::cin >> position;\r\n// Validate the position\r\nif (position < 1 || position > size) {\r\nstd::cout << \"Invalid position!\" << std::endl;\r\nreturn 0;\r\n}\r\n// Shift the elements to the left to overwrite the element to be deleted\r\nfor (int i = position - 1; i < size - 1; i++) {\r\narr[i] = arr[i + 1];\r\n}\r\n// Decrement the size of the array\r\nsize--;\r\n// Display the updated array\r\nstd::cout << \"Updated array: \";\r\nfor (int i = 0; i < size; i++) {\r\nstd::cout << arr[i] << \" \";\r\n}std::cout << std::endl;\r\nreturn 0;\r\n}', NULL, NULL, 17, '2024-02-02 06:55:47', '2024-02-02 06:55:47'),
+(48, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 1, 3, NULL, NULL, '104', '104', 1, '2024-02-02 06:56:06', '2024-02-02 06:56:06'),
+(49, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 2, 3, NULL, NULL, '108', '106', 0, '2024-02-02 06:56:09', '2024-02-02 06:56:09'),
+(50, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 3, 3, NULL, NULL, '113', '110', 0, '2024-02-02 06:56:13', '2024-02-02 06:56:13'),
+(51, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 4, 3, NULL, NULL, '116', '116', 1, '2024-02-02 06:56:16', '2024-02-02 06:56:16'),
+(52, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae572a765b5', 5, 3, NULL, NULL, '120', '120', 1, '2024-02-02 06:56:22', '2024-02-02 06:56:22'),
+(53, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 6, 3, NULL, NULL, '124', '124', 1, '2024-02-02 06:56:26', '2024-02-02 06:56:26'),
+(54, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 7, 3, NULL, NULL, '129', '129', 1, '2024-02-02 06:56:29', '2024-02-02 06:56:29'),
+(55, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 8, 3, NULL, NULL, '133', '132', 0, '2024-02-02 06:56:33', '2024-02-02 06:56:33'),
+(56, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 9, 3, NULL, NULL, '137', '136', 0, '2024-02-02 06:56:36', '2024-02-02 06:56:36'),
+(57, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65ae5d9a22659', 10, 3, NULL, NULL, '141', '140', 0, '2024-02-02 06:56:44', '2024-02-02 06:56:44'),
+(58, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 16, 3, NULL, NULL, '164', '164', 1, '2024-02-02 06:56:49', '2024-02-02 06:56:49'),
+(59, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 17, 3, NULL, NULL, '171', '171', 1, '2024-02-02 06:56:53', '2024-02-02 06:56:53'),
+(60, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 18, 3, NULL, NULL, '175', '175', 1, '2024-02-02 06:56:58', '2024-02-02 06:56:58'),
+(61, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 19, 3, NULL, NULL, '179', '176', 0, '2024-02-02 06:57:01', '2024-02-02 06:57:01'),
+(62, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af481a77470', 20, 3, NULL, NULL, '183', '181', 0, '2024-02-02 06:57:06', '2024-02-02 06:57:06'),
+(63, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 21, 3, NULL, NULL, '187', '185', 0, '2024-02-02 06:58:38', '2024-02-02 06:58:38'),
+(64, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 22, 3, NULL, NULL, '191', '191', 1, '2024-02-02 06:58:41', '2024-02-02 06:58:41'),
+(65, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 23, 3, NULL, NULL, '195', '192', 0, '2024-02-02 06:58:45', '2024-02-02 06:58:45'),
+(66, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 24, 3, NULL, NULL, '199', '199', 1, '2024-02-02 06:58:48', '2024-02-02 06:58:48'),
+(67, 2, '721120104010', '65b23acb26fd8', 3, NULL, 5, '65af495f1be6f', 25, 3, NULL, NULL, '201', '202', 0, '2024-02-02 06:58:51', '2024-02-02 06:58:51');
 
 -- --------------------------------------------------------
 
@@ -1224,6 +1291,20 @@ CREATE TABLE `student_test_programming_test_cases` (
   `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `student_test_programming_test_cases`
+--
+
+INSERT INTO `student_test_programming_test_cases` (`id`, `test_entry_id`, `question_code`, `input`, `expected_output`, `executed_output`, `matched_status`, `created_at`, `updated_at`) VALUES
+(11, 2, '6597d21560fd7', '11\r\n22', 'The sum of 11 and 22 is: 33', 'The sum of 11 and 22 is: 33', 1, '2024-02-02 12:24:24', '2024-02-02 12:24:24'),
+(12, 2, '6597d431331e5', '234\r\n345\r\n456\r\n567\r\n678', 'The largest number is: 678', 'The largest number is: 678', 1, '2024-02-02 12:24:40', '2024-02-02 12:24:40'),
+(13, 2, '6597d431331e5', '21\r\n54\r\n87\r\n63\r\n66', 'The largest number is: 87', 'The largest number is: 87', 1, '2024-02-02 12:24:40', '2024-02-02 12:24:40'),
+(14, 2, '6597ddd20f94b', '6\r\n12 34 56 78 90 43\r\n9', 'Original array: 12 34 56 78 90 43 \nInvalid position!', 'Original array: 12 34 56 78 90 43 \nInvalid position!', 1, '2024-02-02 12:25:47', '2024-02-02 12:25:47'),
+(15, 2, '6597ddd20f94b', '5\r\n1 2 3 4 5\r\n3', 'Original array: 1 2 3 4 5 \r\nUpdated array: 1 2 4 5', 'Original array: 1 2 3 4 5 \nUpdated array: 1 2 4 5', 1, '2024-02-02 12:25:47', '2024-02-02 12:25:47'),
+(16, 2, '6597ddd20f94b', '7\r\n12 65 34 80 38 51 72\r\n10', 'Original array: 12 65 34 80 38 51 7 \nInvalid position!', 'Original array: 12 65 34 80 38 51 72 \nInvalid position!', 0, '2024-02-02 12:25:47', '2024-02-02 12:25:47'),
+(17, 2, '6597ddd20f94b', '5\r\n8 -2 3 -4 6\r\n4', 'Original array: 8 -2 3 -4 6 \r\nUpdated array: 8 -2 3 6', 'Original array: 8 -2 3 -4 6 \nUpdated array: 8 -2 3 6', 1, '2024-02-02 12:25:47', '2024-02-02 12:25:47'),
+(18, 2, '6597ddd20f94b', '9\r\n10 -20 -30 40 50 -60 70 80 90\r\n6', 'Original array: 10 -20 -30 40 50 -60 70 80 90 \r\nUpdated array: 10 -20 -30 40 50 70 80 90', 'Original array: 10 -20 -30 40 50 -60 70 80 90 \nUpdated array: 10 -20 -30 40 50 70 80 90', 1, '2024-02-02 12:25:47', '2024-02-02 12:25:47');
+
 -- --------------------------------------------------------
 
 --
@@ -1236,6 +1317,8 @@ CREATE TABLE `test_creation` (
   `test_type` int(11) NOT NULL,
   `practice_status` varchar(15) NOT NULL,
   `title` varchar(100) NOT NULL,
+  `exclude_tests` varchar(10) NOT NULL,
+  `exclude_tests_code` text DEFAULT NULL,
   `skills_id` varchar(200) DEFAULT NULL,
   `category` varchar(100) DEFAULT NULL,
   `topics` varchar(200) DEFAULT NULL,
@@ -1250,11 +1333,10 @@ CREATE TABLE `test_creation` (
 -- Dumping data for table `test_creation`
 --
 
-INSERT INTO `test_creation` (`test_id`, `test_code`, `test_type`, `practice_status`, `title`, `skills_id`, `category`, `topics`, `test_questions`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
-(1, '65a0c94901134', 1, 'no', 'Mcq Sample Test', NULL, NULL, NULL, NULL, '1', '1', '2024-01-12 05:08:25', '2024-01-12 05:08:25'),
-(2, '65a12d9baa130', 1, 'no', 'Both test', NULL, NULL, NULL, NULL, '1', '1', '2024-01-12 12:16:27', '2024-01-12 12:16:27'),
-(3, '65a959fa9696f', 1, 'no', 'C++', NULL, NULL, NULL, NULL, '1', '1', '2024-01-18 17:03:54', '2024-01-18 17:03:54'),
-(4, '65af4ca250fba', 1, 'yes', 'mcq grouping test', NULL, NULL, NULL, NULL, '1', '1', '2024-01-23 05:20:34', '2024-01-23 05:20:34');
+INSERT INTO `test_creation` (`test_id`, `test_code`, `test_type`, `practice_status`, `title`, `exclude_tests`, `exclude_tests_code`, `skills_id`, `category`, `topics`, `test_questions`, `is_active`, `trash_key`, `created_at`, `updated_at`) VALUES
+(1, '65b23acb26fd8', 1, 'yes', 'Yardstick test', 'no', NULL, NULL, NULL, NULL, NULL, '1', '1', '2024-01-25 10:41:15', '2024-01-25 10:41:15'),
+(2, '65b4d2951628b', 1, 'yes', 'Test Package 3 for PSG', 'no', NULL, NULL, NULL, NULL, NULL, '1', '1', '2024-01-27 09:53:25', '2024-01-27 09:53:25'),
+(3, '65bb7b0b91719', 1, 'no', 'Programming Question Test', 'yes', '65b23acb26fd8', NULL, NULL, NULL, NULL, '1', '1', '2024-02-01 11:05:47', '2024-02-01 11:05:47');
 
 -- --------------------------------------------------------
 
@@ -1282,12 +1364,11 @@ CREATE TABLE `test_section_wise_questions` (
 --
 
 INSERT INTO `test_section_wise_questions` (`id`, `test_code`, `category`, `common_test_question`, `section_name`, `duration`, `easy`, `medium`, `hard`, `very_hard`, `created_at`, `updated_at`) VALUES
-(1, '65a0c94901134', 2, '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091,6593f94ad8238', 'MCQ Section', 30, NULL, NULL, NULL, NULL, '2024-01-12 10:38:25', '2024-01-12 10:38:25'),
-(3, '65a12d9baa130', 2, '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091,6593f94ad8238,6593f99c5036d,6593f9c96411d', 'mcq', 30, NULL, NULL, NULL, NULL, '2024-01-12 17:46:27', '2024-01-12 17:46:27'),
-(4, '65a12d9baa130', 1, '6597d21560fd7,6597d431331e5,6597ddd20f94b', 'programming', 60, NULL, NULL, NULL, NULL, '2024-01-12 17:46:27', '2024-01-12 17:46:27'),
-(5, '65a959fa9696f', 2, '6593f767e95ca,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091', 'MCQ', 10, NULL, NULL, NULL, NULL, '2024-01-18 22:33:54', '2024-01-18 22:33:54'),
-(6, '65a959fa9696f', 1, '6597d21560fd7,6597ddd20f94b', 'Coding', 10, NULL, NULL, NULL, NULL, '2024-01-18 22:33:54', '2024-01-18 22:33:54'),
-(7, '65af4ca250fba', 3, '65ae572a765b5,65ae5d9a22659,65af481a77470,65af495f1be6f,65af4b42945c5', 'Grouping section', 90, NULL, NULL, NULL, NULL, '2024-01-23 10:50:34', '2024-01-23 10:50:34');
+(1, '65b23acb26fd8', NULL, '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e,6593f86ce1416,6593f89c9e824,6593f912cb091,6593f94ad8238,6597d21560fd7,6597d431331e5,6597ddd20f94b,65ae572a765b5,65ae5d9a22659,65af481a77470,65af495f1be6f', 'Multisection', 90, NULL, NULL, NULL, NULL, '2024-01-25 16:11:15', '2024-01-25 16:11:15'),
+(2, '65b4d2951628b', NULL, '6593f736d7fee,6593f767e95ca,6593f79663ec6,6593f7cd083dc,6593f7f744450,6593f8371f85e', 'mcq', 20, NULL, NULL, NULL, NULL, '2024-01-27 15:23:25', '2024-01-27 15:23:25'),
+(3, '65b4d2951628b', NULL, '6597d21560fd7,6597d431331e5,6597ddd20f94b', 'programming', 20, NULL, NULL, NULL, NULL, '2024-01-27 15:23:25', '2024-01-27 15:23:25'),
+(4, '65b4d2951628b', NULL, '65ae572a765b5,65ae5d9a22659,65af481a77470,65af495f1be6f', 'grouping', 20, NULL, NULL, NULL, NULL, '2024-01-27 15:23:25', '2024-01-27 15:23:25'),
+(5, '65bb7b0b91719', NULL, '6593fada01494,6593fb217170a,6593fb54e2e68,6593fc1ee708a', 'test', 23, NULL, NULL, NULL, NULL, '2024-02-01 16:35:47', '2024-02-01 16:35:47');
 
 -- --------------------------------------------------------
 
@@ -1516,19 +1597,19 @@ ALTER TABLE `course_allocate_to_students`
 -- AUTO_INCREMENT for table `course_creation`
 --
 ALTER TABLE `course_creation`
-  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `course_negative_marks`
 --
 ALTER TABLE `course_negative_marks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `course_test_parameters`
 --
 ALTER TABLE `course_test_parameters`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `master_categories`
@@ -1570,7 +1651,7 @@ ALTER TABLE `master_skills`
 -- AUTO_INCREMENT for table `master_students`
 --
 ALTER TABLE `master_students`
-  MODIFY `student_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=517;
+  MODIFY `student_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=519;
 
 --
 -- AUTO_INCREMENT for table `master_tags`
@@ -1606,7 +1687,7 @@ ALTER TABLE `programming_question_test_case`
 -- AUTO_INCREMENT for table `question_banks`
 --
 ALTER TABLE `question_banks`
-  MODIFY `question_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `question_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `question_bank_entry`
@@ -1618,19 +1699,19 @@ ALTER TABLE `question_bank_entry`
 -- AUTO_INCREMENT for table `question_bank_for_mcq`
 --
 ALTER TABLE `question_bank_for_mcq`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
 
 --
 -- AUTO_INCREMENT for table `students_test_entries`
 --
 ALTER TABLE `students_test_entries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `students_test_questions_answers_entry`
 --
 ALTER TABLE `students_test_questions_answers_entry`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `student_group`
@@ -1648,19 +1729,19 @@ ALTER TABLE `student_group_entry`
 -- AUTO_INCREMENT for table `student_test_programming_test_cases`
 --
 ALTER TABLE `student_test_programming_test_cases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `test_creation`
 --
 ALTER TABLE `test_creation`
-  MODIFY `test_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `test_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `test_section_wise_questions`
 --
 ALTER TABLE `test_section_wise_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
