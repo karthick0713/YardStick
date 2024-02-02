@@ -536,7 +536,7 @@ class ManageCourseController extends Controller
                       }
                     </style>";
             echo "
-                    <h4>$ct->title</h4>
+                    <h4 class='mt-4'>$ct->title</h4>
                     <table id='report_table'>
                     <thead>
                         <tr>
@@ -582,9 +582,13 @@ class ManageCourseController extends Controller
                     if ($ca->department_id !== null) {
                         echo "<option value='" . ($ca->department_id ?? '') . "'>" . $department->department_name . "</option>";
                     } else {
-                        foreach ($department as $dept) {
+                        if (empty($departments)) {
+                            $departments = DB::table('master_departments')->where('is_active', 1)->get();
+                        }
+                        foreach ($departments as $dept) {
                             echo "<option value='" . $dept->department_id . "'>" . $dept->department_name . "</option>";
                         }
+                        break;
                     }
                 }
             }
