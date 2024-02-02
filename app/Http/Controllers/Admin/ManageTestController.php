@@ -93,6 +93,7 @@ class ManageTestController extends Controller
                 'total_questions' => $total_questions,
                 'total_duration' => $total_duration,
                 'test_type' => $test->test_type,
+                'test_code' => $test->test_code,
             ];
         }
 
@@ -274,6 +275,8 @@ class ManageTestController extends Controller
                 'title' => $request->input('test_title'),
                 'test_type' => $request->input('question_type'),
                 'practice_status' => $request->input('practice_status'),
+                'exclude_tests' => $request->input('exclude_tests'),
+                'exclude_tests_code' => $request->input('exclude_previous_test_question'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -307,6 +310,8 @@ class ManageTestController extends Controller
                 'title' => $request->input('test_title'),
                 'test_type' => $request->input('question_type'),
                 'practice_status' => $request->input('practice_status'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
 
             $values = DB::table('test_creation')->insert($test_data);
@@ -366,5 +371,25 @@ class ManageTestController extends Controller
                 return redirect()->route('manage-test');
             }
         }
+    }
+
+
+    public function edit_test($test_code)
+    {
+        $question_banks = DB::table('question_banks')->where('is_active', 1)->where('trash_key', 1)->get();
+        $difficulties = DB::table('master_difficulties')->where('is_active', 1)->where('trash_key', 1)->get();
+        $skills = DB::table('master_skills')->where('is_active', 1)->where('trash_key', 1)->get();
+        $categories = DB::table('master_categories')->where('is_active', 1)->where('trash_key', 1)->get();
+        $topics = DB::table('master_topics')->where('is_active', 1)->where('trash_key', 1)->get();
+        $groups = DB::table('student_group')->where('is_active', 1)->where('trash_key', 1)->where('error_key', 0)->get();
+        $group_entry = array();
+        $tests = DB::table('test_creation')->where('test_code', base64_decode($test_code))->first();
+        $test_sec_ques = DB::table('test_section_wise_questions')->where('test_code', base64_decode($test_code))->get();
+        foreach ($groups as $group) {
+            $group_entry[] = DB::table('student_group_entry')->where('group_id', $group->group_id)->get();
+        }
+        $heading = "Manage Tests";
+        $sub_heading = "Edit Test";
+        return view('admin.manage-test.edit-test', compact('tests', 'test_sec_ques', 'heading', 'sub_heading', 'difficulties', 'question_banks', 'groups', 'group_entry', 'topics', 'categories', 'skills'));
     }
 }

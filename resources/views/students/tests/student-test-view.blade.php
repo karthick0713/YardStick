@@ -67,7 +67,7 @@
                                             <div class="d-flex justify-content-end">
 
                                                 <a href="{{ route('student-test-screen', [request()->segment(3), base64_encode($test->test_code)]) }}"
-                                                    class="btn background-secondary text-white btn-sm">Start
+                                                    class=" btn background-secondary text-white btn-sm">Start
                                                     Test</a>
                                             </div>
                                             <div class=" fw-bold">
@@ -543,4 +543,8 @@
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-<script></script>
+<script>
+    $(function() {
+        localStorage.clear();
+    })
+</script>

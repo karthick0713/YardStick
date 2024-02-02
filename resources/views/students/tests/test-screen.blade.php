@@ -327,10 +327,48 @@
             max-height: 55%;
             overflow: auto;
         }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 9999;
+            display: none;
+        }
+
+        #loader::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            margin: -30px 0 0 -30px;
+            border-radius: 50%;
+            border: 6px solid #3498db;
+            border-color: #3498db transparent #3498db transparent;
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
     </head>
 
     <body>
+
+        <div id="loader"></div>
 
         <div id="all-test-screens" style="background-color:#ffffff !important">
 
@@ -631,7 +669,7 @@
                         <div class="col-12 footer-btn d-flex justify-content-center">
                             {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
                             <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
-                            <button type="button" class="btn btn-theme mx-4 save-next next-button">&raquo;</button>
+                            <button type="button" class="btn btn-theme mx-4 save-next ">&raquo;</button>
 
                             <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
                         </div>
@@ -709,6 +747,8 @@
                                         class="btn background-info text-white grouping-mark-for-review">Mark For
                                         Review</button>
 
+                                    <button type="button" class="btn btn-theme mx-4 previous-button">Previous</button>
+
                                     <button type="button"
                                         class="btn background-secondary text-white float-end grouping-save-next">Save &
                                         Next</button>
@@ -738,6 +778,7 @@
                 $("#side-bar .icon").click(function() {
                     $("body").toggleClass("side-bar-hide");
                 });
+
             });
 
             var questionsData;
@@ -747,7 +788,6 @@
             var total_duration;
             var totalSeconds = localStorage.getItem("remainingSeconds");
             var timer;
-            var question_category_value = [];
             var codes;
             var editor;
             var run_question_inputs = [];
@@ -755,8 +795,17 @@
             var verify_question_inputs = [];
             var verify_question_outputs = [];
             var saved_questions = [];
+            var currentPassage = 0;
 
             $(document).ready(function() {
+
+                function showLoader() {
+                    $("#loader").show();
+                }
+
+                function hideLoader() {
+                    $("#loader").hide();
+                }
 
                 const languages = {
                     java: {
@@ -790,12 +839,20 @@
 
 
                 var marked_questions = localStorage.getItem('markedQuestions_cat2');
+
                 marked_questions = marked_questions ? JSON.parse(marked_questions) : [];
 
                 if (localStorage.getItem('section') === null) {
                     localStorage.setItem('section', 0)
                 }
 
+                setTimeout(() => {
+                    $('button').each(function(i, e) {
+                        if ($(this).val() == localStorage.getItem('section')) {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                }, 1000);
 
                 if (localStorage.getItem('theme') == null) {
                     localStorage.setItem('theme', 'vs-light')
@@ -804,11 +861,90 @@
                 $(".submit-test").prop("disabled", true);
 
 
+
+                function showPassageAndQuestions(index) {
+
+                    showLoader();
+
+                    setTimeout(() => {
+
+                        $("#content-to-fullscreen").hide();
+
+                        $("#programming_screen").hide();
+
+                        $("#mcq_grouping").show();
+
+                        hideLoader();
+
+                    }, 2000);
+
+                    if (questionsData && questionsData[index] && questionsData[
+                            index
+                        ]
+                        .question_for_test) {
+                        $(".passage-col").html(
+                            `<p>${questionsData[index].question_for_test.title}</p>`
+                        );
+
+                        if (questionsData[index].grouping_questions &&
+                            questionsData[
+                                index
+                            ].grouping_questions.length > 0) {
+                            $(".question-col").html(
+                                `<p>${questionsData[index].grouping_questions[currentPassage].questions}</p>`
+                            );
+
+                            var mcqOptions = questionsData[currentQuestionIndex]
+                                .mcq_options;
+
+                            mcqOptions[currentPassage].forEach(function(
+                                opt) {
+                                $(".question-col").append(`
+                                    <div>
+                                    <label class="form-check-label">
+                                    <input type="radio" name="mcqOption" data-question="${opt.question_code}"  data-groupid="${questionsData[index].grouping_questions[currentPassage].id}" value="${opt.id}">
+                                    ${opt.option_name}: ${opt.option_answer}
+                                    </label>
+                                    </div>
+                                    `);
+                            });
+                        } else {
+                            console.error("grouping_questions is undefined or empty at index",
+                                index);
+                        }
+                    } else {
+                        console.error(
+                            "questionsData or question_for_test is undefined at index",
+                            index);
+                    }
+                }
+
+
                 function showQuestion(index) {
+
+                    showLoader();
 
                     if (localStorage.getItem("question_category") == 2) {
 
-                        localStorage.setItem('question_category', questionsData[index].category);
+                        setTimeout(() => {
+
+                            $("#content-to-fullscreen").show();
+
+                            $("#programming_screen").hide();
+
+                            $("#mcq_grouping").hide();
+
+                            hideLoader();
+
+                        }, 2000);
+
+
+
+                        var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
+                            index
+                        ].category
+
+                        localStorage.setItem('question_category', question_cat_set);
 
                         var question = questionsData[index].question_for_test;
 
@@ -816,6 +952,7 @@
                         $(".question_count").text("Question No. " + (index + 1));
                         $(".org-marks").html(questionsData[index].question_marks)
                         $(".question-p").html(question.replaceAll('<p><br></p>', ""));
+                        $(".question-p").attr('data-index', `${index}`);
                         $(".Answer-options").empty();
 
                         var optionsContainer = $("<div>", {
@@ -849,7 +986,6 @@
 
                             labelElement.html(optionText.replaceAll('<p><br></p>', ""));
 
-
                             optionsContainer.append($("<div>", {
                                 class: "form-check"
                             }).append(radioElement, labelElement));
@@ -861,6 +997,18 @@
 
 
                     } else if (localStorage.getItem("question_category") == 1) {
+
+                        setTimeout(() => {
+
+                            $("#content-to-fullscreen").hide();
+
+                            $("#programming_screen").show();
+
+                            $("#mcq_grouping").hide();
+
+                            hideLoader();
+
+                        }, 2000);
 
                         run_question_inputs = [];
                         run_question_outputs = [];
@@ -874,17 +1022,32 @@
                         $(".passed-case-count").text("");
                         $(".rejected-case-count").text("");
 
-                        localStorage.setItem('question_category', questionsData[localStorage.getItem('section')][index]
-                            .category);
+                        var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
+                            index
+                        ].category
 
-                        var question = questionsData[localStorage.getItem("section")][index].question_for_test
-                            .questions;
+                        localStorage.setItem('question_category', question_cat_set);
 
-                        question_code_for_save = questionsData[localStorage.getItem("section")][index].question_for_test
-                            .question_code;
+                        var programming_questions = fetch_questions[1][localStorage.getItem('section')][
+                            index
+                        ].question_for_test
+
+                        var question = programming_questions.questions
+
+                        var test_cases = fetch_questions[1][localStorage.getItem('section')][
+                            index
+                        ].test_cases;
+
+                        question_code_for_save = programming_questions.question_code;
+
                         var testcasediv = "";
                         var coun = 1;
-                        $(questionsData[localStorage.getItem("section")][index].test_cases).map((i, e) => {
+
+                        console.log(fetch_questions[1][localStorage.getItem('section')][
+                            index
+                        ]);
+
+                        $(test_cases).map((i, e) => {
 
                             testcasediv += `
                                     <h6 class="fw-bold">SAMPLE TEST CASE: ${coun ++}</h6>
@@ -895,20 +1058,19 @@
                                     <p>${e.output}</p>
                                 </div>
                                 `;
+
                             run_question_inputs.push(e.input);
                             run_question_outputs.push(e.output);
                             verify_question_inputs.push(e.input);
                             verify_question_outputs.push(e.output);
                         })
 
+
                         $(".test-case-div").append(testcasediv);
 
-                        var input_format = questionsData[localStorage.getItem("section")][index].question_for_test
-                            .input_format
-                        var output_format = questionsData[localStorage.getItem("section")][index].question_for_test
-                            .output_format
-                        var code_constraints = questionsData[localStorage.getItem("section")][index].question_for_test
-                            .code_constraints
+                        var input_format = programming_questions.input_format
+                        var output_format = programming_questions.output_format
+                        var code_constraints = programming_questions.code_constraints
 
 
                         $(".programming-questions").html(question)
@@ -1001,11 +1163,15 @@
                                 });
 
 
-                            }, 500);
+                            }, 2100);
 
                         }
 
                         code_editor();
+
+                    } else if (localStorage.getItem("question_category") == 3) {
+
+                        showPassageAndQuestions(index);
 
                     }
 
@@ -1025,6 +1191,12 @@
                         $('.quiz_number li:eq(' + currentQuestionIndex + ')').addClass('mark-for-review');
 
                         currentQuestionIndex++;
+
+                        var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
+                            currentQuestionIndex
+                        ].category;
+
+                        localStorage.setItem('question_category', question_cat_set);
 
                         showQuestion(currentQuestionIndex);
 
@@ -1050,13 +1222,6 @@
 
                 function saveAndNext() {
 
-                    console.log(marked_questions);
-
-                    if (marked_questions.includes(currentQuestionIndex)) {
-                        alert('yes');
-                    }
-
-
                     if (localStorage.getItem("question_category") == 2) {
 
                         var selectedAnswer = $("input[name='option']:checked");
@@ -1068,7 +1233,7 @@
                         }
 
 
-                        var remaiming_time = localStorage.getItem("remainingSeconds");
+                        // var remaiming_time = localStorage.getItem("remainingSeconds");
 
                         $.ajax({
 
@@ -1082,17 +1247,24 @@
                                 question_code: atob($(selectedAnswer).attr("data-quest")),
                                 option_id: atob($(selectedAnswer).val()),
                                 user_id: "{{ session('userId') }}",
-                                // question_index: currentQuestionIndex,
+                                question_index: currentQuestionIndex,
                             },
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(data) {
-                                saved_questions.push(data)
+
+                                setTimeout(() => {
+                                    saved_questions.push(data);
+
+                                    localStorage.setItem('savedQuestions', JSON.stringify(
+                                        saved_questions));
+
+                                }, 1000);
                             }
 
 
-                        })
+                        });
 
 
                         $(".question" + currentQuestionIndex).removeClass('active');
@@ -1105,17 +1277,25 @@
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
 
-                        var mcq_count = 0;
+                        if (currentQuestionIndex < fetch_questions[1][localStorage.getItem('section')].length - 1) {
 
-                        questionsData[0]
+                            var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
+                                currentQuestionIndex
+                            ].category;
 
-                        if (currentQuestionIndex < questionsData.length - 1) {
+                            localStorage.setItem('question_category', question_cat_set);
 
-                            showQuestion(currentQuestionIndex);
+                            showLoader();
+
+                            setTimeout(() => {
+
+                                showQuestion(currentQuestionIndex);
+
+                            }, 2000);
 
                         } else {
 
-                            location.reload();
+                            // location.reload();
 
                         }
 
@@ -1130,14 +1310,20 @@
                             currentQuestionIndex);
 
 
-                        if (currentQuestionIndex < questionsData[localStorage.getItem('section')].length) {
+                        if (currentQuestionIndex < fetch_questions[1][localStorage.getItem('section')].length) {
+
+
+                            var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
+                                currentQuestionIndex
+                            ].category;
+
+                            localStorage.setItem('question_category', question_cat_set);
 
                             showQuestion(currentQuestionIndex);
 
                             isReloaded = true;
 
                             // location.reload();
-
                         } else {
 
 
@@ -1153,6 +1339,7 @@
 
 
 
+
                 function previous() {
 
 
@@ -1160,12 +1347,17 @@
 
                         currentQuestionIndex--;
 
+                        var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
+                            currentQuestionIndex
+                        ].category;
+
+                        localStorage.setItem('question_category', question_cat_set);
+
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
 
                         showQuestion(currentQuestionIndex);
 
-                        // location.reload();
                     } else {
 
                     }
@@ -1178,6 +1370,331 @@
                     markForReview();
 
                 });
+
+
+                function findLanguageById(id) {
+                    return Object.values(languages).find(lang => lang.id === id);
+                }
+
+
+
+                $(".programming_run_button").click(function() {
+
+                    showLoader();
+
+
+
+                    setTimeout(() => {
+
+
+                        hideLoader();
+
+                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                        var lang = $("#languageSelect option:selected").val()
+                            .toLowerCase();
+                        const languageIdToFind = lang;
+                        const foundLanguage = findLanguageById(languageIdToFind);
+                        var editorContent = editor.getValue();
+
+                        $.ajax({
+                            url: "{{ route('run-code') }}",
+                            type: "POST",
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            data: {
+                                content: editorContent,
+                                language: foundLanguage.id,
+                                stdin: run_question_inputs,
+                                filename: `index${foundLanguage.extension}`,
+                            },
+                            success: function(data) {
+                                $("#sample_correct_testcase").empty();
+
+                                if (data.stderr != null) {
+                                    var formattedStderr = data.stderr
+                                        .replace(/\n/g, '<br>');
+
+                                    $("#sample_correct_testcase").html(
+                                        formattedStderr).addClass(
+                                        "text-danger fw-bold");
+
+
+                                    $("#home-tab").addClass("active");
+
+                                    $("#home ").addClass("active show");
+
+                                    $("#profile-tab").removeClass("active");
+
+                                    $("#profile").removeClass("active show");
+
+                                    return false;
+                                } else {
+
+
+                                    $("#sample_correct_testcase").removeClass(
+                                        "text-danger fw-bold");
+
+                                    var test_case_correct;
+                                    console.log(data);
+                                    $(data).each(function(i, elem) {
+                                        var cleanStdout = elem.stdout
+                                            .trim()
+                                            .split('\n').join('').split(
+                                                '\r').join('');
+                                        var cleanExpectedOutput =
+                                            run_question_outputs[i]
+                                            .trim().split('\n').join('')
+                                            .split('\r').join('');
+
+
+                                        if (arraysEqual(cleanStdout,
+                                                cleanExpectedOutput)) {
+
+                                            test_case_correct = `
+                                                  <div class="accordion accordion-flush" id="sampleCrctExample${i}">
+                                                              <div class="accordion-item rounded-3 border-0 shadow mb-2">
+                                                                  <h2 class="accordion-header">
+                                                                      <button
+                                                                          class="accordion-button text-success border-bottom collapsed fw-semibold"
+                                                                          type="button" data-bs-toggle="collapse"
+                                                                          data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
+                                                                          aria-controls="flush-collapseOne-${i}">
+                                                                          Test Case Sample : ${i + 1}
+                                                                      </button>
+                                                                  </h2>
+                                                                  <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
+                                                                      data-bs-parent="#sampleCrctExample${i}">
+                                                                      <div class="accordion-body mt-3">
+                                                                          <div class="executed-output">
+                                                                              <h6 class="fw-bold">Executed Output: </h6>
+                                                                              <p>${elem.stdout}</p>
+                                                                          </div>
+                                                                          <div class="expected-output">
+                                                                              <h6 class="fw-bold">Expected Output: </h6>
+                                                                              <p>${run_question_outputs[i]}</p>
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+  
+                                                         `;
+
+                                            $("#sample_correct_testcase")
+                                                .append(
+                                                    test_case_correct);
+
+                                        } else {
+
+                                            test_case_correct = `
+                                                  <div class="accordion accordion-flush" id="sampleCrctExample${i}">
+                                                              <div class="accordion-item rounded-3 border-0 shadow mb-2">
+                                                                  <h2 class="accordion-header">
+                                                                      <button
+                                                                          class="accordion-button text-danger border-bottom collapsed fw-semibold"
+                                                                          type="button" data-bs-toggle="collapse"
+                                                                          data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
+                                                                          aria-controls="flush-collapseOne-${i}">
+                                                                          Test Case Sample : ${i + 1}
+                                                                      </button>
+                                                                  </h2>
+                                                                  <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
+                                                                      data-bs-parent="#sampleCrctExample${i}">
+                                                                      <div class="accordion-body mt-3">
+                                                                          <div class="executed-output">
+                                                                              <h6 class="fw-bold">Executed Output: </h6>
+                                                                              <p>${elem.stdout}</p>
+                                                                          </div>
+                                                                          <div class="expected-output">
+                                                                              <h6 class="fw-bold">Expected Output: </h6>
+                                                                              <p>${run_question_outputs[i]}</p>
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+  
+                                                         `;
+
+                                            $("#sample_correct_testcase")
+                                                .append(
+                                                    test_case_correct);
+
+                                        }
+                                    });
+
+                                    function arraysEqual(arr1, arr2) {
+                                        if (arr1.length !== arr2.length)
+                                            return false;
+                                        for (var i = 0; i < arr1.length; i++) {
+                                            if (arr1[i] !== arr2[i])
+                                                return false;
+                                        }
+                                        return true;
+                                    }
+
+
+                                    $("#home-tab").addClass("active");
+
+                                    $("#home ").addClass("active show");
+
+                                    $("#profile-tab").removeClass("active");
+
+                                    $("#profile").removeClass("active show");
+
+
+
+
+
+                                }
+
+
+
+
+                            },
+                            error: function(data) {
+                                alert('Something went wrong');
+                            }
+                        })
+                    }, 3000);
+                });
+
+
+
+                $(".verify-button").click(function() {
+
+
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    var lang = $("#languageSelect option:selected").val()
+                        .toLowerCase();
+                    const languageIdToFind = lang;
+                    const foundLanguage = findLanguageById(languageIdToFind);
+                    var editorContent = editor.getValue();
+                    $.ajax({
+                        url: "{{ route('run-code') }}",
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        data: {
+                            content: editorContent,
+                            language: foundLanguage.id,
+                            stdin: verify_question_inputs,
+                            filename: `index${foundLanguage.extension}`,
+                        },
+                        success: function(data) {
+
+                            if (data[0].stderr != null) {
+
+                                var formattedStderr = data[0].stderr
+                                    .replace(/\n/g, '<br>');
+
+                                $(".verify-error").html(formattedStderr);
+
+
+                                $("#home-tab").removeClass("active");
+
+                                $("#home ").removeClass("active show");
+
+                                $("#profile-tab").addClass("active");
+
+                                $("#profile").addClass("active show");
+                                return false;
+
+                            } else {
+
+                                $(".verify-error").empty();
+                                var tot = data.length;
+
+                                var passed_case = 0;
+
+                                var rejected_case = 0;
+
+                                $(data).each(function(i, elem) {
+                                    var cleanStdout = elem.stdout
+                                        .trim()
+                                        .split('\n').join('').split(
+                                            '\r').join('');
+                                    var cleanExpectedOutput =
+                                        verify_question_outputs[i]
+                                        .trim().split('\n').join('')
+                                        .split('\r').join('');
+
+                                    if (arraysEqual(cleanStdout,
+                                            cleanExpectedOutput)) {
+                                        passed_case++;
+                                    } else {
+                                        rejected_case++;
+                                    }
+                                });
+
+                                $(".test-case-count").text(tot);
+                                $(".passed-case-count").text(passed_case);
+                                $(".rejected-case-count").text(
+                                    rejected_case);
+
+
+                                function arraysEqual(arr1, arr2) {
+                                    if (arr1.length !== arr2.length)
+                                        return false;
+                                    for (var i = 0; i < arr1.length; i++) {
+                                        if (arr1[i] !== arr2[i])
+                                            return false;
+                                    }
+                                    return true;
+                                }
+
+                                $("#home-tab").removeClass("active");
+
+                                $("#home ").removeClass("active show");
+
+                                $("#profile-tab").addClass("active");
+
+                                $("#profile").addClass("active show");
+
+
+
+                                $(".hidden-testcase-tab")
+                                    .show();
+
+
+
+                            }
+
+                            $.ajax({
+
+                                url: "{{ route('test-testcase-update') }}",
+                                type: 'POST',
+                                data: {
+                                    question_code: question_code_for_save,
+                                    code: editor.getValue(),
+                                    datas: data,
+                                    test_entry_id: localStorage
+                                        .getItem('get_id'),
+                                    student_reg_no: "{{ session('userId') }}",
+                                    test_code: "  {{ base64_decode(request()->segment(3)) }}",
+                                    course_id: "  {{ base64_decode(request()->segment(2)) }}",
+                                    total_seconds: totalSeconds,
+                                    passed_case: passed_case,
+                                    rejected_case: rejected_case
+                                },
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                },
+                                success: function(data) {}
+
+                            });
+
+
+
+                        },
+                        error: function(data) {
+                            alert('Something went wrong');
+                        }
+                    })
+                });
+
 
 
 
@@ -1208,7 +1725,7 @@
                             if (e.category == 2) {
                                 var isMarked = marked_questions.includes(i);
                                 html +=
-                                    `<li class="span-ques ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i}">${i+1}</span></li>`;
+                                    `<li class="span-ques li-ques${i} ${isMarked ? 'mark-for-review' : ''}" style="cursor:pointer"><span class="question${i}">${i+1}</span></li>`;
                             } else if (e.category == 3) {
                                 var questionButtons = "";
                                 for (var j = 1; j <= e.grouping_questions.length; j++) {
@@ -1259,18 +1776,16 @@
 
                         if (localStorage.getItem('question_category') == 1) {
 
-                            question_category_value = data[2];
-
                             $(data[0].sections).each(function(i, e) {
 
                                 $(".section-name-div").append(
-                                    `<button type="button" value="${i}" onclick="save_session(this.value)"  class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
+                                    `<button type="button" value="${i}" onclick="save_session(this.value)" class="btn btn-sm section-button btn-success ms-3  ">${e}</button>`
                                 );
 
                             });
 
 
-                            questionsData = data[1];
+                            questionsData = data[1][localStorage.getItem('section')];
 
 
                             showQuestion(currentQuestionIndex);
@@ -1288,8 +1803,6 @@
 
                             });
 
-
-
                             $(".test-title").html("<b>Programming Examination</b>");
 
                             $(".programming_screen").show();
@@ -1297,12 +1810,6 @@
                             $("#content-to-fullscreen").hide();
 
 
-
-
-
-                            function findLanguageById(id) {
-                                return Object.values(languages).find(lang => lang.id === id);
-                            }
 
 
                             $("#code-editor").on("keyup", function() {
@@ -1326,310 +1833,6 @@
 
 
 
-                            $(".programming_run_button").click(function() {
-
-                                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                                var lang = $("#languageSelect option:selected").val()
-                                    .toLowerCase();
-                                const languageIdToFind = lang;
-                                const foundLanguage = findLanguageById(languageIdToFind);
-                                var editorContent = editor.getValue();
-
-                                $.ajax({
-                                    url: "{{ route('run-code') }}",
-                                    type: "POST",
-                                    headers: {
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    data: {
-                                        content: editorContent,
-                                        language: foundLanguage.id,
-                                        stdin: run_question_inputs,
-                                        filename: `index${foundLanguage.extension}`,
-                                    },
-                                    success: function(data) {
-                                        $("#sample_correct_testcase").empty();
-
-                                        if (data[0].stderr != null) {
-                                            var formattedStderr = data[0].stderr
-                                                .replace(/\n/g, '<br>');
-
-                                            $("#sample_correct_testcase").html(
-                                                formattedStderr).addClass(
-                                                "text-danger fw-bold");
-
-
-                                            $("#home-tab").addClass("active");
-
-                                            $("#home ").addClass("active show");
-
-                                            $("#profile-tab").removeClass("active");
-
-                                            $("#profile").removeClass("active show");
-
-                                            return false;
-                                        } else {
-
-                                            $("#sample_correct_testcase").removeClass(
-                                                "text-danger fw-bold");
-
-                                            var test_case_correct;
-                                            $(data).each(function(i, elem) {
-                                                var cleanStdout = elem.stdout
-                                                    .trim()
-                                                    .split('\n').join('').split(
-                                                        '\r').join('');
-                                                var cleanExpectedOutput =
-                                                    run_question_outputs[i]
-                                                    .trim().split('\n').join('')
-                                                    .split('\r').join('');
-
-
-                                                if (arraysEqual(cleanStdout,
-                                                        cleanExpectedOutput)) {
-
-                                                    test_case_correct = `
-                                                <div class="accordion accordion-flush" id="sampleCrctExample${i}">
-                                                            <div class="accordion-item rounded-3 border-0 shadow mb-2">
-                                                                <h2 class="accordion-header">
-                                                                    <button
-                                                                        class="accordion-button text-success border-bottom collapsed fw-semibold"
-                                                                        type="button" data-bs-toggle="collapse"
-                                                                        data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
-                                                                        aria-controls="flush-collapseOne-${i}">
-                                                                        Test Case Sample : ${i + 1}
-                                                                    </button>
-                                                                </h2>
-                                                                <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
-                                                                    data-bs-parent="#sampleCrctExample${i}">
-                                                                    <div class="accordion-body mt-3">
-                                                                        <div class="executed-output">
-                                                                            <h6 class="fw-bold">Executed Output: </h6>
-                                                                            <p>${elem.stdout}</p>
-                                                                        </div>
-                                                                        <div class="expected-output">
-                                                                            <h6 class="fw-bold">Expected Output: </h6>
-                                                                            <p>${run_question_outputs[i]}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                       `;
-
-                                                    $("#sample_correct_testcase")
-                                                        .append(
-                                                            test_case_correct);
-
-                                                } else {
-
-                                                    test_case_correct = `
-                                                <div class="accordion accordion-flush" id="sampleCrctExample${i}">
-                                                            <div class="accordion-item rounded-3 border-0 shadow mb-2">
-                                                                <h2 class="accordion-header">
-                                                                    <button
-                                                                        class="accordion-button text-danger border-bottom collapsed fw-semibold"
-                                                                        type="button" data-bs-toggle="collapse"
-                                                                        data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
-                                                                        aria-controls="flush-collapseOne-${i}">
-                                                                        Test Case Sample : ${i + 1}
-                                                                    </button>
-                                                                </h2>
-                                                                <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
-                                                                    data-bs-parent="#sampleCrctExample${i}">
-                                                                    <div class="accordion-body mt-3">
-                                                                        <div class="executed-output">
-                                                                            <h6 class="fw-bold">Executed Output: </h6>
-                                                                            <p>${elem.stdout}</p>
-                                                                        </div>
-                                                                        <div class="expected-output">
-                                                                            <h6 class="fw-bold">Expected Output: </h6>
-                                                                            <p>${run_question_outputs[i]}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                       `;
-
-                                                    $("#sample_correct_testcase")
-                                                        .append(
-                                                            test_case_correct);
-
-                                                }
-                                            });
-
-                                            function arraysEqual(arr1, arr2) {
-                                                if (arr1.length !== arr2.length)
-                                                    return false;
-                                                for (var i = 0; i < arr1.length; i++) {
-                                                    if (arr1[i] !== arr2[i])
-                                                        return false;
-                                                }
-                                                return true;
-                                            }
-
-
-                                            $("#home-tab").addClass("active");
-
-                                            $("#home ").addClass("active show");
-
-                                            $("#profile-tab").removeClass("active");
-
-                                            $("#profile").removeClass("active show");
-
-
-
-
-
-                                        }
-
-
-
-
-                                    },
-                                    error: function(data) {
-                                        alert('Something went wrong');
-                                    }
-                                })
-                            });
-
-
-
-                            $(".verify-button").click(function() {
-
-
-                                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                                var lang = $("#languageSelect option:selected").val()
-                                    .toLowerCase();
-                                const languageIdToFind = lang;
-                                const foundLanguage = findLanguageById(languageIdToFind);
-                                var editorContent = editor.getValue();
-                                $.ajax({
-                                    url: "{{ route('run-code') }}",
-                                    type: "POST",
-                                    headers: {
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    data: {
-                                        content: editorContent,
-                                        language: foundLanguage.id,
-                                        stdin: verify_question_inputs,
-                                        filename: `index${foundLanguage.extension}`,
-                                    },
-                                    success: function(data) {
-
-                                        if (data[0].stderr != null) {
-
-                                            var formattedStderr = data[0].stderr
-                                                .replace(/\n/g, '<br>');
-
-                                            $(".verify-error").html(formattedStderr);
-
-
-                                            $("#home-tab").removeClass("active");
-
-                                            $("#home ").removeClass("active show");
-
-                                            $("#profile-tab").addClass("active");
-
-                                            $("#profile").addClass("active show");
-                                            return false;
-
-                                        } else {
-
-                                            $(".verify-error").empty();
-                                            var tot = data.length;
-
-                                            var passed_case = 0;
-
-                                            var rejected_case = 0;
-
-                                            $(data).each(function(i, elem) {
-                                                var cleanStdout = elem.stdout
-                                                    .trim()
-                                                    .split('\n').join('').split(
-                                                        '\r').join('');
-                                                var cleanExpectedOutput =
-                                                    verify_question_outputs[i]
-                                                    .trim().split('\n').join('')
-                                                    .split('\r').join('');
-
-                                                if (arraysEqual(cleanStdout,
-                                                        cleanExpectedOutput)) {
-                                                    passed_case++;
-                                                } else {
-                                                    rejected_case++;
-                                                }
-                                            });
-
-                                            $(".test-case-count").text(tot);
-                                            $(".passed-case-count").text(passed_case);
-                                            $(".rejected-case-count").text(
-                                                rejected_case);
-
-
-                                            function arraysEqual(arr1, arr2) {
-                                                if (arr1.length !== arr2.length)
-                                                    return false;
-                                                for (var i = 0; i < arr1.length; i++) {
-                                                    if (arr1[i] !== arr2[i])
-                                                        return false;
-                                                }
-                                                return true;
-                                            }
-
-                                            $("#home-tab").removeClass("active");
-
-                                            $("#home ").removeClass("active show");
-
-                                            $("#profile-tab").addClass("active");
-
-                                            $("#profile").addClass("active show");
-
-
-
-                                            $(".hidden-testcase-tab")
-                                                .show();
-
-
-
-                                        }
-
-                                        $.ajax({
-
-                                            url: "{{ route('test-testcase-update') }}",
-                                            type: 'POST',
-                                            data: {
-                                                question_code: question_code_for_save,
-                                                code: editor.getValue(),
-                                                datas: data,
-                                                test_entry_id: localStorage
-                                                    .getItem('get_id'),
-                                                student_reg_no: "{{ session('userId') }}",
-                                                test_code: "  {{ base64_decode(request()->segment(3)) }}",
-                                                course_id: "  {{ base64_decode(request()->segment(2)) }}",
-                                                total_seconds: totalSeconds,
-                                                passed_case: passed_case,
-                                                rejected_case: rejected_case
-                                            },
-                                            headers: {
-                                                'X-CSRF-TOKEN': csrfToken
-                                            },
-                                            success: function(data) {}
-
-                                        });
-
-
-
-                                    },
-                                    error: function(data) {
-                                        alert('Something went wrong');
-                                    }
-                                })
-                            });
 
 
 
@@ -1655,6 +1858,19 @@
 
                             $(".save-next").click(function() {
 
+                                var data_index = $(".question-p").attr('data-index');
+
+                                data_index = parseInt(data_index);
+
+                                $('.li-ques' + data_index).removeClass('mark-for-review');
+
+                                marked_questions = marked_questions.filter(function(item) {
+                                    return item !== data_index;
+                                });
+
+                                localStorage.setItem('markedQuestions_cat2', JSON.stringify(
+                                    marked_questions));
+
                                 saveAndNext();
 
                             });
@@ -1669,7 +1885,7 @@
 
                             questionsData = data[1][localStorage.getItem('section')];
 
-                            var currentPassage = 0;
+
 
                             var current_pass_and_quest = [];
 
@@ -1799,50 +2015,6 @@
                             $(".category3-screen").show();
                             $("#content-to-fullscreen").hide();
 
-                            function showPassageAndQuestions(index) {
-
-
-
-                                if (questionsData && questionsData[index] && questionsData[
-                                        index
-                                    ]
-                                    .question_for_test) {
-                                    $(".passage-col").html(
-                                        `<p>${questionsData[index].question_for_test.title}</p>`
-                                    );
-
-                                    if (questionsData[index].grouping_questions &&
-                                        questionsData[
-                                            index
-                                        ].grouping_questions.length > 0) {
-                                        $(".question-col").html(
-                                            `<p>${questionsData[index].grouping_questions[currentPassage].questions}</p>`
-                                        );
-
-                                        var mcqOptions = questionsData[currentQuestionIndex]
-                                            .mcq_options;
-
-                                        mcqOptions[currentPassage].forEach(function(
-                                            opt) {
-                                            $(".question-col").append(`
-                    <div>
-                        <label class="form-check-label">
-                            <input type="radio" name="mcqOption" data-question="${opt.question_code}"  data-groupid="${questionsData[index].grouping_questions[currentPassage].id}" value="${opt.id}">
-                            ${opt.option_name}: ${opt.option_answer}
-                        </label>
-                    </div>
-                `);
-                                        });
-                                    } else {
-                                        console.error("grouping_questions is undefined or empty at index",
-                                            index);
-                                    }
-                                } else {
-                                    console.error(
-                                        "questionsData or question_for_test is undefined at index",
-                                        index);
-                                }
-                            }
 
                             function saveAndNextCategory3() {
 
@@ -1869,6 +2041,7 @@
 
                             }
                         }
+
                         if (localStorage.getItem('get_id') == null) {
 
                             saveStudentTestEntry();
@@ -1997,6 +2170,8 @@
 
                             total_duration = totalDurationInMinutes;
 
+                            total_time = totalDurationInMinutes;
+
                             totalSeconds = totalDurationInMinutes * 60;
 
                             startTimer(totalSeconds);
@@ -2045,6 +2220,25 @@
 
                 $(".submit-test").on('click', function() {
 
+                    var remaining_time = localStorage.getItem("remaiming_seconds");
+
+                    var time_taken_by_user = total_duration - (remaining_time / 60);
+
+                    $.ajax({
+
+                        url: '{{ route('update-test-entry') }}',
+                        type: 'POST',
+                        data: {
+                            time_taken: time_taken_by_user,
+                            test_entry_id: localStorage.getItem('get_id')
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(data) {}
+
+                    });
+
                     localStorage.clear();
 
                     clearInterval(timer);
@@ -2070,10 +2264,19 @@
 
                     let found = false;
 
-                    showQuestion(index);
+                    currentQuestionIndex--;
+
+                    var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
+                        index
+                    ].category;
+
+                    localStorage.setItem('question_category', question_cat_set);
 
                     localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                         index);
+
+                    showQuestion(index);
+
 
                 });
 
@@ -2082,29 +2285,90 @@
 
             function saveStudentTestEntry() {
 
-                $.ajax({
-                    url: "{{ route('save-student-test-entry') }}",
-                    type: "POST",
-                    data: {
-                        user_id: "{{ session('userId') }}",
-                        total_questions: questionsData.length,
-                        total_duration: total_duration,
-                        course_id: {{ base64_decode(request()->segment(2)) }},
-                        test_code: "{{ base64_decode(request()->segment(3)) }}"
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(data) {
+                var ip_address;
 
-                        localStorage.setItem('get_id', data);
+                var ip_city;
 
-                        var get_id = localStorage.getItem('get_id');
+                fetch("https://api.ipify.org?format=json")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        ip_address = data.ip;
+                        fetch(`https://ipapi.co/${data.ip}/json/`)
+                            .then((response) => response.json())
+                            .then((locationData) => {
+                                ip_city = locationData.city;
+                            })
+                            .catch((error) => {
+                                console.error("Error fetching location details:", error);
+                            });
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching IP address:", error);
+                    });
+                var userAgent = navigator.userAgent;
 
-                        $("#student_test_entry_id").val(get_id);
+                var os;
+                if (userAgent.match(/Windows/i)) {
+                    os = "Windows";
+                } else if (userAgent.match(/Mac OS/i)) {
+                    os = "Mac OS";
+                } else if (userAgent.match(/Android/i)) {
+                    os = "Android";
+                } else if (userAgent.match(/iOS/i)) {
+                    os = "iOS";
+                } else if (userAgent.match(/Linux/i)) {
+                    os = "Linux";
+                } else {
+                    os = "Unknown";
+                }
 
-                    }
-                });
+                var browser;
+                if (userAgent.match(/Chrome/i)) {
+                    browser = "Google Chrome";
+                } else if (userAgent.match(/Firefox/i)) {
+                    browser = "Mozilla Firefox";
+                } else if (userAgent.match(/Safari/i)) {
+                    browser = "Apple Safari";
+                } else if (userAgent.match(/Edge/i)) {
+                    browser = "Microsoft Edge";
+                } else if (userAgent.match(/Opera/i) || userAgent.match(/OPR\//i)) {
+                    browser = "Opera";
+                } else if (userAgent.match(/MSIE/i) || userAgent.match(/Trident/i)) {
+                    browser = "Internet Explorer";
+                } else {
+                    browser = "Unknown";
+                }
+
+                setTimeout(() => {
+                    $.ajax({
+                        url: "{{ route('save-student-test-entry') }}",
+                        type: "POST",
+                        data: {
+                            user_id: "{{ session('userId') }}",
+                            total_questions: questionsData.length,
+                            total_duration: total_time,
+                            course_id: {{ base64_decode(request()->segment(2)) }},
+                            test_code: "{{ base64_decode(request()->segment(3)) }}",
+                            os: os,
+                            browser: browser,
+                            useragent: userAgent,
+                            ip_address: ip_address,
+                            ip_city: ip_city,
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(data) {
+
+                            localStorage.setItem('get_id', data);
+
+                            var get_id = localStorage.getItem('get_id');
+
+                            $("#student_test_entry_id").val(get_id);
+
+                        }
+                    });
+                }, 1500);
 
 
             }

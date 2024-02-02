@@ -59,6 +59,7 @@
                             <th scope="col" class="text-white text-center">No of Questions</th>
                             <th scope="col" class="text-white text-center">Total Duration</th>
                             <th scope="col" class="text-white text-center">Test Type</th>
+                            <th scope="col" class="text-white text-center">Actions</th>
                         </tr>
                     </thead>
 
@@ -151,6 +152,29 @@
                                         return "RANDOM QUESTIONS"
                                     }
                                 }
+                            },
+                            {
+                                data: "test_id",
+                                orderable: false,
+                                searchable: false,
+                                render: function(data, type, row) {
+                                    var d = row.test_code;
+                                    return `
+                                <div class='text-center'>
+
+                    <a class="icon-buttons text-black" href="{{ url('/admin/edit-test/${btoa(d)}') }}">
+                <i class="bx bx-edit-alt"></i>
+
+                
+                <a onclick="openDeleteModal('${d}')" class="text-black icon-buttons">
+                    <i class="bx bxs-trash"></i>
+                </a>
+
+                    </div>
+
+                    
+                `;
+                                },
                             },
                         ],
 

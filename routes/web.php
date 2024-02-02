@@ -54,6 +54,10 @@ Route::group(['middleware' =>  "auth"], function () {
         Route::post('/admin/save-course', $controller_path . '\Admin\ManageCourseController@save_course')->name('save-course');
         Route::get('/admin/get-course-details', $controller_path . '\Admin\ManageCourseController@get_course_details')->name('get-course-details');
 
+        Route::get('/admin/course-detail', $controller_path . '\Admin\ManageCourseController@allocated_course_reports')->name('course-detail');
+        Route::get('/admin/report-download', $controller_path . '\Admin\ManageCourseController@download_test_report')->name('report-download');
+
+
         Route::get('/admin/edit-course/{id}', $controller_path . '\Admin\ManageCourseController@edit_course')->name('edit-course');
         Route::post('/admin/update-course', $controller_path . '\Admin\ManageCourseController@update_course')->name('update-course');
         Route::post('/admin/delete-course', $controller_path . '\Admin\ManageCourseController@delete_course')->name('delete-course');
@@ -68,6 +72,7 @@ Route::group(['middleware' =>  "auth"], function () {
         Route::get('/admin/manage-test/get-test-details', $controller_path . '\Admin\ManageTestController@get_test_details')->name('get-test-details');
         Route::get('/admin/manage-test/get-selected-questions', $controller_path . '\Admin\ManageTestController@get_selected_questions')->name('get-selected-questions');
         Route::get('/admin/manage-test/get-detailed-question-view', $controller_path . '\Admin\ManageTestController@get_detailed_question_view')->name('get-detailed-question-view');
+        Route::get('/admin/edit-test/{test_code}', $controller_path . '\Admin\ManageTestController@edit_test')->name('edit-test');
 
 
         Route::get('/admin/manage-test/add-test-individual', $controller_path . '\Admin\ManageTestController@create_new_test')->name('create-test');
@@ -199,6 +204,8 @@ Route::group(['middleware' =>  "auth"], function () {
 
         Route::get('admin/masters/batch', $controller_path . '\Admin\MastersController@batch')->name('manage-batch');
         Route::get('admin/masters/semester', $controller_path . '\Admin\MastersController@semester')->name('manage-semester');
+
+        Route::get('admin/reports', $controller_path . '\Admin\StudentsReportController@student_reports')->name('student-test-report');
     });
 
     // Students
@@ -222,6 +229,7 @@ Route::group(['middleware' =>  "auth"], function () {
     Route::get('/Test/get-total-duration', $controller_path . '\Students\StudentTestController@get_total_duration')->name('get-total-duration');
 
     Route::post('/Test/save-student-test-entry', $controller_path . '\Students\StudentTestController@save_student_test_entry')->name('save-student-test-entry');
+    Route::post('/Test/update-test-entry', $controller_path . '\Students\StudentTestController@update_test_entry')->name('update-test-entry');
     // Route::post('/Test/save-question-response', $controller_path . '\Students\StudentTestController@student_test_questions_answers_update')->name('save-question-response');
     Route::post('/Test/save-questions-answers', $controller_path . '\Students\StudentTestController@student_test_questions_answers_update')->name('save-questions-answers');
     Route::post('/Test/test-testcase-update', $controller_path . '\Students\StudentTestController@verify_testcase_update')->name('test-testcase-update');

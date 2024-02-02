@@ -160,10 +160,27 @@ class StudentTestController extends Controller
             'total_duration' => $request->input('total_duration'),
             'course_id' => $request->input('course_id'),
             'test_code' => $request->input('test_code'),
+            'user_os' => $request->input('os'),
+            'ip_address' => $request->input('ip_address'),
+            'browser' => $request->input('browser'),
+            'user_agent' => $request->input('useragent'),
+            'city' => $request->input('ip_city'),
+            'total_duration' => $request->input('total_duration'),
             'created_at' => now(),
         ];
         $value = DB::table('students_test_entries')->insertGetId($data);
         return $value;
+    }
+
+
+    public function update_test_entry(Request $request)
+    {
+
+        $data = [
+            'time_taken' => $request->input('time_taken'),
+            'updated_at' => now(),
+        ];
+        $value = DB::table('students_test_entries')->where('id', $request->input('test_entry_id'))->update($data);
     }
 
 
@@ -216,7 +233,6 @@ class StudentTestController extends Controller
 
 
         if (DB::table('students_test_questions_answers_entry')->insert($data)) {
-
             return $request->input('question_index');
         }
     }

@@ -61,13 +61,27 @@
                 </table>
             </div>
         </div>
-        {{-- pagenations --}}
-        <div class="pagination-flex-container justify-content-end mt-5" id="pagination">
-            <button class="page-link btn-sm" id="previous" disabled>Previous</button>
-            <div id="page-numbers" class="pagination-flex-container"></div>
-            <button class="page-link btn-sm" id="next">Next</button>
+
+    </div>
+
+
+    <div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                    </div>
+                    <h4 class="modal-title">Result Details</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <div class="modal-body" id="reportmodal">
+
+                </div>
+
+            </div>
         </div>
     </div>
+
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -170,8 +184,12 @@
                                 return `
                                 <div class='text-center'>
 
+                        <a type="button" onclick="courseModal(${d})"> 
+                <i class="bx bx-show-alt"></i> </a>
+
                     <a class="icon-buttons text-black" href="{{ url('/admin/edit-course/${btoa(d)}') }}">
                 <i class="bx bx-edit-alt"></i>
+                </a>
 
                 
                 <a onclick="openDeleteModal('${d}')" class="text-black icon-buttons">
@@ -247,6 +265,45 @@
                     location.reload();
                 }
             });
+        }
+
+
+        function courseModal(val) {
+
+            $("#reportmodal").empty();
+            $.ajax({
+                url: '{{ route('course-detail') }}',
+                type: 'GET',
+                data: {
+                    course_id: val
+                },
+                success: function(data) {
+                    $("#reportmodal").append(data);
+                    $("#courseModal").modal('show');
+                }
+            })
+
+        }
+
+        function download_report() {
+            var college = $('#colleges').val() || '';
+            var department = $('#department').val() || '';
+            var year = $('#year').val() || '';
+            var groups = $('#groups').val() || '';
+            var test_code = $('#test_code').val() || '';
+            var course_id = $('#course_id').val() || '';
+
+
+            if (!college || !department || !year) {
+                alert('Please select college, department, and year.');
+                return;
+            }
+
+            let url = "{{ route('report-download') }}" +
+                `?college=${college}&department=${department}&year=${year}&groups=${groups}&course_id=${course_id}&test_code=${test_code}`;
+
+            window.open(url);
+
         }
     </script>
 

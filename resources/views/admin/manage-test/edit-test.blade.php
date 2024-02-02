@@ -103,7 +103,7 @@
                             <div class="col-md-3">
                                 <label for="title" class="mb-2">Title <span class="text-danger"> *</span></label>
                                 <input type="text" name="test_title" id="title" class="form-control mb-3"
-                                    placeholder="Title" required>
+                                    value="{{ $tests->title }}" placeholder="Title" required>
                             </div>
 
 
@@ -112,9 +112,11 @@
                                         *</span></label>
                                 <select name="question_type" id="question_type" onchange="opp_div_close()"
                                     class="form-control">
-                                    <option value="0" disabled selected>SELECT</option>
-                                    <option value="1">Select Questions</option>
-                                    <option value="2">Random Questions</option>
+                                    <option value="0" disabled>SELECT</option>
+                                    <option value="1" {{ $tests->test_type == 1 ? 'selected' : '' }}>Select Questions
+                                    </option>
+                                    <option value="2" {{ $tests->test_type == 2 ? 'selected' : '' }}>Random Questions
+                                    </option>
                                 </select>
                             </div>
 
@@ -129,13 +131,15 @@
 
                                 <div class="form-check form-check-inline">
                                     <input style="height:30px;width:30px;" class="form-check-input ms-3" type="checkbox"
-                                        name="exclude_tests" id="excludeYes" value="yes">
+                                        name="exclude_tests" {{ $tests->exclude_tests == 'yes' ? 'checked' : '' }}
+                                        id="excludeYes" value="yes">
                                     <label style="margin-top:5px" class="form-check-label ms-3" for="excludeYes">Yes</label>
                                 </div>
 
                                 <div class="form-check form-check-inline">
                                     <input style="height:30px;width:30px;" class="form-check-input ms-3" type="checkbox"
-                                        name="exclude_tests" id="excludeNo" value="no">
+                                        name="exclude_tests" {{ $tests->exclude_tests == 'no' ? 'checked' : '' }}
+                                        id="excludeNo" value="no">
                                     <label style="margin-top:5px" class="form-check-label ms-3" for="">No</label>
                                 </div>
 
@@ -162,10 +166,12 @@
                                     <label style="margin-top:5px" class="form-check-label ms-3" for="practice_no">No</label>
                                 </div>
 
-                                <button type="button" id="selected-tests" data-bs-toggle="modal"
+
+
+                                {{-- <button type="button" id="selected-tests" data-bs-toggle="modal"
                                     data-bs-target="#PreviousTestModal" style="display:none"
                                     class="btn background-secondary btn-sm text-white ms-3">SELECTED
-                                    TESTS</button>
+                                    TESTS</button> --}}
                             </div>
 
                             <div style="display:none" class="section-add-div">
@@ -242,7 +248,7 @@
     </div>
 
 
-    <div class="modal fade" id="PreviousTestModal" tabindex="-1" data-bs-backdrop="static"
+    {{-- <div class="modal fade" id="PreviousTestModal" tabindex="-1" data-bs-backdrop="static"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -281,7 +287,7 @@
 
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
     <div class="modal fade" id="selectTiming" tabindex="-1" data-bs-backdrop="static"
@@ -380,6 +386,8 @@
     <script>
         var data_for_count;
 
+        // var test_sections
+
 
         $(document).ready(function() {
 
@@ -387,8 +395,8 @@
 
             $(".selected_questions_modules").hide();
 
-            $('.exclude-prev-test input[type="checkbox"]').prop('checked', false);
-            $('#excludeNo').prop('checked', true);
+            // $('.exclude-prev-test input[type="checkbox"]').prop('checked', false);
+            // $('#excludeNo').prop('checked', true);
 
             $('.exclude-prev-test input[type="checkbox"]').click(function(e) {
                 var checkboxes = $(this).closest('.col-md-4').find('input[type="checkbox"]');
