@@ -49,12 +49,14 @@
                 <table class="table table-striped">
                     <thead>
                         <tr class="background-secondary">
+                            <th scope="col" class="text-white text-center">ID</th>
                             <th scope="col" class="text-white text-center">TOPICS</th>
                             <th scope="col" class="text-white text-center">SKILLS</th>
                             <th scope="col" class="text-white text-center">ACTIVE</th>
                             <th scope="col" class="text-white text-center">ACTIONS</th>
                         </tr>
                         <tr class="background-grey">
+                            <th></th>
                             <th class=" "><input type="search" name="" class="form-control table-search-bar"
                                     placeholder="Search Topics" id="search-topics" onkeyup="searchTable('search-topics',0)">
                             </th>
@@ -68,6 +70,7 @@
                     <tbody>
                         @foreach ($data as $key => $value)
                             <tr>
+                                <td class="">{{ $value->topic_id }}</td>
                                 <td class="">{{ $value->topic_name }}</td>
                                 <td class="">
                                     @php

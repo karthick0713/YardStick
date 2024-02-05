@@ -46,12 +46,14 @@
                 <table class="table table-striped">
                     <thead>
                         <tr class="background-secondary">
+                            <th scope="col" class="text-white text-center">ID</th>
                             <th scope="col" class="text-white text-center">LOGO</th>
                             <th scope="col" class="text-white text-center">SKILLS NAME</th>
                             <th scope="col" class="text-white text-center">ACTIVE</th>
                             <th scope="col" class="text-white text-center">ACTIONS</th>
                         </tr>
                         <tr class="background-grey">
+                            <th></th>
                             <th></th>
                             <th class=" "><input type="search" name="" class="form-control table-search-bar"
                                     placeholder="Search Skills" id="search-skills" onkeyup="searchTable('search-skills',0)">
@@ -64,6 +66,7 @@
 
                         @foreach ($data as $key => $value)
                             <tr>
+                                <td class="">{{ strtoupper($value->skill_id) }}</td>
                                 <td class=""><img src="{{ asset($value->logo) }}" height="50" width="50"
                                         alt=""></td>
                                 <td class="">{{ strtoupper($value->skill_name) }}</td>

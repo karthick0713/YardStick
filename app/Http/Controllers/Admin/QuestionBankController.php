@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use League\CommonMark\Extension\SmartPunct\EllipsesParser;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class QuestionBankController extends Controller
@@ -1199,11 +1200,86 @@ class QuestionBankController extends Controller
             $sheet = $spreadsheet->getActiveSheet();
             $row_limit = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $row_range = range(3, $row_limit);
-            $column_range = range('F', $column_limit);
-            $startcount = 2;
+            $row_range = range(2, $row_limit);
+            // $column_range = range('F', $column_limit);
+            $startcount = 1;
 
-            // dd($spreadsheet);
+
+            foreach ($row_range as $row) {
+                $uniqueCodeGenerated = false;
+                while (!$uniqueCodeGenerated) {
+                    $questionsCode = Str::random(15);
+                    $existingCode = DB::table('question_banks')->where('question_code', $questionsCode)->exists();
+                    if (!$existingCode) {
+                        $uniqueCodeGenerated = true;
+                    }
+                }
+
+                if (
+                    $sheet->getCell('A' . $row)->getValue() != "" &&
+                    $sheet->getCell('B' . $row)->getValue() != "" &&
+                    $sheet->getCell('C' . $row)->getValue() != "" &&
+                    $sheet->getCell('D' . $row)->getValue() != "" &&
+                    $sheet->getCell('F' . $row)->getValue() != "" &&
+                    $sheet->getCell('G' . $row)->getValue() != "" &&
+                    $sheet->getCell('H' . $row)->getValue() != "" &&
+                    $sheet->getCell('I' . $row)->getValue() != "" &&
+                    $sheet->getCell('J' . $row)->getValue() != ""
+                ) {
+                    if ($sheet->getCell('o' . $row)->getValue() != "") {
+                        $saved_status = $sheet->getCell('o' . $row)->getValue();
+                    } else {
+                        $saved_status = 1;
+                    }
+                } else {
+                    $saved_status = 2;
+                }
+
+                $data = [
+                    'skills_id' => $sheet->getCell('A' . $row)->getValue(),
+                    'difficulties_id' => $sheet->getCell('B' . $row)->getValue(),
+                    'topics_id' => $sheet->getCell('C' . $row)->getValue(),
+                    'category' => 2,
+                    'marks' => $sheet->getCell('D' . $row)->getValue(),
+                    'tags' => $sheet->getCell('E' . $row)->getValue(),
+                    'questions' => $sheet->getCell('F' . $row)->getValue(),
+                    'explanation' => $sheet->getCell('G' . $row)->getValue(),
+                    'question_code' => $questionsCode,
+                    'saving_status' => $saved_status,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+
+                $questionId = DB::table('question_banks')->insertGetId($data);
+
+                $correctOptionColumn = 8;
+                $correctOptionLetter = chr(64 + $correctOptionColumn);
+                $correctAnswerIndex = $sheet->getCell('H' . $row)->getValue() - 1;
+
+                for ($i = 1; $i <= 6; $i++) {
+                    $optionLetter = chr(64 + $i + 8);
+                    $option_let = chr(64 + $i);
+                    $option = $sheet->getCell($optionLetter . $row)->getFormattedValue();
+                    if (!empty($option)) {
+
+                        $correctAnswer = ($i - 1 === $correctAnswerIndex) ? 1 : 0;
+
+                        DB::table('question_bank_for_mcq')->insert([
+                            'question_id' => $questionId,
+                            'grouping_question_id' => null,
+                            'question_code' => $questionsCode,
+                            'option_name' => 'Option ' . $option_let,
+                            'option_answer' => $option,
+                            'correct_answer' => $correctAnswer,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
+
+                $values[] = $data;
+                $startcount++;
+            }
         }
     }
 }

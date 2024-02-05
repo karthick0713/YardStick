@@ -392,4 +392,125 @@ class ManageTestController extends Controller
         $sub_heading = "Edit Test";
         return view('admin.manage-test.edit-test', compact('tests', 'test_sec_ques', 'heading', 'sub_heading', 'difficulties', 'question_banks', 'groups', 'group_entry', 'topics', 'categories', 'skills'));
     }
+
+
+    public function update_test(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'test_title' => 'required',
+            'question_type' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors());
+            return redirect()->route('manage-test');
+        }
+
+        $test_code = $request->input('test_code');
+
+        if ($request->input('question_type') == 1) {
+
+            $data = [
+                'test_code' => $test_code,
+                'title' => $request->input('test_title'),
+                'test_type' => $request->input('question_type'),
+                'practice_status' => $request->input('practice_status'),
+                'exclude_tests' => $request->input('exclude_tests'),
+                'exclude_tests_code' => $request->input('exclude_previous_test_question'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            $value = DB::table('test_creation')->insert($data);
+
+            $questions = $request->input('selected_questions_value');
+
+            foreach ($request->input('input_section_name') as $key => $sec_name) {
+                $ins_data[] = [
+                    'test_code' => $test_code,
+                    'section_name' => $sec_name,
+                    'duration' => $request->input('input_section_duration')[$key],
+                    'common_test_question' => $questions[$key],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            $ins_value = DB::table('test_section_wise_questions')->insert($ins_data);
+
+            if ($value && $ins_value) {
+                Session::flash('success', 'Test Created Successfully..!');
+                return redirect()->route('manage-test');
+            }
+        } else {
+
+
+            $test_data = [
+                'test_code' => $test_code,
+                'title' => $request->input('test_title'),
+                'test_type' => $request->input('question_type'),
+                'practice_status' => $request->input('practice_status'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            $values = DB::table('test_creation')->insert($test_data);
+
+            $section_name = $request->input('rand_section_name');
+
+            $data = [];
+
+            $remove_quest = [];
+            $sec_duration = explode(',', $request->input('category_duration'));
+            foreach ($section_name as $key => $s_name) {
+                $category = $request->input('category')[$key];
+                $skills = $request->input('skills')[$key];
+                $topics = $request->input('topics')[$key];
+
+                $difficulty_values = [
+                    'easy' => 1,
+                    'medium' => 2,
+                    'hard' => 3,
+                    'very_hard' => 4,
+                ];
+
+                $section_data['datas'] = [
+                    'test_code' => $test_code,
+                    'section_name' => $s_name,
+                    'duration' => $sec_duration[$key],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+
+                foreach ($difficulty_values as $diff => $value) {
+                    $count = $request->input($diff)[$key];
+                    $questions = DB::table('question_banks')
+                        ->where('is_active', 1)
+                        ->where('trash_key', 1)
+                        ->whereIn('category', $category)
+                        ->whereIn('skills_id', $skills)
+                        ->whereIn('topics_id', $topics)
+                        ->where('difficulties_id', $value)
+                        ->whereNotIn('question_banks.question_code', $remove_quest)
+                        ->inRandomOrder()
+                        ->take($count)
+                        ->get();
+
+                    $question_code = $questions->pluck('question_code')->toArray();
+                    $imp_questions = implode(',', $question_code);
+                    $remove_quest[] = $imp_questions;
+                    $section_data['questions'][$diff] = $imp_questions;
+                }
+                $data[] = array_merge($section_data['datas'], $section_data['questions']);
+            }
+
+            $ins_data = DB::table('test_section_wise_questions')->insert($data);
+
+            if ($values && $ins_data) {
+                Session::flash('success', 'Test Created Successfully..!');
+                return redirect()->route('manage-test');
+            }
+        }
+    }
 }

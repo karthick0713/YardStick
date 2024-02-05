@@ -104,6 +104,7 @@
                                 <label for="title" class="mb-2">Title <span class="text-danger"> *</span></label>
                                 <input type="text" name="test_title" id="title" class="form-control mb-3"
                                     value="{{ $tests->title }}" placeholder="Title" required>
+                                <input type="hidden" name="test_code" value="{{ $tests->test_code }}">
                             </div>
 
 
@@ -143,10 +144,16 @@
                                     <label style="margin-top:5px" class="form-check-label ms-3" for="">No</label>
                                 </div>
 
-                                <button type="button" id="selected-tests" data-bs-toggle="modal"
-                                    data-bs-target="#PreviousTestModal" style="display:none"
-                                    class="btn background-secondary btn-sm text-white ms-3">SELECTED
-                                    TESTS</button>
+                                @if ($tests->exclude_tests == 'yes')
+                                    <button type="button" id="selected-tests" data-bs-toggle="modal"
+                                        data-bs-target="#PreviousTestModal"
+                                        class="btn background-secondary btn-sm text-white ms-3">SELECTED
+                                        TESTS</button>
+                                @endif
+
+
+
+
                             </div>
 
 
@@ -155,23 +162,19 @@
 
                                 <div class="form-check form-check-inline">
                                     <input style="height:30px;width:30px;" class="form-check-input ms-3" type="checkbox"
-                                        id="practice_yes" name="practice_status" value="yes">
+                                        {{ $tests->exclude_tests == 'yes' ? 'checked' : '' }} id="practice_yes"
+                                        name="practice_status" value="yes">
                                     <label style="margin-top:5px" class="form-check-label ms-3"
                                         for="practice_yes">Yes</label>
                                 </div>
 
                                 <div class="form-check form-check-inline">
                                     <input style="height:30px;width:30px;" class="form-check-input ms-3" type="checkbox"
-                                        id="practice_no" name="practice_status" value="no">
+                                        {{ $tests->exclude_tests == 'no' ? 'checked' : '' }} id="practice_no"
+                                        name="practice_status" value="no">
                                     <label style="margin-top:5px" class="form-check-label ms-3" for="practice_no">No</label>
                                 </div>
 
-
-
-                                {{-- <button type="button" id="selected-tests" data-bs-toggle="modal"
-                                    data-bs-target="#PreviousTestModal" style="display:none"
-                                    class="btn background-secondary btn-sm text-white ms-3">SELECTED
-                                    TESTS</button> --}}
                             </div>
 
                             <div style="display:none" class="section-add-div">
@@ -215,31 +218,119 @@
                                 <div class="col-md-3 ms-4">
                                     <label for="section_name">SECTION NAME</label>
                                 </div>
+                                <div class="col-md-2 ms-4">
+                                    <label for="section_name">DURATION</label>
+                                </div>
                             </div>
                             <div class="select_question_append_body">
+                                @if ($tests->test_type == 1)
 
+                                    @foreach ($test_sec_ques as $key => $val)
+                                        <div class="row">
+                                            <div class="col-md-3 ms-4">
+                                                <input type="text" name="input_section_name[]"
+                                                    value="{{ $val->section_name }}" class="form-control">
+                                            </div>
+                                            <div class="col-md-2 ms-4">
+                                                <input type="text" name="input_section_duration[]"
+                                                    value="{{ $val->duration }}" class="form-control">
+                                            </div>
+                                            <div class=" col-md-4 d-flex">
+                                                <button type="button"
+                                                    onclick="openSelectQuestionModal({{ $key }})"
+                                                    class="btn btn-sm ms-4 background-secondary text-white">SELECT
+                                                    QUESTIONS</button>
+                                                <button type="button"
+                                                    onclick="openViewQuestionModal({{ $key }})"
+                                                    class="btn btn-sm ms-4 background-info text-white">VIEW SELECTED
+                                                    QUESTIONS</button>
+                                                <input type="hidden" name="selected_questions_value[]"
+                                                    id="selected_questions_value{{ $key }}"
+                                                    value='{{ $val->common_test_question }}'
+                                                    class="selected_questions_value">
+                                            </div>
+                                        </div>
                             </div>
+                            <br>
+
+                            <div class="modal fade" id="select_questions_modal{{ $key }}" tabindex="-1"
+                                data-bs-backdrop="static" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold" id="staticBackdropLabel">SELECT QUESTIONS
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="div-table-responsive">
+
+                                                <table id="example{{ $key }}"
+                                                    class="table table-striped table-bordered ex-table dt-column-search{{ $key }}">
+                                                    <thead class="">
+                                                        <tr>
+                                                            <th scope="col" class="text-black">
+                                                            </th>
+                                                            <th scope="col" class="text-black">Question Code</th>
+                                                            <th scope="col" class="text-black">
+                                                                Skills
+                                                            </th>
+                                                            <th scope="col" class="text-black">
+                                                                Categories
+                                                            </th>
+                                                            <th scope="col" class="text-black">
+                                                                Difficulties
+                                                            </th>
+                                                            <th scope="col" class="text-black">Questions</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="tbodys">
+                                                    </tbody>
+                                                </table>
+                                                <input type="hidden" name="" id="index" value="">
+                                                <div class="mt-5 d-flex justify-content-end">
+                                                    <button type="button"
+                                                        class="btn background-info select-submit mx-4 text-white"
+                                                        onclick="select_questions()">SELECT
+                                                        QUESTIONS</button>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+
+                            @endif
+
                         </div>
-                        <br>
                     </div>
-
-                    {{-- table starts --}}
-                    <div class="card dtable">
-
-                    </div>
-                    {{-- table ends --}}
-
-
-
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="mx-3 btn text-white" onclick="openPreviewModal()"
-                            style="background-color:#4a6064">Preview</button>
-                        <button type="submit" class="btn background-secondary text-white">Submit
-                            Form</button>
-                    </div>
+                    <br>
             </div>
-            </form>
+
+            {{-- table starts --}}
+            <div class="card dtable">
+
+            </div>
+            {{-- table ends --}}
+
+
+
+            <div class="mb-3 d-flex justify-content-center">
+                <button type="button" class="mx-3 btn text-white" onclick="openPreviewModal()"
+                    style="background-color:#4a6064">Preview</button>
+                <button type="submit" class="btn background-secondary text-white">Submit
+                    Form</button>
+            </div>
         </div>
+        </form>
+    </div>
     </div>
     </div>
 
@@ -247,47 +338,6 @@
         <span id="succ_mess"></span>
     </div>
 
-
-    {{-- <div class="modal fade" id="PreviousTestModal" tabindex="-1" data-bs-backdrop="static"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="staticBackdropLabel">Select Tests to exclude Questions.</h5>
-                    <button type="button" class="btn-close" onclick="modal_close()"></button>
-                </div>
-
-                <div class="modal-body">
-                    <table id="testsTable" class="display ms-5">
-                        <thead>
-                            <tr>
-                                <th>Select</th>
-                                <th>Title</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($tests as $tt)
-                                <tr>
-
-                                    <td>
-                                        <input style="height:30px;width:30px;" type="checkbox" name=""
-                                            class="select-test-toexclude" value="{{ $tt->test_code }}" id="">
-                                    </td>
-                                    <td>{{ strtoupper($tt->title) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn  background-secondary text-white" onclick="exclude_tests()"
-                        id="timing-submit">UPDATE</button>
-                </div>
-
-            </div>
-        </div>
-    </div> --}}
 
 
     <div class="modal fade" id="selectTiming" tabindex="-1" data-bs-backdrop="static"
@@ -308,7 +358,28 @@
                             </tr>
                         </thead>
                         <tbody class="category-body">
-                            <tr>
+                            @foreach ($test_sec_ques as $i => $sec)
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control sec_name_select" name="section_name[]"
+                                            value="{{ $sec->section_name }}" placeholder="Enter Section Name ">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="section_duration[]"
+                                            class="form-control category_duration" value="{{ $sec->duration }}"
+                                            oninput=" this.value = this.value.replace(/[^0-9]/g, ''); " id=""
+                                            placeholder="Enter Duration">
+                                    </td>
+                                    <td>
+                                        @if ($i == 0)
+                                            <button style="border-radius:0%" class="btn background-secondary text-white"
+                                                onclick="add_row()" type="button">+</button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            {{-- 
+                                <tr>
                                 <td>
                                     <input type="text" class="form-control sec_name_select" name="section_name[]"
                                         placeholder="Enter Section Name ">
@@ -324,6 +395,7 @@
                                         onclick="add_row()" type="button">+</button>
                                 </td>
                             </tr>
+                             --}}
                         </tbody>
                     </table>
                 </div>
@@ -393,7 +465,7 @@
 
             localStorage.clear();
 
-            $(".selected_questions_modules").hide();
+            // $(".selected_questions_modules").hide();
 
             // $('.exclude-prev-test input[type="checkbox"]').prop('checked', false);
             // $('#excludeNo').prop('checked', true);
@@ -457,7 +529,6 @@
                     sectionValue.push(vals);
                 }
             });
-            console.log(section_name);
             var duration = $(".category_duration");
             var duration_value = [];
             duration.map(function() {
@@ -797,7 +868,6 @@
                 return $(this).val();
             }).get().join(',');
 
-            console.log(question_code);
 
             $.ajax({
                 url: "{{ route('get-selected-questions') }}",
@@ -821,8 +891,6 @@
             var checkedValues = [];
 
             var table = $("#example" + index).DataTable();
-
-            console.log(table);
 
             table.rows().nodes().each(function(row, i) {
                 var isChecked = $(row).find('td:eq(0) input[type="checkbox"]:checked').length > 0;
