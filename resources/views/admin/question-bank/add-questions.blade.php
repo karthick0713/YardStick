@@ -1024,6 +1024,9 @@
             <td class='text-center'><button type="button" onclick="remove_row(this)" class="btn btn-danger btn-sm">DELETE</button></td>
         </tr>
     `;
+
+            $("#code-input").val("");
+            $("#code-output").val("");
             $("#test-case-div").show();
             $(".test-case-body").append(rows);
         }

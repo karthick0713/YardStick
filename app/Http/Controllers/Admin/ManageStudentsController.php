@@ -257,30 +257,30 @@ class ManageStudentsController extends Controller
         echo '
                 </select>
             </div>
+            <input type="hidden" name="student_id" id="student-id" >
 
-                <div class="col-md-6 mb-3">
-                    <label for="edit-year" class="col-form-label">Year:</label>
+            <div class="col-md-6 mb-3">
+            <label for="edit-year" class="col-form-label">Year:</label>
                     <select name="edit_year" class="form-control" id="">
                         <option value="" disabled>SELECT</option>
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
+                        <option value="1"' . ($value->year == 1 ? "selected" : '') . '>1st Year</option>
+                        <option value="2"' . ($value->year == 2 ? "selected" : '') . '>2nd Year</option>
+                        <option value="3"' . ($value->year == 3 ? "selected" : '') . '>3rd Year</option>
+                        <option value="4"' . ($value->year == 4 ? "selected" : '') . '>4th Year</option>
                     </select>
                 </div>
-                <input type="hidden" name="student_id" id="student-id" >
                 <div class="col-md-6 mb-3">
                     <label for="edit-semester" class="col-form-label">Semester:</label>
                     <select name="edit_semester" class="form-control" id="">
                         <option value="" disabled>SELECT</option>
-                        <option value="1">First Semester</option>
-                        <option value="2">Second Semester</option>
-                        <option value="3">Third Semester</option>
-                        <option value="4">Fourth Semester</option>
-                        <option value="5">Fifth Semester</option>
-                        <option value="6">Sixth Semester</option>
-                        <option value="7">Seventh Semester</option>
-                        <option value="8">Eighth Semester</option>
+                        <option value="1" ' . ($value->semester == 1 ? "selected" : '') . '>First Semester</option>
+                        <option value="2" ' . ($value->semester == 2 ? "selected" : '') . '>Second Semester</option>
+                        <option value="3" ' . ($value->semester == 3 ? "selected" : '') . '>Third Semester</option>
+                        <option value="4" ' . ($value->semester == 4 ? "selected" : '') . '>Fourth Semester</option>
+                        <option value="5" ' . ($value->semester == 5 ? "selected" : '') . '>Fifth Semester</option>
+                        <option value="6" ' . ($value->semester == 6 ? "selected" : '') . '>Sixth Semester</option>
+                        <option value="7" ' . ($value->semester == 7 ? "selected" : '') . '>Seventh Semester</option>
+                        <option value="8" ' . ($value->semester == 8 ? "selected" : '') . '>Eighth Semester</option>
                     </select>
                 </div>
 

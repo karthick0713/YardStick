@@ -1179,4 +1179,31 @@ class QuestionBankController extends Controller
             return Datatables::of($questions)->toJson();
         }
     }
+
+
+
+
+    public function questions_import_from_excel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'uploaded_file' => 'required|file|mimes:xls,xlsx,csv',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->errors());
+        }
+
+        if ($request->hasFile('uploaded_file') && $request->file('uploaded_file')->isValid()) {
+            $the_file = $request->file('uploaded_file');
+            $spreadsheet = IOFactory::load($the_file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $row_limit = $sheet->getHighestDataRow();
+            $column_limit = $sheet->getHighestDataColumn();
+            $row_range = range(3, $row_limit);
+            $column_range = range('F', $column_limit);
+            $startcount = 2;
+
+            // dd($spreadsheet);
+        }
+    }
 }

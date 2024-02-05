@@ -113,7 +113,7 @@ class MastersController extends Controller
     public function skills_add(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'skill_logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            // 'skill_logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'skill_name' => 'required|string|max:100',
         ]);
 
@@ -121,7 +121,11 @@ class MastersController extends Controller
             Session::flash('error', $validator->errors());
         }
 
-        $imagePath = $request->file('skill_logo')->storeAs('assets/img/lang-icons', uniqid('', true) . '.' . $request->file('skill_logo')->getClientOriginalExtension(), 'public');
+        if ($request->hasFile('skill_logo') && $request->file('skill_logo')->isValid()) {
+            $imagePath = $request->file('skill_logo')->storeAs('assets/img/lang-icons', uniqid('', true) . '.' . $request->file('skill_logo')->getClientOriginalExtension(), 'public');
+        } else {
+            $imagePath = "";
+        }
 
         $value = DB::table('master_skills')->insert([
             'logo' => $imagePath,

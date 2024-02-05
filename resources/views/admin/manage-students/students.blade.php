@@ -168,7 +168,7 @@
                             <th class="text-white">Register No</th>
                             <th class="text-white">Student Name</th>
                             <th class="text-white">College</th>
-                            <th class="text-white">Mobile</th>
+                            <th class="text-white">Email</th>
                             <th class="text-white">Status</th>
                             <th class="text-white">Action</th>
                         </tr>
@@ -418,7 +418,7 @@
                             orderable: false
                         },
                         {
-                            data: "mobile_no",
+                            data: "email_id",
                             orderable: false
                         },
                         {

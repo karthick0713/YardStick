@@ -147,7 +147,7 @@ Route::group(['middleware' =>  "auth"], function () {
 
 
         Route::get('admin/question-bank/upload-questions', $controller_path . '\Admin\QuestionBankController@uploadQuestions')->name('upload-questions');
-        Route::post('admin/question-bank/import-excel-pro-questions', $controller_path . '\Admin\QuestionBankController@import_excel_data')->name('import-excel-programming-questions');
+        Route::post('admin/question-bank/import-excel-pro-questions', $controller_path . '\Admin\QuestionBankController@questions_import_from_excel')->name('import-excel-programming-questions');
 
 
 

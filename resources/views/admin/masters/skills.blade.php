@@ -110,7 +110,7 @@
                                     <label for="skill-logo" class="col-form-label"><b>Select
                                             Logo:</b>&nbsp;&nbsp;&nbsp;(Select only jpg, jpeg, png files.)</label>
                                     <input type="file" class="form-control" id="skill-logo" name="skill_logo"
-                                        accept="image/jpeg, image/jpg, image/png" required>
+                                        accept="image/jpeg, image/jpg, image/png">
                                     {{-- save images in lang-icons folder --}}
                                 </div>
                                 <div class=" mb-3">

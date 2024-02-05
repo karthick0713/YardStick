@@ -304,6 +304,8 @@
 
             window.open(url);
 
+            window.location.href = '{{ route('manage-courses') }}';
+
         }
     </script>
 

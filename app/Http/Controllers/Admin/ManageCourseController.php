@@ -769,10 +769,156 @@ class ManageCourseController extends Controller
             $writer = new Xlsx($spreadsheet);
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="student_report.xlsx"');
+            header('Content-Disposition: attachment;filename="Student Report.xlsx"');
             header('Cache-Control: max-age=0');
 
             $writer->save('php://output');
+        } else {
+            $where = [
+                'college_id' => $request->input('college'),
+                'department_id' => $request->input('department'),
+                'year' => $request->input('year'),
+                'group_id' => $request->input('groups'),
+            ];
+
+            $students_report = [];
+
+            $group_ids = $request->input('groups');
+
+            $course_allocated_check = DB::table('course_allocate_to_students')
+                ->where('college_id', $request->input('college'))
+                ->where('department_id', $request->input('department'))
+                ->where('year', $request->input('year'))
+                ->whereIn('groups_id', (array) $group_ids)
+                ->get();
+
+            if ($course_allocated_check) {
+
+                $get_students = DB::table('student_group')->where($where)->first();
+
+                if (isset($get_students->id)) {
+
+
+                    $students_list = DB::table('student_group_entry')->where('group_id', $get_students->id)->get();
+
+                    foreach ($students_list as $sl) {
+                        $student_test_entry = DB::table('students_test_entries')
+                            ->where('student_reg_no', $sl->register_no)
+                            ->where('course_id', $request->input('course_id'))
+                            ->where('test_code', $request->input('test_code'))
+                            ->get();
+
+                        $total_mark_for_each_questions = 0;
+                        $total_mark_taken_for_this_question = 0;
+
+                        foreach ($student_test_entry as $st) {
+                            $student_test_sub_entry = DB::table('students_test_questions_answers_entry')
+                                ->where('test_entry_id', $st->id)
+                                ->get();
+
+                            foreach ($student_test_sub_entry as $ss) {
+                                $total_mark_for_each_questions += $ss->mark_for_each_question;
+                                $total_mark_taken_for_this_question += $ss->mark_taken_for_this_question;
+                            }
+                        }
+
+                        if ($student_test_entry->isEmpty()) {
+                            $total_mark_for_each_questions = 0;
+                            $total_mark_taken_for_this_question = 0;
+                        }
+
+                        $student_report = [
+                            'student_name' => $sl->student_name,
+                            'email_id' => $sl->email_id,
+                            'total_mark_for_each_questions' => $total_mark_for_each_questions,
+                            'total_mark_taken_for_this_question' => $total_mark_taken_for_this_question,
+                        ];
+
+                        if ($student_test_entry->isEmpty()) {
+                            $student_report['user_os'] = 0;
+                            $student_report['ip_address'] = 0;
+                            $student_report['browser'] = 0;
+                            $student_report['user_agent'] = 0;
+                            $student_report['city'] = 0;
+                            $student_report['time_taken'] = 0;
+                            $student_report['total_duration'] = 0;
+                        } else {
+                            $student_report['user_os'] = $st->user_os;
+                            $student_report['ip_address'] = $st->ip_address;
+                            $student_report['browser'] = $st->browser;
+                            $student_report['user_agent'] = $st->user_agent;
+                            $student_report['city'] = $st->city;
+                            $student_report['time_taken'] = $st->time_taken;
+                            $student_report['total_duration'] =  $st->total_duration;
+                        }
+
+                        $students_report[] = $student_report;
+                    }
+
+                    $spreadsheet = new Spreadsheet();
+
+                    $sheet = $spreadsheet->getActiveSheet();
+
+                    $sheet->setCellValue('A1', 'Student Name');
+                    $sheet->setCellValue('B1', 'Student Email Id');
+                    $sheet->setCellValue('C1', 'Total Marks for Each Question');
+                    $sheet->setCellValue('D1', 'Total Marks Taken for This Question');
+                    $sheet->setCellValue('E1', 'Total Time');
+                    $sheet->setCellValue('F1', 'Time Taken');
+                    $sheet->setCellValue('G1', 'User OS');
+                    $sheet->setCellValue('H1', 'IP Address');
+                    $sheet->setCellValue('I1', 'Browser');
+                    $sheet->setCellValue('J1', 'User Agent');
+                    $sheet->setCellValue('K1', 'City');
+
+
+                    $sheet->getColumnDimension('A')->setWidth(30);
+                    $sheet->getColumnDimension('B')->setWidth(30);
+                    $sheet->getColumnDimension('C')->setWidth(30);
+                    $sheet->getColumnDimension('D')->setWidth(35);
+                    $sheet->getColumnDimension('E')->setWidth(25);
+                    $sheet->getColumnDimension('F')->setWidth(25);
+                    $sheet->getColumnDimension('G')->setWidth(25);
+                    $sheet->getColumnDimension('H')->setWidth(25);
+                    $sheet->getColumnDimension('I')->setWidth(25);
+                    $sheet->getColumnDimension('J')->setWidth(25);
+                    $sheet->getColumnDimension('K')->setWidth(25);
+
+                    $row = 2;
+
+                    foreach ($students_report as $report) {
+                        $total_duration_hours = $this->convertMinutesToHoursAndMinutes($report['total_duration']);
+                        $time_taken = $this->convertMinutesToHoursAndMinutes($report['time_taken']);
+
+                        $sheet->setCellValue('A' . $row, $report['student_name']);
+                        $sheet->setCellValue('B' . $row, $report['email_id']);
+                        $sheet->setCellValue('C' . $row, $report['total_mark_for_each_questions']);
+                        $sheet->setCellValue('D' . $row, $report['total_mark_taken_for_this_question']);
+                        $sheet->setCellValue('E' . $row, $total_duration_hours);
+                        $sheet->setCellValue('F' . $row, $time_taken);
+                        $sheet->setCellValue('G' . $row, $report['user_os']);
+                        $sheet->setCellValue('H' . $row, $report['ip_address']);
+                        $sheet->setCellValue('I' . $row, $report['browser']);
+                        $sheet->setCellValue('J' . $row, $report['user_agent']);
+                        $sheet->setCellValue('K' . $row, $report['city']);
+                        $row++;
+                    }
+
+
+
+                    $writer = new Xlsx($spreadsheet);
+
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header('Content-Disposition: attachment;filename="Student Report.xlsx"');
+                    header('Cache-Control: max-age=0');
+
+                    $writer->save('php://output');
+                } else {
+                    echo "<script type='text/javascript'> alert('Invalid Input..!'); </script>";
+                }
+            } else {
+                echo "<script type='text/javascript'> alert('No Records Found on this Input..!'); </script>";
+            }
         }
     }
 }

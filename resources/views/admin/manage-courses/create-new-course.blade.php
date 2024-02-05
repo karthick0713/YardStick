@@ -626,7 +626,7 @@
                     var existingTable = $('#negativeMarkentry' + index).DataTable();
                     existingTable.destroy();
                     $("#negativeMarkentry" + index).DataTable({
-                        pageLength: 6,
+                        pageLength: 50,
                         orderable: false,
                         searchable: false,
                     });

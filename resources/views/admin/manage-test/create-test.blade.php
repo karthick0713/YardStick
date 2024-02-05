@@ -696,7 +696,7 @@
                             d.exclude_tests = $("#exclude-tests").val();
                         }
                     },
-                    pageLength: 6,
+                    pageLength: 20,
                     columns: [{
                             data: "question_code",
                             orderable: false,

@@ -36,8 +36,15 @@
                 <div class="col-5"></div>
                 {{-- template download for import bulk questions --}}
                 <div class="col-6 justify-content-center d-flex">
-                    <a download="" href="{{ asset('import-templates/questions-import-template.xlsx') }}"><button
-                            class="background-info btn text-white">Download Template</button></a>
+                    <div class="col-2">
+                        <select name="" class="form-control " id="" required>
+                            <option value="0">SELECT</option>
+                            <option value="1">Programming</option>
+                            <option value="2">MCQ</option>
+                        </select>
+                    </div>
+                    <a download class="questions-template-button"><button
+                            class="background-info btn text-white mx-3">Download Template</button></a>
                 </div>
 
             </div>
@@ -73,9 +80,30 @@
     </div>
 
     <script>
+        document.getElementById("uploaded_file").oninvalid = function(event) {
+            event.target.setCustomValidity("Please Select Any File to Proceed !.");
+        };
+
         $(document).ready(() => {
             $(".success-message").fadeIn().delay(3000).fadeOut();
             $(".error-message").fadeIn().delay(3000).fadeOut();
+
+            $(".background-info").on('click', function() {
+                if ($('select').val() == 0) {
+                    $('select').each(function() {
+                        alert("Please Select Any Format to Download..!");
+                    });
+                } else {
+                    if ($('select').val() == 1) {
+                        $(".questions-template-button").attr('href',
+                            '{{ asset('import-templates/programming-questions-format.xlsx') }}')
+                    } else if ($('select').val() == 2) {
+                        $(".questions-template-button").attr('href',
+                            '{{ asset('import-templates/mcq-questions-format.xlsx') }}')
+                    }
+                }
+            });
+
         });
     </script>
 @endsection
