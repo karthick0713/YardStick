@@ -130,8 +130,8 @@
         }
 
         /* label.card-body {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    line-height: 0.1cm !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            line-height: 0.1cm !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } */
 
         .custom-align-center {
             display: flex;
@@ -534,11 +534,7 @@
                     testCasesAccordionContainer.append(testCasesAccordionItem);
 
                     accordionBody.append(testCasesAccordionContainer);
-                    // accordionItem.append(accordionHeader, accordionBody);
-                    // accordionContainer.append(accordionItem);
 
-                    // cardBody.append(accordionContainer);
-                    // cardContainer.append(cardBody);
                     $('#resultDiv').append(cardContainer);
 
                     resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
@@ -589,9 +585,7 @@
                     questionDiv.append(optionsContainer);
 
                 } else if (question.category == 3) {
-
                     var gQuestions = groupingQuestions[question.question_code];
-
 
                     $.each(gQuestions, function(gIndex, groupingQuestion) {
                         var groupingAccordionItem = $('<div>').addClass('accordion-item');
@@ -625,7 +619,8 @@
 
                         var optionsContainer = $('<div>').addClass('options-container');
                         var questionDetails = test_student_question_details.filter(function(detail) {
-                            return detail.question_code === groupingQuestion.question_code;
+                            return detail.question_code === groupingQuestion.question_code && detail
+                                .group_question_id === groupingQuestion.id;
                         });
 
                         var questionOptions = groupingMcqOptions[groupingQuestion.question_code][
@@ -639,7 +634,6 @@
                         groupingAccordionItem.append(groupingAccordionHeader, groupingAccordionBody);
                         accordionBody.append(groupingAccordionItem);
                     });
-
                 }
 
 
@@ -698,13 +692,13 @@
 
                     if (option.id == questionDetails.correct_answer && option.id == questionDetails
                         .answer_selected) {
-                        optionElement.addClass('correct-answer selected-answer');
-                    } else if (option.id == questionDetails.correct_answer) {
                         optionElement.addClass('correct-answer');
+                    } else if (option.id == questionDetails.correct_answer) {
+                        optionElement.addClass('correct-answer text-white');
                     } else if (option.id == questionDetails.answer_selected) {
-                        optionElement.addClass('selected-answer');
+                        optionElement.addClass('selected-answer text-white');
                     } else {
-                        optionElement.addClass('normal-answer');
+                        optionElement.addClass('normal-answer ');
                     }
 
                     optionElement.append(option.option_answer.replace('<p><br></p>', ''));
