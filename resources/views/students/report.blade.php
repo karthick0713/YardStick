@@ -86,12 +86,12 @@
 
         .correct-answer {
             background-color: #155724;
-            color: #fff;
+            color: #fff !important;
         }
 
         .selected-answer {
             background-color: #bb2533;
-            color: #fff;
+            color: #fff !important;
         }
 
         .normal-answer {
@@ -130,8 +130,8 @@
         }
 
         /* label.card-body {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            line-height: 0.1cm !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    line-height: 0.1cm !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } */
 
         .custom-align-center {
             display: flex;
@@ -223,7 +223,7 @@
                         </div>
                         <div class="card radius-none background-secondary">
                             <div class=" mt-3 mb-3 text-center fw-bold fs-30 text-white">
-                                {{ count($test_question_details) }}
+                                {{ count($student_test_details) }}
                             </div>
                         </div>
                     </div>
@@ -238,7 +238,7 @@
                         </div>
                         <div class="card radius-none background-secondary">
                             <div class=" mt-3 mb-3 text-center fw-bold fs-30 text-white">
-                                {{ $data['total_questions'] - count($test_question_details) > 0 ? $data['total_questions'] - count($test_question_details) : '-' }}
+                                {{ $data['total_questions'] - count($student_test_details) > 0 ? $data['total_questions'] - count($student_test_details) : '-' }}
                             </div>
                         </div>
                     </div>
@@ -296,20 +296,6 @@
     </div>
 
     <script>
-        var test_student_question_details = @json($test_question_details);
-        var question_details = @json($data['question_details']);
-        var mcqOptions = @json($data['mcq_options']);
-        var programmingTestCase = @json($data['programming_test_case']);
-
-
-        var programmingQuestions = question_details.filter(function(question) {
-            return question.category == 1;
-        });
-
-        var mcqQuestions = question_details.filter(function(question) {
-            return question.category == 2;
-        });
-
         var categories = [];
 
         $(function() {
@@ -323,7 +309,6 @@
                     var html = '<option value="" selected disabled>SELECT</option>';
                     for (var i = 0; i < data.length; i++) {
                         categories.push({
-                            cat: data[i].category,
                             opt_id: data[i].id
                         });
 
@@ -343,256 +328,339 @@
 
         function fetch_questions_answers(value) {
 
-            $(".report-title").show();
+            var test_student_question_details = @json($student_test_details);
+            var question_details = @json($data['question_details']);
+            var mcqOptions = @json($data['mcq_options']);
+            var programmingTestCase = @json($data['programming_test_case']);
+            var groupingQuestions = @json($data['grouping_questions']);
+            var groupingMcqOptions = @json($data['grouping_mcq_options']);
+            var sectionQuestions = question_details.filter(function(question) {
+                return question.section_id == value;
+            });
+            // var gQuestions = [];
 
-            if (categories.some(category => category.opt_id == value)) {
+            $("#resultDiv").empty();
 
-                var matchingCategory = categories.find(category => category.opt_id == value);
 
-                if (matchingCategory.cat == 1) {
-                    $("#resultDiv").empty();
+            $.each(sectionQuestions, function(index, question) {
+                var cardContainer = $('<div>').addClass('card mb-4');
+                var cardBody = $('<div>').addClass('card-body');
 
-                    $.each(programmingQuestions, function(index, programmingQuestion) {
-                        var cardContainer = $('<div>').addClass('card mb-4');
-                        var cardBody = $('<div>').addClass('card-body');
+                var accordionContainer = $('<div>').addClass('accordion');
+                var accordionItem = $('<div>').addClass('accordion-item');
+                var accordionHeader = $('<h2>').addClass('accordion-header').attr('id', 'question-' +
+                    index + '-header');
 
-                        var accordionContainer = $('<div>').addClass('accordion container');
-                        var accordionItem = $('<div>').addClass('accordion-item row');
+                var questionButton = $('<button>').addClass(
+                        'accordion-button btn btn-outline-primary fw-bold')
+                    .attr({
+                        'type': 'button',
+                        'data-bs-toggle': 'collapse',
+                        'data-bs-target': '#question-' + index + '-content',
+                        'aria-expanded': 'false',
+                        'aria-controls': 'question-' + index + '-content'
+                    })
+                    .html(`Question ${index + 1}`);
 
-                        var accordionHeader = $('<h2>').addClass('accordion-header ').attr('id', 'question-' +
-                            index + '-header');
-                        var questionButton = $('<button>').addClass(
-                                'accordion-button w-100  btn btn-outline-primary fw-bold')
-                            .attr({
-                                'type': 'button',
-                                'data-bs-toggle': 'collapse',
-                                'data-bs-target': '#question-' + index + '-content',
-                                'aria-expanded': 'false',
-                                'aria-controls': 'question-' + index + '-content',
-                                'data-bs-parent': '#accordion-parent'
-                            });
+                accordionHeader.append(questionButton);
 
-                        questionButton.html(`Question ${index + 1}`);
-                        accordionHeader.append(questionButton);
-
-                        var accordionBody = $('<div>').addClass('accordion-collapse collapse col-12')
-                            .attr({
-                                'id': 'question-' + index + '-content',
-                                'aria-labelledby': 'question-' + index + '-header'
-                            });
-                        var questionDiv = $('<div>').addClass('accordion-body col-12');
-                        var newContainer = $('<div>').addClass('row');
-
-                        var additionalInfoDiv = $('<div>').addClass('row col-12 mt-3');
-                        var inputFormatDiv = $('<div>').addClass('col-4');
-                        var inputFormatTitle = $('<h5>').addClass('fw-bold').html('Input Format:');
-                        var inputFormatPre = $('<p>').html(programmingQuestion.input_format.replaceAll('\n',
-                            '<br/>'));
-                        inputFormatDiv.append(inputFormatTitle, inputFormatPre);
-
-                        var outputFormatDiv = $('<div>').addClass('col-4');
-                        var outputFormatTitle = $('<h5>').addClass('fw-bold').html('Output Format:');
-                        var outputFormatPre = $('<p>').html(programmingQuestion.output_format.replaceAll('\n',
-                            '<br/>'));
-                        outputFormatDiv.append(outputFormatTitle, outputFormatPre);
-
-                        var codeConstraintsDiv = $('<div>').addClass('col-4');
-                        var codeConstraintsTitle = $('<h5>').addClass('fw-bold').html('Code Constraints:');
-                        var codeConstraintsPre = $('<p>').html(programmingQuestion.code_constraints.replaceAll('\n',
-                            '<br/>'));
-                        codeConstraintsDiv.append(codeConstraintsTitle, codeConstraintsPre);
-
-                        additionalInfoDiv.append(inputFormatDiv, outputFormatDiv, codeConstraintsDiv);
-
-                        var questionSolutionDiv = $('<div>').addClass('col-6');
-                        var solutionTitleDiv = $('<div>');
-                        var solutionTitle = $('<h5>').addClass('fw-bold text-sec-color').html('SOLUTION :');
-                        var questionSolutionPre = $('<pre>').addClass('language-cpp').text(programmingQuestion
-                            .solutions);
-                        questionSolutionDiv.append(solutionTitleDiv, solutionTitle,
-                            questionSolutionPre);
-
-                        var studentCodeDiv = $('<div>').addClass('col-6');
-                        var studentCodeTitleDiv = $('<div>');
-                        var studentCodeTitle = $('<h5>').addClass('fw-bold').html('YOUR CODE :');
-                        var studentCodePre = $('<pre>').addClass('language-cpp');
-                        var studentTestSolution = test_student_question_details.find(function(detail) {
-                            return detail.question_code === programmingQuestion.question_code;
-                        });
-                        studentCodePre.text(studentTestSolution.student_code);
-                        studentCodeDiv.append(studentCodeTitleDiv, studentCodeTitle, studentCodePre);
-
-                        newContainer.append(additionalInfoDiv, questionSolutionDiv, studentCodeDiv);
-
-                        var questionTitleDiv = $('<div>');
-                        var questionTitle = $('<h5>').addClass('fw-bold').html('Question ' + (index + 1));
-
-                        var questionTextDiv = $('<div>');
-                        var questionText = $('<p>').html(programmingQuestion.questions);
-                        questionTextDiv.append(questionText);
-
-                        questionDiv.append(questionTitleDiv, questionTextDiv, newContainer);
-
-                        accordionBody.append(questionDiv);
-
-                        var testCasesAccordionContainer = $('<div>').addClass(
-                            'accordion test-cases-accordion mt-3');
-                        var testCasesAccordionItem = $('<div>').addClass('accordion-item row');
-
-                        var testCasesAccordionHeader = $('<h2>').addClass('accordion-header').attr('id',
-                            'test-cases-' + index + '-header');
-                        var testCasesButton = $('<button>').addClass(
-                                'accordion-button test-case-button w-100 btn btn-outline-primary fw-bold')
-                            .attr({
-                                'type': 'button',
-                                'data-bs-toggle': 'collapse',
-                                'data-bs-target': '#test-cases-' + index + '-content',
-                                'aria-expanded': 'false',
-                                'aria-controls': 'test-cases-' + index + '-content'
-                            })
-                            .text('Test Cases');
-
-                        testCasesAccordionHeader.append(testCasesButton);
-
-                        var testCasesAccordionBody = $('<div>').addClass('accordion-collapse collapse col-12')
-                            .attr({
-                                'id': 'test-cases-' + index + '-content',
-                                'aria-labelledby': 'test-cases-' + index + '-header'
-                            });
-
-                        var testCasesRow = $('<div>').addClass('row');
-
-                        $.each(programmingTestCase[index], function(testCaseIndex, testCase) {
-                            var testCaseDiv = $('<div>').addClass(
-                                'col-3 accordion-body rounded-2 text-center text-white  ms-5 mt-3');
-
-                            var executedOutputDiv = $('<div>');
-                            var executedOutputTitle = $('<h5>').addClass(
-                                    'fw-bold text-white mt-4  text-decoration-underline')
-                                .html(
-                                    'Executed Output :');
-                            var executedOutputPre = $('<pre>').text(testCase.executed_output);
-                            executedOutputDiv.append(executedOutputTitle, executedOutputPre);
-
-                            var expectedOutputDiv = $('<div>');
-                            var expectedOutputTitle = $('<h5>').addClass(
-                                'fw-bold text-white text-decoration-underline').html(
-                                'Expected Output :');
-                            var expectedOutputPre = $('<pre>').text(testCase.expected_output);
-                            expectedOutputDiv.append(expectedOutputTitle, expectedOutputPre);
-
-                            var executedOutputTrimmed = testCase.executed_output.trim().replaceAll(
-                                /[\r\n]/g,
-                                '');
-                            var expectedOutputTrimmed = testCase.expected_output.trim().replaceAll(
-                                /[\r\n]/g,
-                                '');
-
-                            var match = executedOutputTrimmed === expectedOutputTrimmed;
-                            testCaseDiv.css('background-color', match ? '#3c7a3c' : '#cf3131');
-
-                            testCaseDiv.append(executedOutputDiv, expectedOutputDiv);
-                            testCasesRow.append(testCaseDiv);
-                        });
-
-                        testCasesAccordionBody.append(testCasesRow);
-                        testCasesAccordionItem.append(testCasesAccordionHeader, testCasesAccordionBody);
-                        testCasesAccordionContainer.append(testCasesAccordionItem);
-
-                        accordionBody.append(testCasesAccordionContainer);
-                        accordionItem.append(accordionHeader, accordionBody);
-                        accordionContainer.append(accordionItem);
-
-                        cardBody.append(accordionContainer);
-                        cardContainer.append(cardBody);
-                        $('#resultDiv').append(cardContainer);
-
-                        resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
-
-                        Prism.highlightAll();
+                var accordionBody = $('<div>').addClass('accordion-collapse collapse')
+                    .attr({
+                        'id': 'question-' + index + '-content',
+                        'aria-labelledby': 'question-' + index + '-header'
                     });
 
-                    $('.accordion').each(function() {
-                        $(this).collapse({
-                            toggle: false
+                var questionDiv = $('<div>').addClass('accordion-body ');
+                if (question.category == 3) {
+                    var questionText = $('<p>').addClass('mb-0 fs-5').html(question.title);
+                } else {
+                    var questionText = $('<p>').addClass('mb-0 fs-5').html(question.questions);
+                }
+                questionDiv.append(questionText);
+
+                var questionDetails = test_student_question_details.find(function(detail) {
+                    return detail.question_code === question.question_code;
+                });
+
+                if (question.category == 1) {
+
+
+
+                    var cardContainer = $('<div>').addClass('card mb-4');
+                    var cardBody = $('<div>').addClass('card-body');
+
+                    var accordionContainer = $('<div>').addClass('accordion');
+                    var accordionItem = $('<div>').addClass('accordion-item row');
+
+                    var accordionHeader = $('<h2>').addClass('accordion-header ').attr('id', 'question-' +
+                        index + '-header');
+                    var questionButton = $('<button>').addClass(
+                            'accordion-button btn btn-outline-primary fw-bold')
+                        .attr({
+                            'type': 'button',
+                            'data-bs-toggle': 'collapse',
+                            'data-bs-target': '#question-' + index + '-content',
+                            'aria-expanded': 'false',
+                            'aria-controls': 'question-' + index + '-content'
+                        })
+                        .html(`Question ${index + 1}`);
+                    accordionHeader.append(questionButton);
+
+                    var accordionBody = $('<div>').addClass('accordion-collapse collapse col-12')
+                        .attr({
+                            'id': 'question-' + index + '-content',
+                            'aria-labelledby': 'question-' + index + '-header'
                         });
+                    var questionDiv = $('<div>').addClass('accordion-body col-12');
+                    var newContainer = $('<div>').addClass('row');
+
+                    var additionalInfoDiv = $('<div>').addClass('row col-12 mt-3');
+                    var inputFormatDiv = $('<div>').addClass('col-4');
+                    var inputFormatTitle = $('<h5>').addClass('fw-bold').html('Input Format:');
+                    var inputFormatPre = $('<p>').html(question.input_format.replaceAll('\n',
+                        '<br/>'));
+                    inputFormatDiv.append(inputFormatTitle, inputFormatPre);
+
+                    var outputFormatDiv = $('<div>').addClass('col-4');
+                    var outputFormatTitle = $('<h5>').addClass('fw-bold').html('Output Format:');
+                    var outputFormatPre = $('<p>').html(question.output_format.replaceAll('\n',
+                        '<br/>'));
+                    outputFormatDiv.append(outputFormatTitle, outputFormatPre);
+
+                    var codeConstraintsDiv = $('<div>').addClass('col-4');
+                    var codeConstraintsTitle = $('<h5>').addClass('fw-bold').html('Code Constraints:');
+                    var codeConstraintsPre = $('<p>').html(question.code_constraints.replaceAll('\n',
+                        '<br/>'));
+                    codeConstraintsDiv.append(codeConstraintsTitle, codeConstraintsPre);
+
+                    additionalInfoDiv.append(inputFormatDiv, outputFormatDiv, codeConstraintsDiv);
+
+                    var questionSolutionDiv = $('<div>').addClass('col-6');
+                    var solutionTitleDiv = $('<div>');
+                    var solutionTitle = $('<h5>').addClass('fw-bold text-sec-color').html('SOLUTION :');
+                    var questionSolutionPre = $('<pre>').addClass('language-cpp').text(question
+                        .solutions);
+                    questionSolutionDiv.append(solutionTitleDiv, solutionTitle,
+                        questionSolutionPre);
+
+                    var studentCodeDiv = $('<div>').addClass('col-6');
+                    var studentCodeTitleDiv = $('<div>');
+                    var studentCodeTitle = $('<h5>').addClass('fw-bold').html('YOUR CODE :');
+                    var studentCodePre = $('<pre>').addClass('language-cpp');
+                    var studentTestSolution = test_student_question_details.find(function(detail) {
+                        return detail.question_code === question.question_code;
+                    });
+                    studentCodePre.text(studentTestSolution.student_code);
+                    studentCodeDiv.append(studentCodeTitleDiv, studentCodeTitle, studentCodePre);
+
+                    newContainer.append(additionalInfoDiv, questionSolutionDiv, studentCodeDiv);
+
+                    var questionTitleDiv = $('<div>');
+                    var questionTitle = $('<h5>').addClass('fw-bold').html('Question ' + (index + 1));
+
+                    var questionTextDiv = $('<div>');
+                    var questionText = $('<p>').html(question.questions);
+                    questionTextDiv.append(questionText);
+
+                    questionDiv.append(questionTitleDiv, questionTextDiv, newContainer);
+
+                    accordionBody.append(questionDiv);
+
+                    var testCasesAccordionContainer = $('<div>').addClass(
+                        'accordion test-cases-accordion mt-3');
+                    var testCasesAccordionItem = $('<div>').addClass('accordion-item row');
+
+                    var testCasesAccordionHeader = $('<h2>').addClass('accordion-header').attr('id',
+                        'test-cases-' + index + '-header');
+                    var testCasesButton = $('<button>').addClass(
+                            'accordion-button test-case-button w-100 btn btn-outline-primary fw-bold')
+                        .attr({
+                            'type': 'button',
+                            'data-bs-toggle': 'collapse',
+                            'data-bs-target': '#test-cases-' + index + '-content',
+                            'aria-expanded': 'false',
+                            'aria-controls': 'test-cases-' + index + '-content'
+                        })
+                        .text('Test Cases');
+
+                    testCasesAccordionHeader.append(testCasesButton);
+
+                    var testCasesAccordionBody = $('<div>').addClass('accordion-collapse collapse col-12')
+                        .attr({
+                            'id': 'test-cases-' + index + '-content',
+                            'aria-labelledby': 'test-cases-' + index + '-header'
+                        });
+
+                    var testCasesRow = $('<div>').addClass('row');
+
+                    $.each(programmingTestCase, function(testCaseIndex, testCase) {
+
+                        var testCaseDiv = $('<div>').addClass(
+                            'col-3 accordion-body rounded-2 text-center text-white  ms-5 mt-3');
+
+                        var executedOutputDiv = $('<div>');
+                        var executedOutputTitle = $('<h5>').addClass(
+                                'fw-bold text-white mt-4  text-decoration-underline')
+                            .html(
+                                'Executed Output :');
+                        var executedOutputPre = $('<pre>').text(testCase[testCaseIndex].executed_output);
+                        executedOutputDiv.append(executedOutputTitle, executedOutputPre);
+
+                        var expectedOutputDiv = $('<div>');
+                        var expectedOutputTitle = $('<h5>').addClass(
+                            'fw-bold text-white text-decoration-underline').html(
+                            'Expected Output :');
+                        var expectedOutputPre = $('<pre>').text(testCase[testCaseIndex].expected_output);
+                        expectedOutputDiv.append(expectedOutputTitle, expectedOutputPre);
+
+                        var executedOutputTrimmed = testCase[testCaseIndex].executed_output.trim()
+                            .replaceAll(
+                                /[\r\n]/g,
+                                '');
+                        var expectedOutputTrimmed = testCase[testCaseIndex].expected_output.trim()
+                            .replaceAll(
+                                /[\r\n]/g,
+                                '');
+
+                        var match = executedOutputTrimmed === expectedOutputTrimmed;
+                        testCaseDiv.css('background-color', match ? '#3c7a3c' : '#cf3131');
+
+                        testCaseDiv.append(executedOutputDiv, expectedOutputDiv);
+                        testCasesRow.append(testCaseDiv);
                     });
 
+                    testCasesAccordionBody.append(testCasesRow);
+                    testCasesAccordionItem.append(testCasesAccordionHeader, testCasesAccordionBody);
+                    testCasesAccordionContainer.append(testCasesAccordionItem);
+
+                    accordionBody.append(testCasesAccordionContainer);
+                    // accordionItem.append(accordionHeader, accordionBody);
+                    // accordionContainer.append(accordionItem);
+
+                    // cardBody.append(accordionContainer);
+                    // cardContainer.append(cardBody);
+                    $('#resultDiv').append(cardContainer);
+
+                    resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
+
+                    Prism.highlightAll();
+
+                } else if (question.category == 2) {
+                    var cardContainer = $('<div>').addClass('card mb-4');
+                    var cardBody = $('<div>').addClass('card-body');
+
+                    var accordionContainer = $('<div>').addClass('accordion');
+                    var accordionItem = $('<div>').addClass('accordion-item');
+                    var accordionHeader = $('<h2>').addClass('accordion-header').attr('id', 'question-' +
+                        index + '-header');
+
+                    var questionButton = $('<button>').addClass(
+                            'accordion-button btn btn-outline-primary fw-bold')
+                        .attr({
+                            'type': 'button',
+                            'data-bs-toggle': 'collapse',
+                            'data-bs-target': '#question-' + index + '-content',
+                            'aria-expanded': 'false',
+                            'aria-controls': 'question-' + index + '-content'
+                        })
+                        .html(`Question ${index + 1}`);
+
+                    accordionHeader.append(questionButton);
+
+                    var accordionBody = $('<div>').addClass('accordion-collapse collapse')
+                        .attr({
+                            'id': 'question-' + index + '-content',
+                            'aria-labelledby': 'question-' + index + '-header'
+                        });
+
+                    var questionDiv = $('<div>').addClass('accordion-body ');
+                    var questionText = $('<p>').addClass('mb-0 fs-5').html(question.questions);
+                    questionDiv.append(questionText);
+
+                    var questionDetails = test_student_question_details.find(function(detail) {
+
+                        return detail.question_code === question.question_code;
+                    });
+
+                    var optionsContainer = $('<div>').addClass(
+                        'options-container');
+                    highlightOptions(mcqOptions[index], questionDetails, optionsContainer);
+
+                    questionDiv.append(optionsContainer);
+
+                } else if (question.category == 3) {
+
+                    var gQuestions = groupingQuestions[question.question_code];
 
 
-
-                } else if (matchingCategory.cat == 2) {
-
-                    $("#resultDiv").empty();
-
-                    $.each(mcqQuestions, function(index, mcqQuestion) {
-
-                        var cardContainer = $('<div>').addClass('card mb-4');
-                        var cardBody = $('<div>').addClass('card-body');
-
-                        var accordionContainer = $('<div>').addClass('accordion');
-                        var accordionItem = $('<div>').addClass('accordion-item');
-                        var accordionHeader = $('<h2>').addClass('accordion-header').attr('id', 'question-' +
-                            index + '-header');
-
-                        var questionButton = $('<button>').addClass(
+                    $.each(gQuestions, function(gIndex, groupingQuestion) {
+                        var groupingAccordionItem = $('<div>').addClass('accordion-item');
+                        var groupingAccordionHeader = $('<h2>').addClass('accordion-header').attr('id',
+                            'grouping-question-' + groupingQuestion.id + '-header');
+                        var groupingQuestionButton = $('<button>').addClass(
                                 'accordion-button btn btn-outline-primary fw-bold')
                             .attr({
                                 'type': 'button',
                                 'data-bs-toggle': 'collapse',
-                                'data-bs-target': '#question-' + index + '-content',
+                                'data-bs-target': '#grouping-question-' + groupingQuestion.id +
+                                    '-content',
                                 'aria-expanded': 'false',
-                                'aria-controls': 'question-' + index + '-content'
+                                'aria-controls': 'grouping-question-' + groupingQuestion.id + '-content'
                             })
-                            .html(`Question ${index + 1}`);
+                            .html(`Passage Question: ${gIndex + 1}`);
 
-                        accordionHeader.append(questionButton);
+                        groupingAccordionHeader.append(groupingQuestionButton);
 
-                        var accordionBody = $('<div>').addClass('accordion-collapse collapse')
+                        var groupingAccordionBody = $('<div>').addClass('accordion-collapse collapse')
                             .attr({
-                                'id': 'question-' + index + '-content',
-                                'aria-labelledby': 'question-' + index + '-header'
+                                'id': 'grouping-question-' + groupingQuestion.id + '-content',
+                                'aria-labelledby': 'grouping-question-' + groupingQuestion.id +
+                                    '-header'
                             });
 
-                        var questionDiv = $('<div>').addClass('accordion-body ');
-                        var questionText = $('<p>').addClass('mb-0 fs-5').html(mcqQuestion.questions);
-                        questionDiv.append(questionText);
+                        var groupingQuestionDiv = $('<div>').addClass('accordion-body');
+                        var groupingQuestionText = $('<p>').addClass('mb-0 fs-5').html(groupingQuestion
+                            .questions);
+                        groupingQuestionDiv.append(groupingQuestionText);
 
-                        var questionDetails = test_student_question_details.find(function(detail) {
-
-                            return detail.question_code === mcqQuestion.question_code;
+                        var optionsContainer = $('<div>').addClass('options-container');
+                        var questionDetails = test_student_question_details.filter(function(detail) {
+                            return detail.question_code === groupingQuestion.question_code;
                         });
 
-                        var optionsContainer = $('<div>').addClass(
-                            'options-container');
-                        highlightOptions(mcqOptions[index], questionDetails, optionsContainer);
+                        var questionOptions = groupingMcqOptions[groupingQuestion.question_code][
+                            groupingQuestion.id
+                        ];
+                        highlightGroupingOptions(questionOptions, questionDetails[0], optionsContainer);
 
-                        questionDiv.append(optionsContainer);
+                        groupingQuestionDiv.append(optionsContainer);
 
-                        accordionBody.append(questionDiv);
-                        accordionItem.append(accordionHeader, accordionBody);
-                        accordionContainer.append(accordionItem);
-                        cardBody.append(accordionContainer);
-                        cardContainer.append(cardBody);
-                        $('#resultDiv').append(cardContainer);
+                        groupingAccordionBody.append(groupingQuestionDiv);
+                        groupingAccordionItem.append(groupingAccordionHeader, groupingAccordionBody);
+                        accordionBody.append(groupingAccordionItem);
                     });
 
-                    $('.accordion').each(function() {
-                        new bootstrap.Collapse($(this).find('.accordion-button'), {
-                            toggle: false
-                        });
-                    });
-
-                    resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
-                    $('#resultDiv p:empty').remove();
-
-                    $('.accordion').each(function() {
-                        $(this).collapse({
-                            toggle: false
-                        });
-                    });
                 }
-            }
+
+
+
+                accordionBody.append(questionDiv);
+                accordionItem.append(accordionHeader, accordionBody);
+                accordionContainer.append(accordionItem);
+                cardBody.append(accordionContainer);
+                cardContainer.append(cardBody);
+                $('#resultDiv').append(cardContainer);
+            });
+
+            $('.accordion').each(function() {
+                new bootstrap.Collapse($(this).find('.accordion-button'), {
+                    toggle: false
+                });
+            });
+
+            $('#resultDiv p:empty').remove();
+
+
 
             function highlightOptions(options, questionDetails, containerDiv) {
                 $.each(options, function(index, option) {
@@ -608,13 +676,10 @@
                     if (option.id == questionDetails.correct_answer && option.id == questionDetails
                         .answer_selected) {
                         optionElement.addClass('correct-answer');
-                        addTickOrCross(optionElement, true);
                     } else if (option.id == questionDetails.correct_answer) {
                         optionElement.addClass('correct-answer');
-                        addTickOrCross(optionElement, true);
                     } else if (option.id == questionDetails.answer_selected) {
                         optionElement.addClass('selected-answer');
-                        addTickOrCross(optionElement, false);
                     } else {
                         optionElement.addClass('normal-answer');
                     }
@@ -625,14 +690,31 @@
                 });
             }
 
+            function highlightGroupingOptions(options, questionDetails, containerDiv) {
+                $.each(options, function(index, option) {
+                    var optionContainer = $('<div>').addClass('option-container ');
 
+                    var optionElement = $('<label>').addClass('row col-12');
 
+                    if (option.id == questionDetails.correct_answer && option.id == questionDetails
+                        .answer_selected) {
+                        optionElement.addClass('correct-answer selected-answer');
+                    } else if (option.id == questionDetails.correct_answer) {
+                        optionElement.addClass('correct-answer');
+                    } else if (option.id == questionDetails.answer_selected) {
+                        optionElement.addClass('selected-answer');
+                    } else {
+                        optionElement.addClass('normal-answer');
+                    }
 
-
-            function addTickOrCross(optionElement, isCorrect) {
-                var iconElement = $('<span>').addClass(isCorrect ? 'tick' : 'cross').html(isCorrect ? '&#10003;' : 'X');
-                optionElement.append(iconElement);
+                    optionElement.append(option.option_answer.replace('<p><br></p>', ''));
+                    optionContainer.append(optionElement);
+                    containerDiv.append(optionContainer);
+                });
             }
+
+
+
         }
     </script>
 

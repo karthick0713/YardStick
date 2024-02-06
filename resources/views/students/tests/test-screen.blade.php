@@ -858,7 +858,8 @@
                     localStorage.setItem('theme', 'vs-light')
                 }
 
-                $(".submit-test").prop("disabled", true);
+
+                // $(".submit-test").prop("disabled", true);
 
 
 
@@ -1049,7 +1050,8 @@
 
                         $(test_cases).map((i, e) => {
 
-                            testcasediv += `
+                            if (e.sample != 1) {
+                                testcasediv += `
                                     <h6 class="fw-bold">SAMPLE TEST CASE: ${coun ++}</h6>
                                     <div class="ms-2">
                                     <label class="fw-bold text-primary text-decoration-underline">Input</label>
@@ -1058,6 +1060,8 @@
                                     <p>${e.output}</p>
                                 </div>
                                 `;
+                            }
+
 
                             run_question_inputs.push(e.input);
                             run_question_outputs.push(e.output);

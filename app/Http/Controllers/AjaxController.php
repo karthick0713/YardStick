@@ -118,7 +118,7 @@ class AjaxController extends Controller
 
     public function get_sections(Request $request)
     {
-        $section_name = DB::table('test_section_wise_questions')->where('test_code', $request->input('test_code'))->get();
-        return $section_name;
+        $sections = DB::table('test_section_wise_questions')->where('test_code', $request->input('test_code'))->get();
+        return $sections;
     }
 }

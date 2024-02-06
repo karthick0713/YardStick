@@ -409,6 +409,53 @@
     </div>
 
 
+
+    <div class="modal fade" id="PreviousTestModal" tabindex="-1" data-bs-backdrop="static"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="staticBackdropLabel">Select Tests to exclude Questions.</h5>
+                    <button type="button" class="btn-close" onclick="modal_close()"></button>
+                </div>
+
+                <div class="modal-body">
+                    <table id="testsTable" class="display ms-5">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($prev_tests as $tt)
+                                @php
+                                    // dd($tests);
+                                @endphp
+                                <tr>
+
+                                    <td>
+                                        <input style="height:30px;width:30px;" type="checkbox" name=""
+                                            class="select-test-toexclude" value="{{ $tt->test_code }}" id="">
+                                    </td>
+                                    <td>{{ strtoupper($tt->title) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn  background-secondary text-white" onclick="exclude_tests()"
+                        id="timing-submit">UPDATE</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="modal fade" id="viewQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-contents">
@@ -475,6 +522,7 @@
 
                 checkboxes.prop('checked',
                     false);
+
                 $(this).prop('checked', true);
                 if ($(this).attr('id') === 'excludeYes' && $(this).prop('checked')) {
                     $('#PreviousTestModal').modal('show');

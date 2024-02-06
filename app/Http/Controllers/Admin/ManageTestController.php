@@ -376,6 +376,7 @@ class ManageTestController extends Controller
 
     public function edit_test($test_code)
     {
+        $prev_tests = DB::table('test_creation')->where('is_active', 1)->get();
         $question_banks = DB::table('question_banks')->where('is_active', 1)->where('trash_key', 1)->get();
         $difficulties = DB::table('master_difficulties')->where('is_active', 1)->where('trash_key', 1)->get();
         $skills = DB::table('master_skills')->where('is_active', 1)->where('trash_key', 1)->get();
@@ -390,7 +391,7 @@ class ManageTestController extends Controller
         }
         $heading = "Manage Tests";
         $sub_heading = "Edit Test";
-        return view('admin.manage-test.edit-test', compact('tests', 'test_sec_ques', 'heading', 'sub_heading', 'difficulties', 'question_banks', 'groups', 'group_entry', 'topics', 'categories', 'skills'));
+        return view('admin.manage-test.edit-test', compact('tests', 'test_sec_ques', 'prev_tests', 'heading', 'sub_heading', 'difficulties', 'question_banks', 'groups', 'group_entry', 'topics', 'categories', 'skills'));
     }
 
 
