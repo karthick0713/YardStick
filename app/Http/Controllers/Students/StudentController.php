@@ -40,13 +40,15 @@ class StudentController extends Controller
                 $query->where('year', $student_det->year)
                     ->orWhereNull('year');
             })
-            ->whereIn('groups_id', $stu_groups->pluck('group_id')->toArray())
-            ->orWhereNull('groups_id')
+            ->where(function ($query) use ($stu_groups) {
+                $groupIds = collect(explode(',', $stu_groups))->pluck('group_id')->toArray();
+                $query->whereIn('groups_id', $groupIds)
+                    ->orWhereNull('groups_id');
+            })
             ->pluck('course_id')
             ->toArray();
 
-        $course_ids = array_unique($course_ids);
-
+        // dd($student_det->college_id);
         foreach ($course_ids as $course_id) {
             $courses[] = DB::table('course_creation')->where('course_id', $course_id)->first();
             $course_params[] = DB::table('course_test_parameters')->where('course_id', $course_id)->count();

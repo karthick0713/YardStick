@@ -51,7 +51,7 @@ class ReportController extends Controller
 
                 // Processing different question categories
                 if ($question_detail->category == 1) {
-                    $programming_test_case[] = DB::table('student_test_programming_test_cases')->where('question_code', $questionCode)->where('test_entry_id', $test_details->id)->get();
+                    $programming_test_case[$questionCode] = DB::table('student_test_programming_test_cases')->where('question_code', $questionCode)->where('test_entry_id', $test_details->id)->get();
                 } else if ($question_detail->category == 2) {
                     $mcq_options[] = DB::table('question_bank_for_mcq')->where('question_code', $questionCode)->get();
                 } else if ($question_detail->category == 3) {
@@ -117,6 +117,7 @@ class ReportController extends Controller
             'grouping_mcq_options' => $grouping_mcq_options,
         ];
 
+        // dd($programming_test_case);
 
         // Returning view with data
         return view('students.report', compact('heading', 'sub_heading', 'test_details', 'student_test_details', 'data'));

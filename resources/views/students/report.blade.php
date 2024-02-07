@@ -130,8 +130,8 @@
         }
 
         /* label.card-body {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            line-height: 0.1cm !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        line-height: 0.1cm !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
 
         .custom-align-center {
             display: flex;
@@ -337,12 +337,12 @@
             var sectionQuestions = question_details.filter(function(question) {
                 return question.section_id == value;
             });
-            // var gQuestions = [];
 
             $("#resultDiv").empty();
 
 
             $.each(sectionQuestions, function(index, question) {
+
                 var cardContainer = $('<div>').addClass('card mb-4');
                 var cardBody = $('<div>').addClass('card-body');
 
@@ -382,6 +382,7 @@
                     return detail.question_code === question.question_code;
                 });
 
+                // console.log(question.category);
                 if (question.category == 1) {
 
 
@@ -415,23 +416,39 @@
                     var newContainer = $('<div>').addClass('row');
 
                     var additionalInfoDiv = $('<div>').addClass('row col-12 mt-3');
+
                     var inputFormatDiv = $('<div>').addClass('col-4');
-                    var inputFormatTitle = $('<h5>').addClass('fw-bold').html('Input Format:');
-                    var inputFormatPre = $('<p>').html(question.input_format.replaceAll('\n',
-                        '<br/>'));
-                    inputFormatDiv.append(inputFormatTitle, inputFormatPre);
+                    if (question.input_format) {
+                        var inputFormatTitle = $('<h5>').addClass('fw-bold').html('Input Format:');
+                        var inputFormatPre = $('<p>').html(question.input_format.replaceAll('\n',
+                            '<br/>'));
+                        inputFormatDiv.append(inputFormatTitle, inputFormatPre);
+                    } else {
+                        inputFormatDiv.append('');
+                    }
 
                     var outputFormatDiv = $('<div>').addClass('col-4');
-                    var outputFormatTitle = $('<h5>').addClass('fw-bold').html('Output Format:');
-                    var outputFormatPre = $('<p>').html(question.output_format.replaceAll('\n',
-                        '<br/>'));
-                    outputFormatDiv.append(outputFormatTitle, outputFormatPre);
+                    if (question.output_format) {
+                        var outputFormatTitle = $('<h5>').addClass('fw-bold').html('Output Format:');
+                        var outputFormatPre = $('<p>').html(question.output_format.replaceAll('\n',
+                            '<br/>'));
+                        outputFormatDiv.append(outputFormatTitle, outputFormatPre);
+                    } else {
+                        outputFormatDiv.append('');
+                    }
+
 
                     var codeConstraintsDiv = $('<div>').addClass('col-4');
-                    var codeConstraintsTitle = $('<h5>').addClass('fw-bold').html('Code Constraints:');
-                    var codeConstraintsPre = $('<p>').html(question.code_constraints.replaceAll('\n',
-                        '<br/>'));
-                    codeConstraintsDiv.append(codeConstraintsTitle, codeConstraintsPre);
+
+                    if (question.code_constraints) {
+                        var codeConstraintsTitle = $('<h5>').addClass('fw-bold').html('Code Constraints:');
+                        var codeConstraintsPre = $('<p>').html(question.code_constraints.replaceAll('\n',
+                            '<br/>'));
+                        codeConstraintsDiv.append(codeConstraintsTitle, codeConstraintsPre);
+                    } else {
+                        codeConstraintsDiv.append('');
+                    }
+
 
                     additionalInfoDiv.append(inputFormatDiv, outputFormatDiv, codeConstraintsDiv);
 
@@ -493,7 +510,10 @@
 
                     var testCasesRow = $('<div>').addClass('row');
 
-                    $.each(programmingTestCase, function(testCaseIndex, testCase) {
+                    $.each(programmingTestCase[question.question_code], function(testCaseIndex, testCase) {
+
+                        console.log(testCase);
+
 
                         var testCaseDiv = $('<div>').addClass(
                             'col-3 accordion-body rounded-2 text-center text-white  ms-5 mt-3');
@@ -503,21 +523,23 @@
                                 'fw-bold text-white mt-4  text-decoration-underline')
                             .html(
                                 'Executed Output :');
-                        var executedOutputPre = $('<pre>').text(testCase[testCaseIndex].executed_output);
+                        var executedOutputPre = $('<pre>').text(testCase
+                            .executed_output);
                         executedOutputDiv.append(executedOutputTitle, executedOutputPre);
 
                         var expectedOutputDiv = $('<div>');
                         var expectedOutputTitle = $('<h5>').addClass(
                             'fw-bold text-white text-decoration-underline').html(
                             'Expected Output :');
-                        var expectedOutputPre = $('<pre>').text(testCase[testCaseIndex].expected_output);
+                        var expectedOutputPre = $('<pre>').text(testCase
+                            .expected_output);
                         expectedOutputDiv.append(expectedOutputTitle, expectedOutputPre);
 
-                        var executedOutputTrimmed = testCase[testCaseIndex].executed_output.trim()
+                        var executedOutputTrimmed = testCase.executed_output.trim()
                             .replaceAll(
                                 /[\r\n]/g,
                                 '');
-                        var expectedOutputTrimmed = testCase[testCaseIndex].expected_output.trim()
+                        var expectedOutputTrimmed = testCase.expected_output.trim()
                             .replaceAll(
                                 /[\r\n]/g,
                                 '');
@@ -527,6 +549,8 @@
 
                         testCaseDiv.append(executedOutputDiv, expectedOutputDiv);
                         testCasesRow.append(testCaseDiv);
+
+
                     });
 
                     testCasesAccordionBody.append(testCasesRow);
@@ -535,7 +559,7 @@
 
                     accordionBody.append(testCasesAccordionContainer);
 
-                    $('#resultDiv').append(cardContainer);
+                    // $('#resultDiv').append(cardContainer);
 
                     resultDiv.innerHTML = resultDiv.innerHTML.replace(/<p><br><\/p>/g, '');
 
@@ -659,11 +683,6 @@
             function highlightOptions(options, questionDetails, containerDiv) {
                 $.each(options, function(index, option) {
                     var optionContainer = $('<div>').addClass('option-container ');
-                    var radioInput = $('<input>').attr({
-                        'type': 'radio',
-                        'name': 'question_' + questionDetails.question_code,
-                        'value': option.id
-                    }).addClass('option-radio').prop('disabled', true);
 
                     var optionElement = $('<label>').addClass('row col-12');
 

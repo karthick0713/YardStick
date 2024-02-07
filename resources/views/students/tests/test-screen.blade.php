@@ -503,7 +503,7 @@
                             <button type="button" class="btn btn-theme mark-for-review-button">Mark for Review &
                                 Next</button>
                             <button type="button" class="btn btn-theme clear-response">Clear Response</button>
-                            <button type="button" class="btn btn-info float-right save-next">Save & Next</button>
+                            <button type="button" class="btn btn-info float-right save-next">Save</button>
                         </div>
                     </footer>
                     <!-- end footer -->
@@ -668,8 +668,8 @@
                     <footer>
                         <div class="col-12 footer-btn d-flex justify-content-center">
                             {{-- <button type="button" class="btn btn-theme">Mark for Review & Next</button> --}}
-                            <button type="button" class="btn btn-theme mx-4 previous-button">&laquo;</button>
-                            <button type="button" class="btn btn-theme mx-4 save-next ">&raquo;</button>
+                            <button type="button" class="btn btn-theme mx-4 previous-button">Previous</button>
+                            <button type="button" class="btn btn-theme mx-4 save-next ">Next</button>
 
                             <button type="button" class="btn btn-info mx-4 submit-test float-end"> Submit</button>
                         </div>
@@ -750,8 +750,8 @@
                                     <button type="button" class="btn btn-theme mx-4 previous-button">Previous</button>
 
                                     <button type="button"
-                                        class="btn background-secondary text-white float-end grouping-save-next">Save &
-                                        Next</button>
+                                        class="btn background-secondary text-white float-end grouping-save-next">Save
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -781,6 +781,8 @@
 
             });
 
+            var disable_finish_button = @json($test_parameters->disable_finish_button);
+
             var questionsData;
             var question_code_for_save;
             var fetch_questions;
@@ -790,6 +792,7 @@
             var timer;
             var codes;
             var editor;
+            var test_case_samples = [];
             var run_question_inputs = [];
             var run_question_outputs = [];
             var verify_question_inputs = [];
@@ -836,6 +839,10 @@
                 }
 
 
+                if (disable_finish_button == 1) {
+                    $(".submit-test").prop("disabled", true);
+                }
+
 
 
                 var marked_questions = localStorage.getItem('markedQuestions_cat2');
@@ -857,9 +864,6 @@
                 if (localStorage.getItem('theme') == null) {
                     localStorage.setItem('theme', 'vs-light')
                 }
-
-
-                // $(".submit-test").prop("disabled", true);
 
 
 
@@ -1067,6 +1071,7 @@
                             run_question_outputs.push(e.output);
                             verify_question_inputs.push(e.input);
                             verify_question_outputs.push(e.output);
+                            test_case_samples.push(e.sample);
                         })
 
 
@@ -1281,7 +1286,8 @@
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
 
-                        if (currentQuestionIndex < fetch_questions[1][localStorage.getItem('section')].length - 1) {
+                        console.log(fetch_questions[1][localStorage.getItem('section')].length);
+                        if (currentQuestionIndex < fetch_questions[1][localStorage.getItem('section')].length) {
 
                             var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
                                 currentQuestionIndex
@@ -1289,13 +1295,13 @@
 
                             localStorage.setItem('question_category', question_cat_set);
 
-                            showLoader();
+                            // showLoader();
 
-                            setTimeout(() => {
+                            // setTimeout(() => {
 
-                                showQuestion(currentQuestionIndex);
+                            showQuestion(currentQuestionIndex);
 
-                            }, 2000);
+                            // }, 2000);
 
                         } else {
 
@@ -1387,73 +1393,72 @@
                     showLoader();
 
 
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    var lang = $("#languageSelect option:selected").val()
+                        .toLowerCase();
+                    const languageIdToFind = lang;
+                    const foundLanguage = findLanguageById(languageIdToFind);
+                    var editorContent = editor.getValue();
 
-                    setTimeout(() => {
+                    $.ajax({
+                        url: "{{ route('run-code') }}",
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        data: {
+                            content: editorContent,
+                            language: foundLanguage.id,
+                            stdin: run_question_inputs,
+                            filename: `index${foundLanguage.extension}`,
+                        },
+                        success: function(data) {
 
+                            hideLoader();
 
-                        hideLoader();
+                            $("#sample_correct_testcase").empty();
 
-                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                        var lang = $("#languageSelect option:selected").val()
-                            .toLowerCase();
-                        const languageIdToFind = lang;
-                        const foundLanguage = findLanguageById(languageIdToFind);
-                        var editorContent = editor.getValue();
+                            if (data[0].stderr != null) {
+                                var formattedStderr = data[0].stderr
+                                    .replace(/\n/g, '<br>');
 
-                        $.ajax({
-                            url: "{{ route('run-code') }}",
-                            type: "POST",
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken
-                            },
-                            data: {
-                                content: editorContent,
-                                language: foundLanguage.id,
-                                stdin: run_question_inputs,
-                                filename: `index${foundLanguage.extension}`,
-                            },
-                            success: function(data) {
-                                $("#sample_correct_testcase").empty();
-
-                                if (data.stderr != null) {
-                                    var formattedStderr = data.stderr
-                                        .replace(/\n/g, '<br>');
-
-                                    $("#sample_correct_testcase").html(
-                                        formattedStderr).addClass(
-                                        "text-danger fw-bold");
+                                $("#sample_correct_testcase").html(
+                                    formattedStderr).addClass(
+                                    "text-danger fw-bold");
 
 
-                                    $("#home-tab").addClass("active");
+                                $("#home-tab").addClass("active");
 
-                                    $("#home ").addClass("active show");
+                                $("#home").addClass("active show");
 
-                                    $("#profile-tab").removeClass("active");
+                                $("#profile-tab").removeClass("active");
 
-                                    $("#profile").removeClass("active show");
+                                $("#profile").removeClass("active show");
 
-                                    return false;
-                                } else {
-
-
-                                    $("#sample_correct_testcase").removeClass(
-                                        "text-danger fw-bold");
-
-                                    var test_case_correct;
-                                    console.log(data);
-                                    $(data).each(function(i, elem) {
-                                        var cleanStdout = elem.stdout
-                                            .trim()
-                                            .split('\n').join('').split(
-                                                '\r').join('');
-                                        var cleanExpectedOutput =
-                                            run_question_outputs[i]
-                                            .trim().split('\n').join('')
-                                            .split('\r').join('');
+                                return false;
+                            } else {
 
 
-                                        if (arraysEqual(cleanStdout,
-                                                cleanExpectedOutput)) {
+                                $("#sample_correct_testcase").removeClass(
+                                    "text-danger fw-bold");
+
+                                var k = 1;
+                                var test_case_correct;
+                                $(data).each(function(i, elem) {
+                                    var cleanStdout = elem.stdout
+                                        .trim()
+                                        .split('\n').join('').split(
+                                            '\r').join('');
+                                    var cleanExpectedOutput =
+                                        run_question_outputs[i]
+                                        .trim().split('\n').join('')
+                                        .split('\r').join('');
+
+
+                                    if (arraysEqual(cleanStdout,
+                                            cleanExpectedOutput)) {
+
+                                        if (test_case_samples[i] == 0) {
 
                                             test_case_correct = `
                                                   <div class="accordion accordion-flush" id="sampleCrctExample${i}">
@@ -1464,7 +1469,7 @@
                                                                           type="button" data-bs-toggle="collapse"
                                                                           data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
                                                                           aria-controls="flush-collapseOne-${i}">
-                                                                          Test Case Sample : ${i + 1}
+                                                                          Test Case Sample : ${k++}
                                                                       </button>
                                                                   </h2>
                                                                   <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
@@ -1485,11 +1490,17 @@
   
                                                          `;
 
-                                            $("#sample_correct_testcase")
-                                                .append(
-                                                    test_case_correct);
+                                        }
 
-                                        } else {
+
+
+                                        $("#sample_correct_testcase")
+                                            .append(
+                                                test_case_correct);
+
+                                    } else {
+
+                                        if (test_case_samples[i] == 0) {
 
                                             test_case_correct = `
                                                   <div class="accordion accordion-flush" id="sampleCrctExample${i}">
@@ -1500,7 +1511,7 @@
                                                                           type="button" data-bs-toggle="collapse"
                                                                           data-bs-target="#flush-collapseOne-${i}" aria-expanded="false"
                                                                           aria-controls="flush-collapseOne-${i}">
-                                                                          Test Case Sample : ${i + 1}
+                                                                          Test Case Sample : ${k++}
                                                                       </button>
                                                                   </h2>
                                                                   <div id="flush-collapseOne-${i}" class="accordion-collapse collapse"
@@ -1526,48 +1537,49 @@
                                                     test_case_correct);
 
                                         }
-                                    });
-
-                                    function arraysEqual(arr1, arr2) {
-                                        if (arr1.length !== arr2.length)
-                                            return false;
-                                        for (var i = 0; i < arr1.length; i++) {
-                                            if (arr1[i] !== arr2[i])
-                                                return false;
-                                        }
-                                        return true;
                                     }
+                                });
 
-
-                                    $("#home-tab").addClass("active");
-
-                                    $("#home ").addClass("active show");
-
-                                    $("#profile-tab").removeClass("active");
-
-                                    $("#profile").removeClass("active show");
-
-
-
-
-
+                                function arraysEqual(arr1, arr2) {
+                                    if (arr1.length !== arr2.length)
+                                        return false;
+                                    for (var i = 0; i < arr1.length; i++) {
+                                        if (arr1[i] !== arr2[i])
+                                            return false;
+                                    }
+                                    return true;
                                 }
 
 
+                                $("#home-tab").addClass("active");
+
+                                $("#home ").addClass("active show");
+
+                                $("#profile-tab").removeClass("active");
+
+                                $("#profile").removeClass("active show");
 
 
-                            },
-                            error: function(data) {
-                                alert('Something went wrong');
+                                hideLoader();
+
+
+
                             }
-                        })
-                    }, 3000);
+
+
+                        },
+                        error: function(data) {
+                            alert('Something went wrong');
+                        }
+                    })
+
                 });
 
 
 
                 $(".verify-button").click(function() {
 
+                    showLoader();
 
                     var csrfToken = $('meta[name="csrf-token"]').attr('content');
                     var lang = $("#languageSelect option:selected").val()
@@ -1588,6 +1600,8 @@
                             filename: `index${foundLanguage.extension}`,
                         },
                         success: function(data) {
+
+                            hideLoader();
 
                             if (data[0].stderr != null) {
 

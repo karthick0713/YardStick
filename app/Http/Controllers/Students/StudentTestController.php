@@ -36,9 +36,10 @@ class StudentTestController extends Controller
     }
 
 
-    public function test_taking_screen()
+    public function test_taking_screen($course_id, $test_code)
     {
-        return view('students.tests.test-screen');
+        $test_parameters = DB::table('course_test_parameters')->where('course_id', base64_decode($course_id))->where('test_code', base64_decode($test_code))->first();
+        return view('students.tests.test-screen', compact('test_parameters'));
     }
 
 
