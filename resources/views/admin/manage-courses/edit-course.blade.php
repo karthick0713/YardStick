@@ -715,11 +715,10 @@
                                 <div class="col-md-2">
                                 <button type="button" style="background-color:#cd0000"data-bs-toggle="modal"
                                             data-bs-target="#openParamsModal${i}" class="btn text-white ms-4">Set Parameters</button>
-                                    <i title='Please Fill the Parameter..!' style='cursor:pointer;color:red' class='bx bxs-info-circle icon-info${i}' ></i>
-                                    <i title='Validated..!' style='cursor:pointer;color:green;display:none' class='bx bxs-check-circle icon-check${i}'></i>
+                                   
                                 </div>
                                 <div class="col-md-2">
-                                <button type="button" style="background-color:#cd0000" onclick="openNegativeModal(${i})" 
+                                <button type="button" style="background-color:#cd0000" onclick="openNegativeModal(${i},'${testCode}')" 
                                     class="btn text-white ms-4">Add -Ve Marks 
                                     </button>
 
@@ -937,6 +936,7 @@
             $(".display_result_date" + index).val(result_date);
             $(".icon-info" + index).hide();
             $(".icon-check" + index).show();
+            openNegativeModal(index);
         }
 
 

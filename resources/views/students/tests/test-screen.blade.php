@@ -10,6 +10,7 @@
 
 @section('page-script')
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
+
 @endsection
 @section('content')
     <script>
@@ -21,6 +22,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.23.0/min/vs/loader.js"></script>
+
     <style>
         * {
             --side-bar-width: 420px;
@@ -32,6 +34,19 @@
 
         #content-to-fullscreen {
             background-color: #fff;
+        }
+
+        .custom-alert {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px 20px;
+            border-radius: 5px;
         }
 
         a {
@@ -369,6 +384,10 @@
     <body>
 
         <div id="loader"></div>
+
+        <div id="customAlert" class="custom-alert">
+            <p>Please Select Any One of the Option..!</p>
+        </div>
 
         <div id="all-test-screens" style="background-color:#ffffff !important">
 
@@ -772,6 +791,7 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
+
         <script>
             $(function() {
 
@@ -869,6 +889,8 @@
 
                 function showPassageAndQuestions(index) {
 
+                    pauseTimerForTwoSeconds();
+
                     showLoader();
 
                     setTimeout(() => {
@@ -880,6 +902,8 @@
                         $("#mcq_grouping").show();
 
                         hideLoader();
+
+                        startTimer(totalSeconds);
 
                     }, 2000);
 
@@ -925,9 +949,28 @@
                 }
 
 
+                function pauseTimerForTwoSeconds() {
+
+                    clearInterval(timer);
+
+                    setTimeout(() => {
+
+                        startTimer(totalSeconds);
+
+                    }, 2000);
+                }
+
+
                 function showQuestion(index) {
 
                     showLoader();
+
+                    if (timer != null) {
+
+                        pauseTimerForTwoSeconds();
+
+                    }
+
 
                     if (localStorage.getItem("question_category") == 2) {
 
@@ -940,6 +983,8 @@
                             $("#mcq_grouping").hide();
 
                             hideLoader();
+
+                            // startTimer(totalSeconds);
 
                         }, 2000);
 
@@ -1237,7 +1282,8 @@
 
 
                         if (selectedAnswer.length < 1) {
-                            alert("Select Any one of the Option..!");
+                            // showWarning();
+                            alert('Please select an answer..!');
                             return false;
                         }
 
@@ -1805,8 +1851,10 @@
 
                             questionsData = data[1][localStorage.getItem('section')];
 
+                            setTimeout(() => {
 
-                            showQuestion(currentQuestionIndex);
+                                showQuestion(currentQuestionIndex);
+                            }, 1000);
 
                             $(".save-next").click(function() {
 
@@ -2234,6 +2282,7 @@
 
 
                 }
+
 
 
                 $(".submit-test").on('click', function() {

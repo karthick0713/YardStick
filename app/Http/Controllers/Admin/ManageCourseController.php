@@ -369,9 +369,6 @@ class ManageCourseController extends Controller
     public function update_course(Request $request)
     {
 
-        // dd($request->input());
-
-
         $where = [
             'course_id' => $request->input('course_id')
         ];
@@ -389,8 +386,6 @@ class ManageCourseController extends Controller
         $group_a = $request->input('group-a');
 
         DB::table('course_allocate_to_students')->where($where)->delete();
-        DB::table('course_test_parameters')->where($where)->delete();
-        DB::table('course_negative_marks')->where($where)->delete();
 
         $update_data = [];
 
@@ -415,6 +410,8 @@ class ManageCourseController extends Controller
 
             $update_data[] = $data;
         }
+
+
         DB::table('course_allocate_to_students')->insert($update_data);
 
 
@@ -442,11 +439,15 @@ class ManageCourseController extends Controller
         }
 
 
-
         $test_code =  $request->input('test_code');
         $negative_marks = $request->input('input_negative_marks');
 
         if (isset($test_code)) {
+
+
+            DB::table('course_test_parameters')->where($where)->delete();
+
+
             foreach ($test_code as $key => $tc) {
                 $up_data[] = [
                     'test_code' => $tc,
@@ -467,6 +468,9 @@ class ManageCourseController extends Controller
 
 
             if (isset($negative_marks)) {
+
+                DB::table('course_negative_marks')->where($where)->delete();
+
                 foreach ($negative_marks as $k => $neg) {
                     $neg_data[] = [
                         'test_code' => $tc,
@@ -660,6 +664,10 @@ class ManageCourseController extends Controller
             $students_report = [];
 
             $students_list = DB::table('master_students')->where($where)->get();
+
+            if ($students_list == "") {
+                return "<script type='text/javascript'> alert('Invalid Input..!'); </script>";
+            }
 
             foreach ($students_list as $sl) {
                 $student_test_entry = DB::table('students_test_entries')

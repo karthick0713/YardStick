@@ -530,7 +530,7 @@
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" onclick="store_negative_marks(${i})" class="btn  background-secondary text-white"
+                                    <button type="button" onclick="store_negative_marks(${i})" class="btn store_negative_marks${i} background-secondary text-white"
                                       id="">OK</button>
                                 </div>
 
@@ -607,6 +607,7 @@
             $(".display_result_date" + index).val(result_date);
             $(".icon-info" + index).hide();
             $(".icon-check" + index).show();
+            openNegativeModal(index);
         }
 
 
