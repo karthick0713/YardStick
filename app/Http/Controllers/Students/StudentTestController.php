@@ -47,7 +47,9 @@ class StudentTestController extends Controller
     {
         $questions = DB::table('test_creation')->where('test_code', $request->input('test_code'))->first();
         $negative_marks = DB::table('course_negative_marks')->where('test_code', $request->input('test_code'))->first();
-        // $neg_marks  = explode(',', $negative_marks->question_codes);
+        $neg_questions  = explode(',', $negative_marks->question_codes);
+        $neg_marks  = explode(',', $negative_marks->negative_marks);
+
         if ($questions && $questions->test_type == 1) {
             $sections = [];
             $testQuestions = [];
@@ -60,6 +62,9 @@ class StudentTestController extends Controller
                 $testQuestions[] = explode(',', $sectionQuestion->common_test_question);
             }
 
+
+
+
             foreach ($testQuestions as $key => $t) {
                 foreach ($t as $k => $questionCode) {
                     $ques = DB::table('question_banks')->where('question_code', $questionCode)->first();
@@ -67,6 +72,7 @@ class StudentTestController extends Controller
                         $mcq = DB::table('question_bank_for_mcq')->select('option_name', 'question_code', 'option_answer', 'id', 'correct_answer')->where('question_code', $questionCode)->get()->toArray();
 
                         $questionsData[$key][] = [
+                            'neg_marks' => $neg_marks[$k],
                             'category' => $ques->category,
                             'question_for_test' => $ques->questions,
                             'question_marks' => $ques->marks,
@@ -76,6 +82,7 @@ class StudentTestController extends Controller
                     } else if ($ques && $ques->category == 1) {
                         $test_cases = DB::table('programming_question_test_case')->where('question_code', $questionCode)->get();
                         $questionsData[$key][] = [
+                            'neg_marks' => $neg_marks[$k],
                             'category' => $ques->category,
                             'question_for_test'  => $ques,
                             'test_cases' => $test_cases
@@ -88,6 +95,7 @@ class StudentTestController extends Controller
                         }
 
                         $questionsData[$key][] = [
+                            'neg_marks' => $neg_marks[$k],
                             'category' => $ques->category,
                             'question_for_test'  => $ques,
                             'grouping_questions' => $grouping,

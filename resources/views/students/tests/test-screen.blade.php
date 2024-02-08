@@ -479,7 +479,7 @@
                                         <div class="col-md-2">
                                             Marks <br />
                                             <span class="badge rounded-pill org-marks bg-success"></span>
-                                            <span class="badge rounded-pill neg-marks bg-danger">-0.5</span>
+                                            <span class="badge rounded-pill neg-marks bg-danger"></span>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="btn-group">
@@ -763,9 +763,9 @@
                                 <div class="question-col">
                                 </div>
                                 <div class="mt-5">
-                                    <button type="button"
+                                    {{-- <button type="button"
                                         class="btn background-info text-white grouping-mark-for-review">Mark For
-                                        Review</button>
+                                        Review</button> --}}
 
                                     <button type="button" class="btn btn-theme mx-4 previous-button">Previous</button>
 
@@ -995,10 +995,13 @@
                         }, 2000);
 
 
-
                         var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
                             index
                         ].category
+
+                        var negative_marks = fetch_questions[1][localStorage.getItem('section')][
+                            index
+                        ].neg_marks
 
                         localStorage.setItem('question_category', question_cat_set);
 
@@ -1007,6 +1010,7 @@
                         var mcqOptions = questionsData[index].mcq_options;
                         $(".question_count").text("Question No. " + (index + 1));
                         $(".org-marks").html(questionsData[index].question_marks)
+                        $(".neg-marks").html('-' + negative_marks);
                         $(".question-p").html(question.replaceAll('<p><br></p>', ""));
                         $(".question-p").attr('data-index', `${index}`);
                         $(".Answer-options").empty();
@@ -1105,9 +1109,7 @@
                         var testcasediv = "";
                         var coun = 1;
 
-                        console.log(fetch_questions[1][localStorage.getItem('section')][
-                            index
-                        ]);
+
 
                         $(test_cases).map((i, e) => {
 
@@ -1346,7 +1348,6 @@
                         localStorage.setItem("currentQuestionIndex" + localStorage.getItem('section'),
                             currentQuestionIndex);
 
-                        console.log(fetch_questions[1][localStorage.getItem('section')].length);
                         if (currentQuestionIndex < fetch_questions[1][localStorage.getItem('section')].length) {
 
                             var question_cat_set = fetch_questions[1][localStorage.getItem('section')][
@@ -1365,7 +1366,7 @@
 
                         } else {
 
-                            // location.reload();
+                            $('.save-next').prop('disabled', true);
 
                         }
 
@@ -1396,7 +1397,7 @@
                             // location.reload();
                         } else {
 
-
+                            $('.save-next').prop('disabled', true);
 
 
                         }
