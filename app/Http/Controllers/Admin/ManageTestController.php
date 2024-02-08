@@ -398,19 +398,12 @@ class ManageTestController extends Controller
     public function update_test(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'test_title' => 'required',
-            'question_type' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            Session::flash('error', $validator->errors());
-            return redirect()->route('manage-test');
-        }
 
         $test_code = $request->input('test_code');
 
         if ($request->input('question_type') == 1) {
+
+            DB::table('test_section_wise_questions')->where('test_code', $test_code)->delete();
 
             $data = [
                 'test_code' => $test_code,
@@ -419,11 +412,10 @@ class ManageTestController extends Controller
                 'practice_status' => $request->input('practice_status'),
                 'exclude_tests' => $request->input('exclude_tests'),
                 'exclude_tests_code' => $request->input('exclude_previous_test_question'),
-                'created_at' => now(),
                 'updated_at' => now(),
             ];
 
-            $value = DB::table('test_creation')->insert($data);
+            $value = DB::table('test_creation')->where('test_code', $test_code)->update($data);
 
             $questions = $request->input('selected_questions_value');
 
@@ -441,7 +433,7 @@ class ManageTestController extends Controller
             $ins_value = DB::table('test_section_wise_questions')->insert($ins_data);
 
             if ($value && $ins_value) {
-                Session::flash('success', 'Test Created Successfully..!');
+                Session::flash('success', 'Test Updated Successfully..!');
                 return redirect()->route('manage-test');
             }
         } else {

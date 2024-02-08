@@ -90,7 +90,7 @@
     <div class="card">
         <div class="container">
             <div class="card-body">
-                <form action="{{ route('save-test') }}" method="POST">
+                <form action="{{ route('update-test') }}" method="POST">
                     @csrf
                     {{-- Add test fields --}}
 
@@ -111,7 +111,7 @@
                             <div class="col-md-3">
                                 <label for="test-assigned" class="mb-2">Questions <span class="text-danger">
                                         *</span></label>
-                                <select name="question_type" id="question_type" onchange="opp_div_close()"
+                                <select name="question_type" id="question_type" onchange="opp_div_close()" readonly
                                     class="form-control">
                                     <option value="0" disabled>SELECT</option>
                                     <option value="1" {{ $tests->test_type == 1 ? 'selected' : '' }}>Select Questions

@@ -73,6 +73,7 @@ Route::group(['middleware' =>  "auth"], function () {
         Route::get('/admin/manage-test/get-selected-questions', $controller_path . '\Admin\ManageTestController@get_selected_questions')->name('get-selected-questions');
         Route::get('/admin/manage-test/get-detailed-question-view', $controller_path . '\Admin\ManageTestController@get_detailed_question_view')->name('get-detailed-question-view');
         Route::get('/admin/edit-test/{test_code}', $controller_path . '\Admin\ManageTestController@edit_test')->name('edit-test');
+        Route::post('/admin/update-test', $controller_path . '\Admin\ManageTestController@update_test')->name('update-test');
 
 
         Route::get('/admin/manage-test/add-test-individual', $controller_path . '\Admin\ManageTestController@create_new_test')->name('create-test');

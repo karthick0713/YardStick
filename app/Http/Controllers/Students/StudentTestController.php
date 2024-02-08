@@ -196,6 +196,7 @@ class StudentTestController extends Controller
 
         if ($question->category == 2) {
             $correct_option = DB::table('question_bank_for_mcq')->where('question_code', $question->question_code)->where('correct_answer', 1)->first();
+            $mark_for_each_question = $question->marks;
             if ($selected_option->correct_answer == $correct_option->correct_answer) {
                 $ans = $question->marks;
             } else {
@@ -203,6 +204,7 @@ class StudentTestController extends Controller
             }
         } else if ($question->category == 3) {
             $correct_option = DB::table('question_bank_for_mcq')->where('question_code', $question->question_code)->where('grouping_question_id', $request->input('group_question_id'))->where('correct_answer', 1)->first();
+            $mark_for_each_question = 1;
             if ($selected_option->correct_answer == $correct_option->correct_answer) {
                 $ans = 1;
             } else {
@@ -219,7 +221,7 @@ class StudentTestController extends Controller
             'category_id' => $question->category,
             'question_code' => $question_code,
             'mark_taken_for_this_question' => $ans,
-            'mark_for_each_question' => $question->marks,
+            'mark_for_each_question' => $mark_for_each_question,
             'answer_selected' => $request->input('option_id'),
             'correct_answer' => $correct_option->id,
             'created_at' => now(),

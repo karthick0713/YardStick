@@ -519,10 +519,11 @@
                     <!-- footer -->
                     <footer>
                         <div class="footer-btn ">
-                            <button type="button" class="btn btn-theme mark-for-review-button">Mark for Review &
-                                Next</button>
+                            {{-- <button type="button" class="btn btn-theme mark-for-review-button">Mark for Review &
+                                Next</button> --}}
+                            <button type="button" class="btn btn-theme mx-4 previous-button">Previous</button>
                             <button type="button" class="btn btn-theme clear-response">Clear Response</button>
-                            <button type="button" class="btn btn-info float-right save-next">Save</button>
+                            <button type="button" class="btn btn-info float-right save-next">Next</button>
                         </div>
                     </footer>
                     <!-- end footer -->
@@ -886,10 +887,26 @@
                 }
 
 
+                function pauseTimerForTwoSeconds() {
+
+                    clearInterval(timer);
+
+                    setTimeout(() => {
+
+                        startTimer(totalSeconds);
+
+                    }, 2000);
+                }
+
+
 
                 function showPassageAndQuestions(index) {
 
-                    pauseTimerForTwoSeconds();
+                    if (timer != null) {
+
+                        pauseTimerForTwoSeconds();
+
+                    }
 
                     showLoader();
 
@@ -903,7 +920,6 @@
 
                         hideLoader();
 
-                        startTimer(totalSeconds);
 
                     }, 2000);
 
@@ -949,30 +965,22 @@
                 }
 
 
-                function pauseTimerForTwoSeconds() {
-
-                    clearInterval(timer);
-
-                    setTimeout(() => {
-
-                        startTimer(totalSeconds);
-
-                    }, 2000);
-                }
 
 
                 function showQuestion(index) {
 
                     showLoader();
 
-                    if (timer != null) {
-
-                        pauseTimerForTwoSeconds();
-
-                    }
-
 
                     if (localStorage.getItem("question_category") == 2) {
+
+
+                        if (timer != null) {
+
+                            pauseTimerForTwoSeconds();
+
+                        }
+
 
                         setTimeout(() => {
 
@@ -983,8 +991,6 @@
                             $("#mcq_grouping").hide();
 
                             hideLoader();
-
-                            // startTimer(totalSeconds);
 
                         }, 2000);
 
@@ -1047,6 +1053,12 @@
 
 
                     } else if (localStorage.getItem("question_category") == 1) {
+
+                        if (timer != null) {
+
+                            pauseTimerForTwoSeconds();
+
+                        }
 
                         setTimeout(() => {
 
@@ -1225,6 +1237,8 @@
 
                     } else if (localStorage.getItem("question_category") == 3) {
 
+                        location.reload();
+
                         showPassageAndQuestions(index);
 
                     }
@@ -1394,8 +1408,6 @@
                 }
 
 
-
-
                 function previous() {
 
 
@@ -1421,7 +1433,6 @@
                 }
 
                 $(".mark-for-review-button").click(function() {
-
 
                     markForReview();
 
@@ -1863,7 +1874,7 @@
                             });
 
 
-                            $(".previous-button").click(function() {
+                            $(".previous-button").on('click', function() {
 
                                 previous();
 
@@ -1903,6 +1914,12 @@
 
 
                         } else if (localStorage.getItem('question_category') == 2) {
+
+                            $(".previous-button").on('click', function() {
+
+                                previous();
+
+                            });
 
                             $(data[0].sections).each(function(i, e) {
 
@@ -1946,6 +1963,11 @@
                         } else if (localStorage.getItem('question_category') == 3) {
 
 
+                            $(".previous-button").on('click', function() {
+
+                                previous();
+
+                            });
 
                             $(".mcq-grouping").show();
 
