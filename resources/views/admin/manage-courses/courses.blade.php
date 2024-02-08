@@ -180,28 +180,42 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
-                                var d = row.course_id;
-                                return `
-                                <div class='text-center'>
+                                let formattedDate = new Date().toISOString().split('T')[0];
+                                let validityFrom = row.validity_from;
 
-                        <a type="button" onclick="courseModal(${d})"> 
-                <i class="bx bx-show-alt"></i> </a>
+                                if (validityFrom <= formattedDate) {
+                                    return `
+                <div class='text-center'>
+                    <a type="button" onclick="courseModal(${data})"> 
+                        <i class="bx bx-show-alt"></i>
+                    </a> 
 
-                    <a class="icon-buttons text-black" href="{{ url('/admin/edit-course/${btoa(d)}') }}">
-                <i class="bx bx-edit-alt"></i>
-                </a>
+                    <a class="icon-buttons text-black" href="{{ url('/admin/edit-course/${btoa(data)}') }}">
+                        <i class="bx bx-edit-alt"></i>
+                    </a>
 
-                
-                <a onclick="openDeleteModal('${d}')" class="text-black icon-buttons">
-                    <i class="bx bxs-trash"></i>
-                </a>
+                    <a onclick="openDeleteModal('${data}')" class="text-black icon-buttons">
+                        <i class="bx bxs-trash"></i>
+                    </a>
+                </div>
+            `;
+                                } else {
+                                    // Don't show the view button
+                                    return `
+                <div class='text-center'>
+                    <a class="icon-buttons text-black" href="{{ url('/admin/edit-course/${btoa(data)}') }}">
+                        <i class="bx bx-edit-alt"></i>
+                    </a>
 
-                    </div>
-
-                    
-                `;
+                    <a onclick="openDeleteModal('${data}')" class="text-black icon-buttons">
+                        <i class="bx bxs-trash"></i>
+                    </a>
+                </div>
+            `;
+                                }
                             },
                         },
+
                     ],
 
                     orderCellsTop: !0,
@@ -302,10 +316,7 @@
             let url = "{{ route('report-download') }}" +
                 `?college=${college}&department=${department}&year=${year}&groups=${groups}&course_id=${course_id}&test_code=${test_code}`;
 
-            window.open(url);
-
-            // window.location.href = '{{ route('manage-courses') }}';
-
+            location = url;
         }
     </script>
 

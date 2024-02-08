@@ -664,9 +664,8 @@ class ManageCourseController extends Controller
             $students_report = [];
 
             $students_list = DB::table('master_students')->where($where)->get();
-
-            if ($students_list == "") {
-                return "<script type='text/javascript'> alert('Invalid Input..!'); </script>";
+            if (count($students_list) == 0) {
+                return "<script type='text/javascript'> alert('No Records Found on this Input..!'); </script>";
             }
 
             foreach ($students_list as $sl) {
@@ -727,17 +726,23 @@ class ManageCourseController extends Controller
 
             $sheet = $spreadsheet->getActiveSheet();
 
-            $sheet->setCellValue('A1', 'Student Name');
-            $sheet->setCellValue('B1', 'Student Email Id');
-            $sheet->setCellValue('C1', 'Total Marks for Each Question');
-            $sheet->setCellValue('D1', 'Total Marks Taken for This Question');
-            $sheet->setCellValue('E1', 'Total Time');
-            $sheet->setCellValue('F1', 'Time Taken');
-            $sheet->setCellValue('G1', 'User OS');
-            $sheet->setCellValue('H1', 'IP Address');
-            $sheet->setCellValue('I1', 'Browser');
-            $sheet->setCellValue('J1', 'User Agent');
-            $sheet->setCellValue('K1', 'City');
+            $sheet->mergeCells('C1:K1');
+
+            $sheet->setCellValue('C1', 'Attempt 1');
+            $sheet->getStyle('C1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+
+            $sheet->setCellValue('A2', 'Student Name');
+            $sheet->setCellValue('B2', 'Student Email Id');
+            $sheet->setCellValue('C2', 'Total Marks');
+            $sheet->setCellValue('D2', 'Marks Taken');
+            $sheet->setCellValue('E2', 'Total Time');
+            $sheet->setCellValue('F2', 'Time Taken');
+            $sheet->setCellValue('G2', 'User OS');
+            $sheet->setCellValue('H2', 'IP Address');
+            $sheet->setCellValue('I2', 'Browser');
+            $sheet->setCellValue('J2', 'User Agent');
+            $sheet->setCellValue('K2', 'City');
 
 
             $sheet->getColumnDimension('A')->setWidth(30);
@@ -867,17 +872,22 @@ class ManageCourseController extends Controller
 
                     $sheet = $spreadsheet->getActiveSheet();
 
-                    $sheet->setCellValue('A1', 'Student Name');
-                    $sheet->setCellValue('B1', 'Student Email Id');
-                    $sheet->setCellValue('C1', 'Total Marks for Each Question');
-                    $sheet->setCellValue('D1', 'Total Marks Taken for This Question');
-                    $sheet->setCellValue('E1', 'Total Time');
-                    $sheet->setCellValue('F1', 'Time Taken');
-                    $sheet->setCellValue('G1', 'User OS');
-                    $sheet->setCellValue('H1', 'IP Address');
-                    $sheet->setCellValue('I1', 'Browser');
-                    $sheet->setCellValue('J1', 'User Agent');
-                    $sheet->setCellValue('K1', 'City');
+                    $sheet->mergeCells('C1:K1');
+
+                    $sheet->setCellValue('C1', 'Attempt 1');
+                    $sheet->getStyle('C1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValue('A2', 'Student Name');
+                    $sheet->setCellValue('B2', 'Student Email Id');
+                    $sheet->setCellValue('C2', 'Total Marks for Each Question');
+                    $sheet->setCellValue('D2', 'Total Marks Taken for This Question');
+                    $sheet->setCellValue('E2', 'Total Time');
+                    $sheet->setCellValue('F2', 'Time Taken');
+                    $sheet->setCellValue('G2', 'User OS');
+                    $sheet->setCellValue('H2', 'IP Address');
+                    $sheet->setCellValue('I2', 'Browser');
+                    $sheet->setCellValue('J2', 'User Agent');
+                    $sheet->setCellValue('K2', 'City');
 
 
                     $sheet->getColumnDimension('A')->setWidth(30);
